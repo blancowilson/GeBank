@@ -13,7 +13,7 @@
 - [x] Configure FastAPI with Jinja2 templates (server-side rendering) [Verified with uv & pytest]
 - [x] Configure SQL Server connection (AsyncSQLAlchemy) to Saint DB [Verified with pytest & aioodbc]
 - [x] Create separate schema in SQL Server: `AppConciliacion` (via Alembic or raw SQL if needed) [Configured in alembic/env.py]
-- [ ] Setup Redis for Celery and configure Celery instance
+- [x] Setup Redis for Celery and configure Celery instance [Verified with pytest]
 - [ ] Configure Tailwind CSS (CDN for dev, build script for prod)
 - [ ] Setup HTMX (CDN) and create `base.html` template with navbar
 - [ ] Verify setup: FastAPI running at http://localhost:8000 with rendered template

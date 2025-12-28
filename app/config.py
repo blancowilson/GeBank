@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     # DB Settings
     SQL_SERVER_URL: str
     
+    # Celery & Redis
+    CELERY_BROKER_URL: str
+    CELERY_RESULT_BACKEND: str
+    
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 settings = Settings()
