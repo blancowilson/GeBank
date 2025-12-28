@@ -1,0 +1,69 @@
+[project]
+name = "gebanksaint"
+version = "1.0.0"
+description = "Integración Automatizada de Cobranzas entre Saint y Insytech"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "GeBank Team", email = "dev@gebanksaint.com" }
+]
+dependencies = [
+    "fastapi==0.104.1",
+    "uvicorn[standard]==0.24.0",
+    "jinja2==3.1.2",
+    "python-multipart==0.0.6",
+    "pydantic==2.5.0",
+    "pydantic-settings==2.1.0",
+    "python-jose[cryptography]==3.3.0",
+    "passlib[bcrypt]==1.7.4",
+    "python-dateutil==2.8.2",
+    "httpx==0.25.2",
+    "sqlalchemy[asyncio]==2.0.23",
+    "pyodbc==5.0.1",
+    "alembic==1.12.1",
+    "celery==5.3.4",
+    "redis==5.0.1",
+    "openpyxl==3.1.2",
+    "pdfplumber==0.10.3",
+    "pandas==2.1.4",
+    "sentry-sdk[fastapi]==1.35.0",
+    "structlog==23.2.0",
+    "python-dotenv==1.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==7.4.3",
+    "pytest-asyncio==0.21.1",
+    "pytest-cov==4.1.0",
+    "playwright==1.40.0",
+    "ruff==0.1.6",
+    "black==23.11.0",
+    "mypy==1.7.0",
+    "radon==6.0.1",
+    "pylint==3.0.2"
+]
+prod = [
+    "gunicorn==21.2.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.4.3",
+    "pytest-asyncio>=0.21.1",
+    "ruff>=0.1.6"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --asyncio-mode=auto"
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"

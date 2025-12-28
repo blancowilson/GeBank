@@ -10,7 +10,7 @@
 
 ### Sprint 0.1: Infrastructure Base
 - [x] Setup Git repository with hexagonal structure (app/, domain/, infrastructure/, etc.) a25121b
-- [ ] Configure FastAPI with Jinja2 templates (server-side rendering)
+- [x] Configure FastAPI with Jinja2 templates (server-side rendering) [Verified with uv & pytest]
 - [ ] Configure SQL Server connection (AsyncSQLAlchemy) to Saint DB
 - [ ] Create separate schema in SQL Server: `AppConciliacion` (via Alembic or raw SQL if needed)
 - [ ] Setup Redis for Celery and configure Celery instance

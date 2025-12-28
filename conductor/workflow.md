@@ -9,6 +9,14 @@
 5. **User Experience First:** Every decision should prioritize user experience
 6. **Non-Interactive & CI-Aware:** Prefer non-interactive commands. Use `CI=true` for watch-mode tools (tests, linters) to ensure single execution.
 
+## Dependency Management
+
+- **Source of Truth:** `pyproject.toml` is the primary source for dependencies.
+- **Synchronization:** Always ensure `requirements/*.txt` and `pyproject.toml` are in sync.
+- **Tools:** Use `uv` for faster installation and resolution.
+  - To install: `uv pip install -r requirements/dev.txt` or `uv pip sync requirements/dev.txt`
+  - To sync metadata: Run `python scripts/sync_deps.py` after modifying requirements manually.
+
 ## Task Workflow
 
 All tasks follow a strict lifecycle:
