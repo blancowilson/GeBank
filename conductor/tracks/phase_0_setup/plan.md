@@ -12,7 +12,7 @@
 - [x] Setup Git repository with hexagonal structure (app/, domain/, infrastructure/, etc.) a25121b
 - [x] Configure FastAPI with Jinja2 templates (server-side rendering) [Verified with uv & pytest]
 - [x] Configure SQL Server connection (AsyncSQLAlchemy) to Saint DB [Verified with pytest & aioodbc]
-- [ ] Create separate schema in SQL Server: `AppConciliacion` (via Alembic or raw SQL if needed)
+- [x] Create separate schema in SQL Server: `AppConciliacion` (via Alembic or raw SQL if needed) [Configured in alembic/env.py]
 - [ ] Setup Redis for Celery and configure Celery instance
 - [ ] Configure Tailwind CSS (CDN for dev, build script for prod)
 - [ ] Setup HTMX (CDN) and create `base.html` template with navbar
