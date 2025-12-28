@@ -9,7 +9,7 @@
 ## Todo List
 
 ### Sprint 0.1: Infrastructure Base
-- [~] Setup Git repository with hexagonal structure (app/, domain/, infrastructure/, etc.)
+- [x] Setup Git repository with hexagonal structure (app/, domain/, infrastructure/, etc.) a25121b
 - [ ] Configure FastAPI with Jinja2 templates (server-side rendering)
 - [ ] Configure SQL Server connection (AsyncSQLAlchemy) to Saint DB
 - [ ] Create separate schema in SQL Server: `AppConciliacion` (via Alembic or raw SQL if needed)
