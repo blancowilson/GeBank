@@ -6,6 +6,20 @@
     <title>{% block title %}{{ title }}{% endblock %}</title>
     <!-- Tailwind CSS (CDN for now as per Sprint 0.1) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            main: '#5f11d4',
+                            secondary: '#480da0',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
     <!-- Material Symbols -->
