@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saint Bank - Listado de Bancos</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#480da0",
+                        "primary-light": "#6b4c9a",
+                        "background-light": "#faf8fc",
+                        "background-dark": "#171022",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e162e",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for sidebar if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white transition-colors duration-200">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Side Navigation -->
+<aside class="hidden md:flex w-72 flex-col bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 h-full flex-shrink-0 z-20">
+<div class="flex flex-col h-full justify-between p-6">
+<!-- Header -->
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-full h-10 w-10 bg-primary/10" data-alt="Saint Bank abstract logo icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCp6qzYmcNNkVWJzgbKjgYM21NQpAlRitIgTonnlc80zf1tn1BbguYJ6ZZ5SgfrpvfWQqqfRluvo-ZCRc0ZAn5ZmLJm6QLGzS3kj3tlCQKvUYflcBBJjUbJmhjQPWH8fZgGTRf4deOIrcP0GVN0zUEGtcnrhdnQpF0VraNhV1BpAzTh0KLQ1e4UNwz0b9KJTSqvih36ZCTqaeJYx_R9UFt5XZVm6KIE3wBisrpPwTiOHiS9b7xgcjWrMvLcjlc2WAxWUjzrFljltbI");'></div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-white text-base font-bold leading-none">Saint Bank</h1>
+<p class="text-primary-light dark:text-gray-400 text-sm font-normal mt-1">Enterprise Portal</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 text-primary dark:text-primary-light" href="#">
+<span class="material-symbols-outlined filled">account_balance</span>
+<span class="text-sm font-bold">Bancos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">sync_alt</span>
+<span class="text-sm font-medium">Movimientos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">bar_chart</span>
+<span class="text-sm font-medium">Reportes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Configuración</span>
+</a>
+</nav>
+</div>
+<!-- User Profile / Footer -->
+<div class="flex items-center gap-3 px-3 py-3 mt-auto border-t border-gray-100 dark:border-gray-800 pt-6">
+<div class="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-purple-400" data-alt="User avatar gradient"></div>
+<div class="flex flex-col">
+<p class="text-sm font-medium dark:text-white">Admin User</p>
+<p class="text-xs text-gray-500">admin@saintbank.com</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Mobile Header Placeholder (simplification for desktop focus) -->
+<div class="md:hidden p-4 bg-surface-light dark:bg-surface-dark flex justify-between items-center shadow-sm">
+<h1 class="font-bold text-lg">Saint Bank</h1>
+<span class="material-symbols-outlined">menu</span>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto no-scrollbar p-6 lg:p-10">
+<div class="max-w-7xl mx-auto flex flex-col gap-8">
+<!-- Page Heading & Controls -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+<div class="flex flex-col gap-2">
+<p class="text-sm font-semibold text-primary uppercase tracking-wider">Gestión Financiera</p>
+<h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">Listado de Bancos</h2>
+</div>
+<!-- Global Controls -->
+<div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+<!-- Search -->
+<div class="relative group flex-1 sm:w-64">
+<input class="w-full h-12 pl-11 pr-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-gray-400" placeholder="Buscar por nombre..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">search</span>
+</div>
+<!-- Sort -->
+<div class="relative group sm:w-48">
+<select class="w-full h-12 pl-4 pr-10 appearance-none rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all cursor-pointer">
+<option>Ordenar por Balance</option>
+<option>Ordenar por Nombre</option>
+<option>Más recientes</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+</div>
+<!-- Add Button -->
+<button class="h-12 px-6 bg-primary hover:bg-[#3b0b85] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-primary/20 whitespace-nowrap">
+<span class="material-symbols-outlined text-lg">add</span>
+                                Nuevo Banco
+                            </button>
+</div>
+</div>
+<!-- Bank Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-800 transition-all duration-300 flex flex-col justify-between min-h-[260px]">
+<!-- Card Header -->
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center p-2 border border-gray-100 dark:border-white/5">
+<img alt="Generic bank logo icon" class="w-full h-full object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSsXda3x3T2Z24qS6PtxTobeFPuAhkIkcPW0iZ-Rvkw9NCjcfWBMdq5tPvJ6_0W8A03LkOpO-K-J05ws8zkAdhS4z1uTBWowOpQJ1mSQ0y5xgx2L3IMyTwBxUPeBYNpi5KfpblcUrLCOn-fmuJzwAok4T2i3MttDQN0Teehh8MrW1nEVdA6IltMJt3RYh-RMiVJ4Ma3RSCgLFZHD4Pr9EirRxtBUWCs9FhfoTIRrHolyl-B5g8j7h0ZrnNKiWzkRMh1Y1uew2AqpM"/>
+</div>
+<div>
+<h3 class="font-semibold text-lg text-slate-900 dark:text-white leading-tight">Saint Bank</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Sincronizado</span>
+</div>
+</div>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Card Body -->
+<div class="py-4">
+<p class="text-sm text-gray-500 dark:text-gray-400 font-mono mb-1">Cuenta Corriente •••• 8832</p>
+<p class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">$1,240,500.00</p>
+</div>
+<!-- Card Footer (Tabs) -->
+<div class="bg-gray-50 dark:bg-black/20 p-1.5 rounded-xl grid grid-cols-3 gap-1">
+<button class="py-2 text-xs font-semibold text-slate-700 dark:text-gray-200 bg-white dark:bg-white/10 shadow-sm rounded-lg transition-all">Resumen</button>
+<button class="py-2 text-xs font-medium text-gray-500 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-all">Historial</button>
+<button class="py-2 text-xs font-medium text-gray-500 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-all">Conciliar</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-800 transition-all duration-300 flex flex-col justify-between min-h-[260px]">
+<!-- Card Header -->
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center p-2 border border-blue-100 dark:border-blue-900/30">
+<img alt="BBVA bank logo icon" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKyM2WzJJ7tVQWpMRGZ34zjpcaNng8KTL8fpPKR39-7N1Yg1tlwO36C5FONl-wC6A4UWle5ICDETyii34XMeAlrHc2xplLzWMkR94nYTul3cfad-C_WJmyCixxZu6ebZ2I6r77PN0N_6T384krZKBJjiL1MuPYL8jLIcQbWxvClmide7wpVCo2v3gqOioxxSsau6xCEIWrNPwAbipcrXke4tx6qK_CEpoA7xrTO-6CuC_iW9eZl66mqXjW2eUAR41YajFajTiutyQ"/>
+</div>
+<div>
+<h3 class="font-semibold text-lg text-slate-900 dark:text-white leading-tight">BBVA</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Sincronizado</span>
+</div>
+</div>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Card Body -->
+<div class="py-4">
+<p class="text-sm text-gray-500 dark:text-gray-400 font-mono mb-1">Empresarial •••• 9941</p>
+<p class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">$840,200.50</p>
+</div>
+<!-- Card Footer (Tabs) -->
+<div class="bg-gray-50 dark:bg-black/20 p-1.5 rounded-xl grid grid-cols-3 gap-1">
+<button class="py-2 text-xs font-medium text-gray-500 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-all">Resumen</button>
+<button class="py-2 text-xs font-medium text-gray-500 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-all">Historial</button>
+<button class="py-2 text-xs font-semibold text-slate-700 dark:text-gray-200 bg-white dark:bg-white/10 shadow-sm rounded-lg transition-all">Conciliar</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-800 transition-all duration-300 flex flex-col justify-between min-h-[260px]">
+<!-- Card Header -->
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center p-2 border border-red-100 dark:border-red-900/30">
+<img alt="Santander bank logo icon" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpg1E2wzbxgozzzuxtLid_HW9OB4unMDpdnZeDBgvwE4EuEOI-hIOzw7Qm7ji49t5by8TG132cgLsBp1fxFQ-3LlyEwuRnDORJGdN2cwGR9zIV11uLG411IcRsVtt-kkb4mhVYEZWORp8fXzTdyCLCP2ZqG459cNjR7SyAEVkmMMY-RmdPyDH9WKKYvIxJONRd556D7Z1cZCk1XqY_d2SoeN2r3K8p-TRVpmrSFWq-nsX1QMZ0a4FO9Lb99BO7LQQplvd_hUkqzb0"/>
+</div>
+<div>
+<h3 class="font-semibold text-lg text-slate-900 dark:text-white leading-tight">Santander</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Actualizando...</span>
+</div>
+</div>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Card Body -->
+<div class="py-4">
+<p class="text-sm text-gray-500 dark:text-gray-400 font-mono mb-1">Nómina •••• 1234</p>
+<p class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">$32,100.00</p>
+</div>
+<!-- Card Footer (Tabs) -->
+<div class="bg-gray-50 dark:bg-black/20 p-1.5 rounded-xl grid grid-cols-3 gap-1">
+<button class="py-2 text-xs font-semibold text-slate-700 dark:text-gray-200 bg-white dark:bg-white/10 shadow-sm rounded-lg transition-all">Resumen</button>
+<button class="py-2 text-xs font-medium text-gray-500 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-all">Historial</button>
+<button class="py-2 text-xs font-medium text-gray-500 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300 hover:bg-white/50 dark:hover:bg-white/5 rounded-lg transition-all">Conciliar</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-800 transition-all duration-300 flex flex-col justify-between min-h-[260px] opacity-75 grayscale hover:grayscale-0 hover:opacity-100">
+<!-- Card Header -->
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-900/20 flex items-center justify-center p-2 border border-cyan-100 dark:border-cyan-900/30">
+<img alt="Citibank logo icon" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcUbOcS-U6L59tZRGm6MPsDAYvO7xW3sI6hO79vHN00KYfMAoP7-HOLi9gwdLiJGDEoe0geRt3r9szFjWv7FujnN7YBi7Rt_er6YAqHt1QwAO8z0mLnkzMYI6M_oMXbi0epRRIWVTJUKuyIlt1u5CL_M39q3V5sDPRH2xqPv6PTXeYP5fcxjEtA0XDI0oZjLa3iHdRxj2I_GfrhnKzHfawKdy8QNyJ5cIelCj0Ts-ydg_NfNlwdH785S8TVktWomizi3gu7-Ck5gw"/>
+</div>
+<div>
+<h3 class="font-semibold text-lg text-slate-900 dark:text-white leading-tight">Citibank</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Desconectado</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="text-xs font-bold text-primary hover:text-primary-light transition-colors px-2 py-1 bg-primary/5 rounded">Reconectar</button>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Card Body -->
+<div class="py-4">
+<p class="text-sm text-gray-500 dark:text-gray-400 font-mono mb-1">Inversión •••• 5555</p>
+<p class="text-3xl font-extrabold text-gray-400 dark:text-gray-500 tracking-tight">$5,000,000.00</p>
+</div>
+<!-- Card Footer (Tabs) -->
+<div class="bg-gray-50 dark:bg-black/20 p-1.5 rounded-xl grid grid-cols-3 gap-1 pointer-events-none opacity-50">
+<button class="py-2 text-xs font-medium text-gray-500 rounded-lg">Resumen</button>
+<button class="py-2 text-xs font-medium text-gray-500 rounded-lg">Historial</button>
+<button class="py-2 text-xs font-medium text-gray-500 rounded-lg">Conciliar</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Validación de Pago - Saint Bank</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#480da0",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#171022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for the modal body if needed */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#130d1b] dark:text-white h-screen overflow-hidden">
+<!-- Background Layer (Blurred to focus on Modal) -->
+<div aria-hidden="true" class="relative flex h-full w-full pointer-events-none select-none blur-[3px] opacity-60">
+<!-- Sidebar Navigation -->
+<div class="flex h-full w-[280px] flex-col border-r border-[#e5e7eb] bg-white dark:bg-[#1e1e2d] dark:border-[#2d2d3f] p-4 flex-shrink-0 hidden md:flex">
+<div class="flex gap-3 mb-8 px-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-[#130d1b] dark:text-white text-base font-bold leading-normal">Insytech</h1>
+<p class="text-[#6b4c9a] dark:text-[#9ca3af] text-sm font-normal leading-normal">Saint Bank Enterprise</p>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3 px-3 py-2 text-[#6b4c9a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined fill-1">payments</span>
+<p class="text-sm font-medium">Pagos</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-[#6b4c9a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined">receipt_long</span>
+<p class="text-sm font-medium">Conciliación</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-[#6b4c9a] dark:text-[#9ca3af]">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium">Proveedores</p>
+</div>
+</div>
+</div>
+<!-- Main Content Dummy -->
+<div class="flex-1 flex flex-col bg-[#faf8fc] dark:bg-background-dark overflow-hidden">
+<header class="h-16 border-b border-[#e5e7eb] dark:border-[#2d2d3f] bg-white dark:bg-[#1e1e2d] px-8 flex items-center justify-between">
+<h2 class="text-xl font-bold">Gestión de Pagos</h2>
+<div class="size-8 rounded-full bg-gray-200"></div>
+</header>
+<div class="p-8">
+<div class="bg-white dark:bg-[#1e1e2d] rounded-xl h-full shadow-sm border border-[#e5e7eb] dark:border-[#2d2d3f]"></div>
+</div>
+</div>
+</div>
+<!-- MODAL OVERLAY -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-[#130d1b]/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+<!-- Modal Card -->
+<div class="w-full max-w-5xl bg-white dark:bg-[#1e1e2d] rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+<!-- Modal Header -->
+<div class="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#1e1e2d]">
+<div class="flex flex-col gap-1">
+<h2 class="text-[#130d1b] dark:text-white text-xl font-bold leading-tight tracking-tight">Validar Pago <span class="text-[#6b4c9a] dark:text-[#a78bfa] font-medium ml-2">REF-2023-8492</span></h2>
+<p class="text-sm text-gray-500 dark:text-gray-400">Revise los datos del comprobante y confirme la transacción.</p>
+</div>
+<button class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+</div>
+<!-- Modal Body (Scrollable) -->
+<div class="overflow-y-auto custom-scrollbar flex-1 bg-white dark:bg-[#1e1e2d]">
+<div class="grid grid-cols-1 lg:grid-cols-12 min-h-full">
+<!-- LEFT COLUMN: Read-Only Data -->
+<div class="lg:col-span-5 bg-[#faf9fc] dark:bg-[#171022]/50 border-r border-gray-100 dark:border-gray-800 p-6 flex flex-col gap-6">
+<!-- Header -->
+<div class="flex items-center gap-2 text-gray-900 dark:text-white pb-2 border-b border-gray-200 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary">inbox</span>
+<h3 class="text-base font-bold">Datos Reportados</h3>
+</div>
+<!-- Data List -->
+<div class="flex flex-col gap-5">
+<div class="grid grid-cols-2 gap-x-4">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Vendedor</span>
+<p class="text-sm font-semibold text-[#130d1b] dark:text-white">Tech Solutions Inc.</p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Referencia</span>
+<p class="text-sm font-mono text-[#130d1b] dark:text-white bg-gray-100 dark:bg-gray-800 w-fit px-2 rounded">9928312</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Monto</span>
+<p class="text-lg font-bold text-[#130d1b] dark:text-white">$1,250.00 <span class="text-xs text-gray-500 font-normal">USD</span></p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Banco Reportado</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-gray-400 text-base">account_balance</span>
+<p class="text-sm font-medium text-[#130d1b] dark:text-white">Chase Bank</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Receipt Image Card -->
+<div class="flex flex-col gap-2 mt-2">
+<span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Comprobante</span>
+<div class="group relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 cursor-pointer shadow-sm hover:shadow-md transition-all">
+<!-- Image with data-alt -->
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Digital receipt screenshot showing transaction details on a phone screen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZpxT0iRf4uD_FxAa8B7gRXrmiepoWVZ3nB5YULzyQFRSQF2xHu2viF4U37_LCgrNoN6vVmAUwp2TyfjNpjgMh-UlNy34iyP2Ntr4jh5fQRguT7-Mtaayra_erwGSr_aDVLglsoMpTT9F3sLMuT8rsWGJGQoEZLImHwWsEngZRs5fHxiX6OIC0o3ddhHJnsj1pORauJLVQz1IZj_aaFntut9qoRuO6o2i16OuL8EL34ta3EUa6gmiWa0sOgLZH20AKk7lvn9prUVQ');">
+</div>
+<!-- Overlay Hover Effect -->
+<div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+<div class="bg-white/90 dark:bg-black/80 backdrop-blur rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 shadow-lg">
+<span class="material-symbols-outlined text-primary dark:text-white">zoom_in</span>
+</div>
+</div>
+</div>
+<p class="text-xs text-center text-gray-400 mt-1 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[14px]">visibility</span> Click para ampliar imagen
+                            </p>
+</div>
+</div>
+<!-- RIGHT COLUMN: Validation Form -->
+<div class="lg:col-span-7 p-8 flex flex-col gap-6">
+<div class="flex items-center gap-2 text-gray-900 dark:text-white pb-2 border-b border-gray-200 dark:border-gray-700">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<h3 class="text-base font-bold">Validación y Conciliación</h3>
+</div>
+<form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
+<!-- Row 1: Bank Selection -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-[#130d1b] dark:text-gray-200" for="bank">Banco Real (Destino)</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400">account_balance_wallet</span>
+</div>
+<select class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2d2d3f] pl-10 py-2.5 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm" id="bank" name="bank">
+<option selected="" value="saint_checking">Saint Bank - Checking ****8829</option>
+<option value="saint_savings">Saint Bank - Savings ****2201</option>
+<option value="external">Cuenta Externa (Manual)</option>
+</select>
+</div>
+<p class="text-xs text-gray-500">Cuenta donde se reflejó el movimiento.</p>
+</div>
+<!-- Row 2: Date & Amount -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-[#130d1b] dark:text-gray-200" for="date">Fecha de Depósito</label>
+<div class="relative">
+<input class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2d2d3f] py-2.5 text-sm text-gray-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm" id="date" name="date" type="date" value="2023-10-24"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-[#130d1b] dark:text-gray-200" for="amount">Monto Confirmado</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="text-gray-500 font-semibold">$</span>
+</div>
+<input class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2d2d3f] pl-8 py-2.5 text-sm font-semibold text-gray-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm" id="amount" name="amount" placeholder="0.00" type="number" value="1250.00"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<span class="text-gray-400 text-xs">USD</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Alert Box / Validation Status -->
+<div class="rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400 mt-0.5">info</span>
+<div class="flex flex-col gap-1">
+<h4 class="text-sm font-semibold text-blue-900 dark:text-blue-100">Verificación Automática</h4>
+<p class="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                                        El sistema detectó un depósito de <span class="font-mono font-medium">$1,250.00</span> el día 24/10/2023 en la cuenta Checking ****8829 que coincide con esta referencia.
+                                    </p>
+</div>
+</div>
+<!-- Checkbox -->
+<div class="flex items-start gap-3 mt-2 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 transition-colors cursor-pointer">
+<div class="flex h-6 items-center">
+<input class="size-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" id="match" name="match" type="checkbox"/>
+</div>
+<div class="text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-white cursor-pointer" for="match">Coincide con estado de cuenta</label>
+<p class="text-gray-500 dark:text-gray-400">Certifico que los datos ingresados corresponden al movimiento bancario real.</p>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="bg-gray-50 dark:bg-[#1e1e2d] border-t border-gray-100 dark:border-gray-800 px-6 py-4 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
+<button class="w-full sm:w-auto px-4 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]">block</span>
+                    Rechazar Pago
+                </button>
+<div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+<button class="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]">save_as</span>
+                        Guardar para revisión
+                    </button>
+<button class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:ring-primary/20 rounded-lg shadow-md transition-all flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                        Validar y Registrar
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

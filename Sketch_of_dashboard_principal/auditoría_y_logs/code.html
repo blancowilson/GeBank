@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saint Bank - Auditoría y Logs</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5f11d4",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#181122",
+                        "surface-dark": "#241933",
+                        "border-dark": "#322348",
+                        "border-highlight": "#473267",
+                        "text-muted": "#a892c9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for table container if needed */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #181122; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #322348; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #473267; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-x-hidden antialiased">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-border-dark bg-background-dark px-6 py-4 lg:px-10">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined !text-[32px]">account_balance</span>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">Saint Bank</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8 ml-10 flex-1">
+<a class="text-text-muted hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Dashboard</a>
+<a class="text-text-muted hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Conciliación</a>
+<a class="text-text-muted hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Proveedores</a>
+<a class="text-white text-sm font-bold leading-normal relative after:content-[''] after:absolute after:-bottom-6 after:left-0 after:w-full after:h-0.5 after:bg-primary" href="#">Auditoría</a>
+<a class="text-text-muted hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Reportes</a>
+</nav>
+<div class="flex items-center gap-4 justify-end">
+<button class="flex size-10 items-center justify-center rounded-lg hover:bg-surface-dark text-text-muted hover:text-white transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="flex size-10 items-center justify-center rounded-lg hover:bg-surface-dark text-text-muted hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-background-dark"></span>
+</button>
+<div class="h-8 w-[1px] bg-border-dark mx-2"></div>
+<div class="flex items-center gap-3 pl-2 cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 ring-2 ring-transparent group-hover:ring-primary transition-all" data-alt="Avatar of current user" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAxp43oMp5zrYLWkm9TapQ0x-R0SwH7oLrabOzfgJyKxp6Vm7P4cWWqI8nb2hrAdTT-_I5DVXVKaOYM8numXxtthrl9EYGxWRYB5KWwlb2TrYdfyLY6odtD8I4Mj_WcOxb2syED6jnAhZnwuVU8P_y-gJU8J02hYhvZU41-gTeavdSFea4s8kkd-zPiudZqKmyDZq7nl1eWbJI2rPm40tcoPnnLDpNX5AIXwyED0X9xT-b-86jA66wWNB-CH_dJunSfvzx0vEkGyWk");'></div>
+<div class="hidden lg:flex flex-col">
+<span class="text-sm font-medium text-white">Admin Principal</span>
+<span class="text-xs text-text-muted">admin@saintbank.com</span>
+</div>
+<span class="material-symbols-outlined text-text-muted">expand_more</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar bg-background-dark">
+<div class="w-full max-w-[1440px] mx-auto p-6 lg:p-10 flex flex-col gap-6">
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-dark pb-6">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<h1 class="text-white text-3xl font-black leading-tight tracking-[-0.033em]">Auditoría y Logs</h1>
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wide border border-primary/30">Live</span>
+</div>
+<p class="text-text-muted text-base font-normal max-w-2xl">
+                            Registro completo de actividad, seguridad y cambios en el sistema. Utilice los filtros para depurar transacciones o auditar accesos.
+                        </p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-surface-dark border border-border-highlight text-white text-sm font-medium hover:bg-border-dark transition-colors gap-2">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Configuración</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-bold shadow-lg shadow-primary/20 transition-all gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Exportar Logs (.csv)</span>
+</button>
+</div>
+</div>
+<!-- Filters Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4">
+<!-- Search Input -->
+<div class="lg:col-span-4 relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted group-focus-within:text-primary">search</span>
+</div>
+<input class="block w-full rounded-lg border-border-highlight bg-surface-dark pl-10 pr-3 py-2.5 text-white placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm" placeholder="Buscar por Usuario, IP o ID de Transacción..." type="text"/>
+</div>
+<!-- Module Filter -->
+<div class="lg:col-span-2">
+<select class="block w-full rounded-lg border-border-highlight bg-surface-dark py-2.5 px-3 text-white focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm appearance-none">
+<option disabled="" selected="" value="">Módulo</option>
+<option value="all">Todos los módulos</option>
+<option value="ventas">Ventas</option>
+<option value="conciliacion">Conciliación</option>
+<option value="proveedores">Proveedores</option>
+<option value="pagos">Pagos</option>
+</select>
+</div>
+<!-- Action Filter -->
+<div class="lg:col-span-2">
+<select class="block w-full rounded-lg border-border-highlight bg-surface-dark py-2.5 px-3 text-white focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm appearance-none">
+<option disabled="" selected="" value="">Acción</option>
+<option value="all">Todas las acciones</option>
+<option value="create">CREATE</option>
+<option value="read">READ</option>
+<option value="update">UPDATE</option>
+<option value="delete">DELETE</option>
+</select>
+</div>
+<!-- Date Picker (Visual Representation) -->
+<div class="lg:col-span-3">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted">calendar_today</span>
+</div>
+<input class="block w-full rounded-lg border-border-highlight bg-surface-dark pl-10 pr-3 py-2.5 text-white placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm cursor-pointer hover:bg-border-dark transition-colors" readonly="" type="text" value="Oct 27, 2023 - Hoy"/>
+</div>
+</div>
+<!-- Refresh Button -->
+<div class="lg:col-span-1 flex justify-end">
+<button class="flex size-[42px] items-center justify-center rounded-lg border border-border-highlight bg-surface-dark text-text-muted hover:text-white hover:bg-border-dark transition-all" title="Refrescar datos">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="flex flex-col flex-1 min-h-[500px] rounded-xl border border-border-highlight bg-surface-dark/50 overflow-hidden shadow-sm">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-dark border-b border-border-highlight text-xs uppercase text-text-muted font-semibold tracking-wider">
+<th class="px-6 py-4 w-48">Timestamp</th>
+<th class="px-6 py-4">Usuario</th>
+<th class="px-6 py-4 w-32">IP</th>
+<th class="px-6 py-4 w-32">Acción</th>
+<th class="px-6 py-4">Descripción</th>
+<th class="px-6 py-4 w-40">Módulo</th>
+<th class="px-6 py-4 w-32">Estado</th>
+<th class="px-6 py-4 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-highlight/50 text-sm">
+<!-- Row 1 -->
+<tr class="group hover:bg-border-dark/50 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-mono text-text-muted whitespace-nowrap">2023-10-27 14:30:01</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAuilqai7551t6_tAgtdrdVzwovd3dcCs0JzXx-PztY_z-H6sSXfuXdfyyJp3Zgsanj8eMNGIR9PNM1YfazuhZ0QnwMJ6IFDrdTHewxkLP9toxjtWbknhrAvOfnN8HarHBpMxDQUnL8jmtOW7OJo5EuusJPl-68YB0FxLvgUMYUWDsIOLfuXGIAftoxXUcXjZfzELCLjYat3Rd-u5-Ag77aeWpyuL6t3NQ1cRlSOzIRzlF7D7Mg0kRTZlUv-4fwm6-FT_4DCCLHexA");'></div>
+<span class="text-white font-medium">Ana G.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-text-muted font-mono">192.168.1.1</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-yellow-400/10 px-2.5 py-1 text-xs font-bold text-yellow-400 ring-1 ring-inset ring-yellow-400/20">UPDATE</span>
+</td>
+<td class="px-6 py-4 text-white">Modificación de tasa de comisión</td>
+<td class="px-6 py-4 text-text-muted">Ventas</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+<span class="text-emerald-400 font-medium">Éxito</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-border-highlight group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-border-dark/50 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-mono text-text-muted whitespace-nowrap">2023-10-27 14:28:55</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-primary/20 rounded-full size-8 flex items-center justify-center text-primary font-bold text-xs">SA</div>
+<span class="text-white font-medium">SysAdmin</span>
+</div>
+</td>
+<td class="px-6 py-4 text-text-muted font-mono">10.0.0.55</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-red-400/10 px-2.5 py-1 text-xs font-bold text-red-400 ring-1 ring-inset ring-red-400/20">DELETE</span>
+</td>
+<td class="px-6 py-4 text-white">Intento de borrado de conciliación</td>
+<td class="px-6 py-4 text-text-muted">Conciliación</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"></div>
+<span class="text-red-400 font-medium">Error</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-border-highlight group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-border-dark/50 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-mono text-text-muted whitespace-nowrap">2023-10-27 14:15:22</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1_cRRkEas-TYXQmmIeu8DzSdD5p47blm1jAW3jfj6jk02Po-P4YFl92NeZhXqpvDK_TDWo5yupuqNqZfCFfA-RRlJm2vNfEpUunT4vq4HfAXKdjFdfZZjmkgZoKYzi3TnBcAeVjKU_oPXVOhw1eKFBb5PFVXnJfD_JbhDx5xC9uHZvrZPhoMtmHbJldzjP2jCR_UCXDvOBCLzgBTWxH0s3A7_juhGhZ79EAa9HakKfu-8AEuVfA2qWGhY5KUKGxHWqD6dBfB6Ac0");'></div>
+<span class="text-white font-medium">Carlos M.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-text-muted font-mono">192.168.1.12</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-400 ring-1 ring-inset ring-emerald-400/20">CREATE</span>
+</td>
+<td class="px-6 py-4 text-white">Nuevo proveedor registrado: "TechCorp"</td>
+<td class="px-6 py-4 text-text-muted">Proveedores</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+<span class="text-emerald-400 font-medium">Éxito</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-border-highlight group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-border-dark/50 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-mono text-text-muted whitespace-nowrap">2023-10-27 13:50:10</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-indigo-500/20 rounded-full size-8 flex items-center justify-center text-indigo-400 font-bold text-xs">AP</div>
+<span class="text-white font-medium">API Bot</span>
+</div>
+</td>
+<td class="px-6 py-4 text-text-muted font-mono">10.0.0.1</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-blue-400/10 px-2.5 py-1 text-xs font-bold text-blue-400 ring-1 ring-inset ring-blue-400/20">READ</span>
+</td>
+<td class="px-6 py-4 text-white">Sincronización automática diaria</td>
+<td class="px-6 py-4 text-text-muted">Pagos</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+<span class="text-emerald-400 font-medium">Éxito</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-border-highlight group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-border-dark/50 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-mono text-text-muted whitespace-nowrap">2023-10-27 11:30:45</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA9KdwW5vYSG_xDr4MuupIMz5fI3wbSVH6gSleQGSSv1BZAXGTnDKjlj5eT91-sNYemtl3OZzeUHaDpACOylAqAZUl5N1uC2ndEvBBF2EpKK8xpiwDOUQYN8k5EfkYHcZKdmNj-7HWfzHMJJbuESISa_INnl0OnqBeFa_mtvBOvFM3j85H8-qQPUHS9Rjkodm1y9I_-iN-IHb-gOy47Bjb03wj2jBtxT4VJfg8_ujrQ-OudCdXs-GKK6zTTWbkFuS8shAxLMf0RFsE");'></div>
+<span class="text-white font-medium">Ana G.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-text-muted font-mono">192.168.1.1</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-yellow-400/10 px-2.5 py-1 text-xs font-bold text-yellow-400 ring-1 ring-inset ring-yellow-400/20">UPDATE</span>
+</td>
+<td class="px-6 py-4 text-white">Ajuste manual de saldo (Ticket #8821)</td>
+<td class="px-6 py-4 text-text-muted">Cuentas</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+<span class="text-emerald-400 font-medium">Éxito</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-border-highlight group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="group hover:bg-border-dark/50 transition-colors cursor-pointer">
+<td class="px-6 py-4 font-mono text-text-muted whitespace-nowrap">2023-10-27 10:12:33</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCbl17LzKLIeXlheBwwoTzJf41z17uNsxsT-gyz0RKTx5B_LYbzRMs3yltU1WH9swmHeZ6lKSlRUf9FIqIUACsFQl6S8F5ewCEsRbMiWRNkXTXiXQjvNF4L7WEBSJ8kX6muMeCT1GJKOI3RdFEmZn_TJmmGIvDW70Zs6YRHdplBxyh8LtExNH1RZVGXtCnDARFxUjCw4J_3KgpGYjwCr8SIkCcRTz17LzO9hzlqNqVPzKlOQJIAtv8aIakz6xV2y_nRceaJoFhqSYc");'></div>
+<span class="text-white font-medium">Roberto S.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-text-muted font-mono">192.168.1.40</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-blue-400/10 px-2.5 py-1 text-xs font-bold text-blue-400 ring-1 ring-inset ring-blue-400/20">READ</span>
+</td>
+<td class="px-6 py-4 text-white">Descarga masiva de reporte de comisiones</td>
+<td class="px-6 py-4 text-text-muted">Reportes</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+<span class="text-emerald-400 font-medium">Éxito</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-border-highlight group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="group hover:bg-border-dark/50 transition-colors cursor-pointer bg-red-500/5">
+<td class="px-6 py-4 font-mono text-text-muted whitespace-nowrap">2023-10-27 09:45:10</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-purple-500/20 rounded-full size-8 flex items-center justify-center text-purple-400 font-bold text-xs">UK</div>
+<span class="text-white font-medium">Unknown</span>
+</div>
+</td>
+<td class="px-6 py-4 text-text-muted font-mono">45.23.12.99</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-md bg-blue-400/10 px-2.5 py-1 text-xs font-bold text-blue-400 ring-1 ring-inset ring-blue-400/20">READ</span>
+</td>
+<td class="px-6 py-4 text-white">Acceso denegado a panel administrativo</td>
+<td class="px-6 py-4 text-text-muted">Seguridad</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"></div>
+<span class="text-red-400 font-medium">Critico</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-border-highlight group-hover:text-primary transition-colors text-[20px]">chevron_right</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="bg-surface-dark px-6 py-4 border-t border-border-highlight flex items-center justify-between">
+<p class="text-sm text-text-muted">Mostrando <span class="text-white font-medium">1-7</span> de <span class="text-white font-medium">10,203</span> logs</p>
+<div class="flex items-center gap-2">
+<button class="flex size-8 items-center justify-center rounded bg-border-dark text-text-muted hover:text-white disabled:opacity-50">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="size-8 rounded bg-primary text-white text-sm font-medium">1</button>
+<button class="size-8 rounded hover:bg-border-dark text-text-muted hover:text-white text-sm font-medium transition-colors">2</button>
+<button class="size-8 rounded hover:bg-border-dark text-text-muted hover:text-white text-sm font-medium transition-colors">3</button>
+<span class="text-text-muted text-sm">...</span>
+<button class="size-8 rounded hover:bg-border-dark text-text-muted hover:text-white text-sm font-medium transition-colors">24</button>
+<button class="flex size-8 items-center justify-center rounded bg-border-dark text-text-muted hover:text-white">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Modal (Hidden by default, shown here as if user clicked a row for demonstration in code structure) -->
+<!-- Ideally controlled by JS state: class="hidden" or "fixed ..." -->
+<div class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+<div class="bg-surface-dark border border-border-highlight rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+<div class="flex items-center justify-between p-6 border-b border-border-highlight">
+<h3 class="text-xl font-bold text-white">Detalle del Log #10293</h3>
+<button class="text-text-muted hover:text-white"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="p-6 overflow-y-auto custom-scrollbar space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-xs uppercase tracking-wider text-text-muted mb-1">Timestamp</p>
+<p class="text-white font-mono">2023-10-27 14:30:01</p>
+</div>
+<div>
+<p class="text-xs uppercase tracking-wider text-text-muted mb-1">IP Address</p>
+<p class="text-white font-mono">192.168.1.1</p>
+</div>
+<div>
+<p class="text-xs uppercase tracking-wider text-text-muted mb-1">User Agent</p>
+<p class="text-white text-sm">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)...</p>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-2">
+<p class="text-xs uppercase tracking-wider text-text-muted">Payload JSON</p>
+<button class="text-primary text-xs font-bold hover:underline">Copiar JSON</button>
+</div>
+<div class="bg-[#0f0f12] p-4 rounded-lg border border-border-dark overflow-x-auto">
+<pre class="text-xs font-mono text-emerald-400">{
+  "action": "UPDATE",
+  "module": "sales",
+  "target_id": "comm_rate_001",
+  "changes": {
+    "old_value": 0.05,
+    "new_value": 0.055
+  },
+  "authorized_by": "admin_main"
+}
+</pre>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-border-highlight flex justify-end gap-3 bg-surface-dark rounded-b-xl">
+<button class="px-4 py-2 rounded-lg bg-transparent text-text-muted hover:text-white text-sm font-medium">Cerrar</button>
+<button class="px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold">Investigar Usuario</button>
+</div>
+</div>
+</div>
+</body></html>
