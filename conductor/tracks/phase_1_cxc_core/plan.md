@@ -16,9 +16,9 @@
 - [x] Unit tests for business logic [Verified with pytest].
 
 ### Sprint 1.2: Infrastructure - CXC Adapters
-- [ ] Implement `SaintClienteRepository` (read-only).
-- [ ] Implement `SaintPagoRepository` (write) -> UPDATE `SAACXC` + INSERT `SAPAGCXC`.
-- [ ] Integration tests with test database.
+- [x] Implement `SaintClienteRepository` (read-only) [Implemented & Verified].
+- [x] Implement `SaintPagoRepository` (write) -> UPDATE `SAACXC` + INSERT `SAPAGCXC` [Implemented & Verified].
+- [x] Integration tests with test database [Verified with pytest].
 
 ### Sprint 1.3: Application Layer - Use Cases
 - [ ] `ConsultarCXCClienteUseCase`: Returns list of pending invoices.

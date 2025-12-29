@@ -116,6 +116,22 @@ class SaAcxc(Base):
 
     # Relationships
     cliente = relationship("SaClie", back_populates="cxc_documents")
+    pagos = relationship("SaPagcxc", back_populates="cxc_document")
+
+class SaPagcxc(Base):
+    __tablename__ = "SAPAGCXC"
+    
+    # In Saint, this usually relates via NroPpal to SaAcxc.NroUnico
+    NroPpal = Column(Integer, ForeignKey("SAACXC.NroUnico"), primary_key=True, nullable=False)
+    NroUnico = Column(Integer, primary_key=True, nullable=False) # Seq
+    
+    CodClie = Column(String(15), nullable=False)
+    FechaE = Column(DateTime, nullable=False)
+    Monto = Column(DECIMAL(28, 4), nullable=False)
+    NumeroD = Column(String(20), nullable=False)
+    Referen = Column(String(20))
+    
+    cxc_document = relationship("SaAcxc", back_populates="pagos")
 
 class SaBanc(Base):
     __tablename__ = "SBBANC"
