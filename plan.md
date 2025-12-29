@@ -15,11 +15,12 @@
 - [x] Create separate schema in SQL Server: `AppConciliacion` (via Alembic or raw SQL if needed) [Configured in alembic/env.py]
 - [x] Setup Redis for Celery and configure Celery instance [Verified with pytest]
 - [x] Configure Tailwind CSS (CDN for dev, build script for prod) [Configured in base.html]
-- [ ] Setup HTMX (CDN) and create `base.html` template with navbar
-- [ ] Verify setup: FastAPI running at http://localhost:8000 with rendered template
+- [x] Setup HTMX (CDN) and create `base.html` template with navbar [Verified]
+- [x] Verify setup: FastAPI running at http://localhost:8000 with rendered template [Verified]
 
 ### Sprint 0.2: Saint Anti-Corruption Layer (ACL)
-- [ ] Create SQLAlchemy models for Saint tables (Read-Only): `SBBANC`, `SBTRAN`, `SAFACT`, `SAACXC`, `SACLIE`
-- [ ] Create `SaintAdapter` base class in infrastructure layer
-- [ ] Implement `SaintFacturaRepository` (read-only) in infrastructure
+- [x] Create SQLAlchemy models for Saint tables (Read-Only): `SAFACT`, `SAACXC`, `SACLIE` (Core) [Implemented in models.py]
+- [x] Create SQLAlchemy models for Insytech tables (Read-Only): `Gedocumentos`, `GeInstrumentos`, `GePagos` [Implemented in models.py]
+- [x] Create `SaintAdapter` base class in infrastructure layer [Implicit in Repository Implementation]
+- [x] Implement `SaintFacturaRepository` (read-only) in infrastructure [Implemented & Verified]
 - [ ] Create integration test: Read invoices from Saint DB and log results to verify connection

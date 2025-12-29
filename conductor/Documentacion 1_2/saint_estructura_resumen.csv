@@ -1,0 +1,12 @@
+Categoría,Tablas,Descripción,Cantidad de Tablas
+"Configuration","SACONF","Configuración general del sistema",1
+"Masters","SACLIE; SAVEND; SAMECA; SAPROV; SAPAIS; SAESTADO; SACIUDAD; SAZONA; SADEPO","Tablas maestro de terceros y ubicaciones",9
+"Sales Documents","SAFACT; SAITEMFAC; SAFALO","Documentos de venta",3
+"Purchase Documents","SACOMP; SAITEMCOM","Documentos de compra",2
+"Accounting","SAACXC; SAACXP; SAPAGCXC; SAPAGCXP","Cuentas por cobrar y pagar",4
+"Taxes & Operations","SATAXES; SAOPER; SAINSTA","Impuestos, operaciones e instancias",3
+"Prices & Offers","SACONV; SAITCV; SAOFER; SAITEO","Convenios, precios y ofertas",4
+"Commissions","SACVEN; SACMEC","Tablas de comisiones",2
+"Inventory","SAEXIS; SALOTE; SAINITI","Existencias, lotes e inventario inicial",3
+"Statistics","SAEVTA; SAECOM; SAECLI; SAEVEN; SAEPRV","Estadísticas por período",5
+"Optional CxC Integration","GePagos; GeDocumentos; GeInstrumentos","Integración de pagos externos",3

@@ -49,7 +49,9 @@ graph TD
 *   **Presentation Layer (UI):** Jinja2 Templates, HTMX attributes, Tailwind CSS classes.
 *   **Application Layer (Use Cases):** Orchestrates logic (e.g., `ConciliarPagoUseCase`, `ValidarPagoUseCase`).
 *   **Domain Layer (Business Logic):** Pure Python entities (`Pago`, `Factura`, `Cliente`), Value Objects (`Monto`, `Moneda`), and Domain Services (`MatchingService`). **No external dependencies.**
-*   **Infrastructure Layer (Adapters):** Implementations of repositories, file parsers (Excel, PDF), Insytech API client, and database connections.
+*   **Infrastructure Layer (Adapters):** Implementations of repositories, file parsers (Excel, PDF), and database connections.
+    *   **Saint Adapter:** Reads `SBBANC`, `SAACXC`, `SAFACT`, `SACLIE`.
+    *   **Insytech Adapter (DB-Based):** Reads `Gedocumentos`, `GeInstrumentos`, `GePagos` (tables populated by the vendor portal).
 
 ## Project Structure
 

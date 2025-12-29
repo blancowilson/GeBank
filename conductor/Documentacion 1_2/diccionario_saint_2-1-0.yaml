@@ -1,0 +1,1081 @@
+# ===============================================
+# SAINT ADMINISTRATIVO - DICCIONARIO COMPLETO
+# Base de datos: Saint Administrativo
+# Versión: 2.1.0
+# Modelo enriquecido con tipos de datos y detalles
+# Fecha de enriquecimiento: 29-12-2025
+# ===============================================
+
+version: "2.1.0"
+database: "Saint Administrativo"
+description: "Sistema integral de gestión administrativa y contable"
+location: "Caracas, Venezuela"
+
+# ===============================================
+# SECCIÓN 1: RELACIONES DEL SISTEMA
+# ===============================================
+
+relationships:
+  primary_relationships:
+    - from: "SACLIE"
+      to: "SAFACT"
+      via_field: "CodClie"
+      type: "one_to_many"
+      description: "Relación Cliente a Facturas de Venta"
+    
+    - from: "SAVEND"
+      to: "SAFACT"
+      via_field: "CodVend"
+      type: "one_to_many"
+      description: "Relación Vendedor a Facturas"
+    
+    - from: "SAPROV"
+      to: "SACOMP"
+      via_field: "CodProv"
+      type: "one_to_many"
+      description: "Relación Proveedor a Compras"
+    
+    - from: "SADEPO"
+      to: "SAFACT"
+      via_field: "CodUbic"
+      type: "one_to_many"
+      description: "Relación Depósito a Salidas (Ventas)"
+    
+    - from: "SADEPO"
+      to: "SACOMP"
+      via_field: "CodUbic"
+      type: "one_to_many"
+      description: "Relación Depósito a Entradas (Compras)"
+    
+    - from: "SAZONE"
+      to: "SACLIE"
+      via_field: "CodZona"
+      type: "one_to_many"
+      description: "Relación Zona a Clientes"
+    
+    - from: "SACONV"
+      to: "SACLIE"
+      via_field: "CodConv"
+      type: "one_to_many"
+      description: "Relación Convenio a Clientes"
+  
+  detail_relationships:
+    - from: "SAFACT"
+      to: "SAITEMFAC"
+      via_fields: ["TipoFac", "NumeroD"]
+      type: "one_to_many"
+      description: "Relación Factura a Detalles de Líneas"
+    
+    - from: "SACOMP"
+      to: "SAITEMCOM"
+      via_fields: ["TipoCom", "NumeroD"]
+      type: "one_to_many"
+      description: "Relación Compra a Detalles de Líneas"
+    
+    - from: "SAOFER"
+      to: "SAITEO"
+      via_field: "NumeroD"
+      type: "one_to_many"
+      description: "Relación Oferta a Detalles de Productos"
+    
+    - from: "SACONV"
+      to: "SAITCV"
+      via_field: "CodConv"
+      type: "one_to_many"
+      description: "Relación Convenio a Detalles de Productos"
+  
+  accounting_relationships:
+    - from: "SAFACT"
+      to: "SAACXC"
+      via_fields: ["CodClie"]
+      type: "one_to_many"
+      description: "Relación Factura a Cuentas por Cobrar"
+    
+    - from: "SACOMP"
+      to: "SAACXP"
+      via_fields: ["CodProv"]
+      type: "one_to_many"
+      description: "Relación Compra a Cuentas por Pagar"
+    
+    - from: "SAACXC"
+      to: "SAPAGCXC"
+      via_field: "NroUnico"
+      type: "one_to_many"
+      description: "Relación CxC a Pagos Aplicados"
+    
+    - from: "SAACXP"
+      to: "SAPAGCXP"
+      via_field: "NroUnico"
+      type: "one_to_many"
+      description: "Relación CxP a Pagos Realizados"
+  
+  geographic_relationships:
+    - from: "SAPAIS"
+      to: "SAESTADO"
+      via_field: "Pais"
+      type: "one_to_many"
+      description: "Relación País a Estados/Provincias"
+    
+    - from: "SAESTADO"
+      to: "SACIUDAD"
+      via_field: "Estado"
+      type: "one_to_many"
+      description: "Relación Estado a Ciudades"
+    
+    - from: "SAPAIS"
+      to: "SACLIE"
+      via_field: "Pais"
+      type: "one_to_many"
+      description: "Relación País a Clientes"
+    
+    - from: "SAESTADO"
+      to: "SACLIE"
+      via_field: "Estado"
+      type: "one_to_many"
+      description: "Relación Estado a Clientes"
+    
+    - from: "SACIUDAD"
+      to: "SACLIE"
+      via_field: "Ciudad"
+      type: "one_to_many"
+      description: "Relación Ciudad a Clientes"
+
+  logical_relationships:
+    description: "Relaciones por JOIN sin Foreign Key explícita en BD"
+    
+    - from: "SAVEND"
+      to: "SAEVEN"
+      via_field: "CodVend"
+      type: "one_to_many"
+      note: "Relación vendedor a sus estadísticas mensuales"
+    
+    - from: "SAMECA"
+      to: "SAITEMFAC"
+      via_field: "CodMeca"
+      type: "one_to_many"
+      note: "Relación servidor a servicios prestados"
+    
+    - from: "SAVEND"
+      to: "SACVEN"
+      via_field: "CodVend"
+      type: "one_to_many"
+      note: "Relación vendedor a tabla de comisiones"
+    
+    - from: "SAMECA"
+      to: "SACMEC"
+      via_field: "CodMeca"
+      type: "one_to_many"
+      note: "Relación servidor a tabla de comisiones"
+
+# ===============================================
+# SECCIÓN 2: TIPOS DE DATOS UTILIZADOS
+# ===============================================
+
+data_types:
+  
+  varchar:
+    size: "variable"
+    description: "Cadena de texto variable"
+    encoding: "UTF-8"
+    examples:
+      - field: "CodClie"
+        size: "15"
+        content: "Códigos alfanuméricos de clientes"
+      - field: "Descrip"
+        size: "100"
+        content: "Descripciones de productos y entidades"
+      - field: "Email"
+        size: "100"
+        content: "Direcciones de correo electrónico"
+      - field: "create"
+        size: "100"
+        content: "Timestamps de creación (formato: YYYY-MM-DD HH:MM:SS.mmm)"
+  
+  decimal:
+    precision: "28,4"
+    description: "Número decimal con precisión fija para valores monetarios"
+    decimals: 4
+    examples:
+      - field: "Monto"
+        format: "999,999,999.9999"
+        usage: "Montos en transacciones"
+      - field: "Precio"
+        format: "999,999.9999"
+        usage: "Precios unitarios"
+      - field: "Factor"
+        format: "9.9999"
+        usage: "Factores de conversión"
+      - field: "IntMora"
+        format: "99.99"
+        usage: "Porcentajes de interés"
+  
+  smallint:
+    size: "2 bytes"
+    range: "-32,768 to 32,767"
+    description: "Entero pequeño para valores booleanos y banderas"
+    examples:
+      - field: "Activo"
+        values: "1 = activo, 0 = inactivo"
+      - field: "EsCredito"
+        values: "1 = sí, 0 = no"
+      - field: "DEsSeri"
+        values: "1 = requiere serial, 0 = no requiere"
+  
+  int:
+    size: "4 bytes"
+    range: "-2,147,483,648 to 2,147,483,647"
+    description: "Entero para contadores y números secuenciales"
+    examples:
+      - field: "NroLinea"
+        usage: "Número de línea en detalles"
+      - field: "NroUnico"
+        usage: "Identificador único autoincremental"
+      - field: "NroFacts"
+        usage: "Cantidad de documentos"
+      - field: "Nivel"
+        usage: "Nivel jerárquico de categorías"
+  
+  datetime2:
+    precision: "100 nanosegundos"
+    description: "Fecha y hora con alta precisión"
+    format: "YYYY-MM-DD HH:MM:SS.mmm"
+    examples:
+      - field: "FechaE"
+        usage: "Fecha de emisión de documentos"
+      - field: "FechaV"
+        usage: "Fecha de vencimiento"
+      - field: "fecha"
+        usage: "Fecha de transacción"
+      - field: "FechaI"
+        usage: "Fecha de posteo contable"
+  
+  varchar_max:
+    description: "Texto de longitud variable sin límite especificado"
+    examples:
+      - field: "UrlImagen"
+        usage: "URLs de imágenes/comprobantes"
+      - field: "UrlRetencion"
+        usage: "URLs de documentos de retención"
+
+# ===============================================
+# SECCIÓN 3: TABLAS PRINCIPALES DETALLADAS
+# ===============================================
+
+tables:
+  
+  SACONF:
+    description: "Configuración general del sistema y datos de empresa"
+    type: "Master"
+    category: "Configuration"
+    fields:
+      CodSucu:
+        type: "varchar(5)"
+        constraint: "PK, NOT NULL"
+        description: "Código único identificador de la sucursal principal"
+      Descrip:
+        type: "varchar(100)"
+        constraint: "NOT NULL"
+        description: "Razón social o nombre comercial de la empresa"
+      Direc1:
+        type: "varchar(100)"
+        description: "Primera línea de dirección física"
+      Direc2:
+        type: "varchar(100)"
+        description: "Segunda línea de dirección física"
+      Email:
+        type: "varchar(100)"
+        description: "Correo electrónico principal de contacto"
+      Telef:
+        type: "varchar(20)"
+        description: "Número telefónico principal de la empresa"
+      RIF:
+        type: "varchar(20)"
+        description: "Registro de Identificación Fiscal"
+      NIT:
+        type: "varchar(20)"
+        description: "Número de Identificación Tributaria"
+      Ciudad:
+        type: "varchar(30)"
+        constraint: "NOT NULL"
+        description: "Ciudad donde está ubicada la empresa"
+      Estado:
+        type: "varchar(30)"
+        constraint: "NOT NULL"
+        description: "Estado o provincia de ubicación"
+      Pais:
+        type: "varchar(30)"
+        constraint: "NOT NULL"
+        description: "País donde está registrada"
+      Factor:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Factor de conversión entre monedas (ej: 1 USD = X BS)"
+      EsMoneda:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=utiliza moneda referencial, 0=no"
+        description: "Indicador si el sistema utiliza moneda referencial"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación (YYYY-MM-DD HH:MM:SS.mmm)"
+  
+  SACLIE:
+    description: "Maestro de clientes del sistema"
+    type: "Master"
+    category: "Masters"
+    unique_identifier: "CodClie"
+    fields:
+      CodClie:
+        type: "varchar(15)"
+        constraint: "PK, NOT NULL"
+        description: "Código único identificador del cliente (ej: CLI001)"
+      Descrip:
+        type: "varchar(100)"
+        description: "Razón social o nombre del cliente"
+      ID3:
+        type: "varchar(20)"
+        description: "RIF o Cédula de Identidad del cliente"
+      tipoid3:
+        type: "varchar(5)"
+        constraint: "NOT NULL"
+        values: "RIF, CED, PAS (Pasaporte), etc"
+        description: "Tipo de identificación fiscal"
+      Pais:
+        type: "varchar(30)"
+        constraint: "NOT NULL"
+        description: "País de residencia del cliente"
+      Estado:
+        type: "varchar(30)"
+        constraint: "NOT NULL"
+        description: "Estado o provincia de residencia"
+      Ciudad:
+        type: "varchar(30)"
+        constraint: "NOT NULL"
+        description: "Ciudad de residencia"
+      Municipio:
+        type: "varchar(50)"
+        constraint: "NOT NULL"
+        description: "Municipio específico"
+      Telef:
+        type: "varchar(20)"
+        description: "Teléfono principal (formato: +58-XXX-XXXXXXX)"
+      Email:
+        type: "varchar(100)"
+        description: "Correo electrónico de contacto"
+      CodZona:
+        type: "varchar(10)"
+        description: "Código de la zona asignada para ventas"
+      CodVend:
+        type: "varchar(10)"
+        description: "Código del vendedor principal asignado"
+      CodConv:
+        type: "varchar(10)"
+        description: "Código del convenio de precios aplicable"
+      TipoCli:
+        type: "varchar(10)"
+        constraint: "NOT NULL"
+        values: "MAYORISTA, MINORISTA, DISTRIBUIDOR, ESPECIAL"
+        description: "Clasificación del cliente"
+      EsCredito:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=maneja crédito, 0=solo contado"
+        description: "Indicador si el cliente compra a crédito"
+      LimiteCred:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Límite máximo de crédito permitido"
+      DiasCred:
+        type: "int"
+        constraint: "NOT NULL"
+        description: "Días de crédito otorgados al cliente"
+      Descto:
+        type: "decimal(5,2)"
+        constraint: "NOT NULL"
+        description: "Porcentaje de descuento comercial (%)"
+      Saldo:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Saldo actual adeudado del cliente"
+      SaldoPtos:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Saldo de puntos cliente acumulados"
+      Activo:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=activo, 0=inactivo"
+        description: "Estado del cliente en el sistema"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación del registro"
+  
+  SAVEND:
+    description: "Maestro de vendedores y comisionistas"
+    type: "Master"
+    category: "Masters"
+    unique_identifier: "CodVend"
+    fields:
+      CodVend:
+        type: "varchar(10)"
+        constraint: "PK, NOT NULL"
+        description: "Código único del vendedor (ej: VND001)"
+      Descrip:
+        type: "varchar(100)"
+        description: "Nombre completo del vendedor"
+      CodSucu:
+        type: "varchar(5)"
+        description: "Sucursal donde labora"
+      ID3:
+        type: "varchar(20)"
+        description: "Cédula de identidad"
+      Telef:
+        type: "varchar(20)"
+        description: "Número telefónico"
+      Email:
+        type: "varchar(100)"
+        description: "Correo electrónico personal"
+      EsComiPV:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=sí, 0=no"
+        description: "Recibe comisión por tipo de precio"
+      EsComiTV:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=sí, 0=no"
+        description: "Recibe comisión por tabla de venta"
+      EsComiTC:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=sí, 0=no"
+        description: "Recibe comisión por tabla de cobro"
+      Activo:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=activo, 0=inactivo"
+        description: "Estado del vendedor en el sistema"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación"
+  
+  SAPROV:
+    description: "Maestro de proveedores"
+    type: "Master"
+    category: "Masters"
+    unique_identifier: "CodProv"
+    fields:
+      CodProv:
+        type: "varchar(15)"
+        constraint: "PK, NOT NULL"
+        description: "Código único del proveedor"
+      Descrip:
+        type: "varchar(100)"
+        description: "Razón social del proveedor"
+      ID3:
+        type: "varchar(20)"
+        description: "RIF del proveedor"
+      Pais:
+        type: "varchar(30)"
+        description: "País del proveedor"
+      Estado:
+        type: "varchar(30)"
+        description: "Estado del proveedor"
+      Ciudad:
+        type: "varchar(30)"
+        description: "Ciudad del proveedor"
+      Telef:
+        type: "varchar(20)"
+        description: "Teléfono de contacto"
+      Email:
+        type: "varchar(100)"
+        description: "Correo electrónico"
+      EsImport:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=es importador, 0=distribuidor local"
+        description: "Indicador si es importador"
+      IntMora:
+        type: "decimal(5,2)"
+        constraint: "NOT NULL"
+        description: "Interés de mora diaria (%) para pagos atrasados"
+      EsCredito:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=otorga crédito, 0=solo contado"
+        description: "Si el proveedor otorga crédito"
+      DiasCred:
+        type: "int"
+        constraint: "NOT NULL"
+        description: "Días de crédito que otorga"
+      RetenIVA:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=retiene IVA, 0=no retiene"
+        description: "Si es retenedor de IVA"
+      Activo:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=activo, 0=inactivo"
+        description: "Estado del proveedor"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación"
+
+  SAFACT:
+    description: "Facturas y documentos de ventas"
+    type: "Transaction"
+    category: "Sales Documents"
+    keys: ["TipoFac", "NumeroD", "CodSucu"]
+    fields:
+      TipoFac:
+        type: "varchar(5)"
+        constraint: "PK, NOT NULL"
+        values: "FAC (Factura), NC (Nota Crédito), ND (Nota Débito), RECIB (Recibos)"
+        description: "Tipo de documento fiscal"
+      NumeroD:
+        type: "varchar(20)"
+        constraint: "PK, NOT NULL"
+        description: "Número único secuencial del documento"
+      CodSucu:
+        type: "varchar(5)"
+        constraint: "PK, NOT NULL"
+        description: "Sucursal donde se emitió"
+      CodClie:
+        type: "varchar(15)"
+        description: "Cliente comprador (FK a SACLIE)"
+      CodVend:
+        type: "varchar(10)"
+        description: "Vendedor responsable (FK a SAVEND)"
+      CodUbic:
+        type: "varchar(10)"
+        description: "Depósito de salida (FK a SADEPO)"
+      Signo:
+        type: "varchar(1)"
+        constraint: "NOT NULL"
+        values: "+ (suma a ingresos), - (descuenta)"
+        description: "Signo del documento"
+      Moneda:
+        type: "varchar(5)"
+        values: "BS (Bolívares), USD (Dólares), EUR (Euros)"
+        description: "Moneda de operación"
+      Factor:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Factor de conversión aplicado"
+      Monto:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto total del documento"
+      MtoTax:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Total de impuestos calculados"
+      Fletes:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Gastos de transporte/flete"
+      TGravable:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto sujeto a impuesto"
+      TExento:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto exento de impuesto"
+      CostoPrd:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Costo de productos vendidos"
+      FechaE:
+        type: "datetime2"
+        description: "Fecha de emisión del documento"
+      FechaV:
+        type: "datetime2"
+        description: "Fecha de vencimiento (para crédito)"
+      FechaI:
+        type: "datetime2"
+        description: "Fecha de posteo al libro mayor"
+      CancelA:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto pagado con adelanto"
+      CancelE:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto pagado en efectivo"
+      CancelC:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto pagado con cheque"
+      CancelG:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto pagado con giros"
+      MtoExtra:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto extra permitido en giro"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación"
+
+  SAACXC:
+    description: "Cuentas por cobrar de clientes"
+    type: "Accounting"
+    category: "Receivables/Payables"
+    keys: ["CodSucu", "CodClie", "NroUnico"]
+    fields:
+      CodSucu:
+        type: "varchar(5)"
+        constraint: "PK, NOT NULL"
+        description: "Sucursal deudora"
+      CodClie:
+        type: "varchar(15)"
+        constraint: "PK, NOT NULL"
+        description: "Cliente deudor (FK a SACLIE)"
+      NroUnico:
+        type: "int"
+        constraint: "PK, NOT NULL"
+        description: "Identificador único autoincremental de la cuenta"
+      NumeroD:
+        type: "varchar(20)"
+        constraint: "NOT NULL"
+        description: "Número del documento de origen (factura)"
+      FechaE:
+        type: "datetime2"
+        constraint: "NOT NULL"
+        description: "Fecha de emisión del documento"
+      FechaV:
+        type: "datetime2"
+        description: "Fecha de vencimiento del crédito"
+      FechaI:
+        type: "datetime2"
+        constraint: "NOT NULL"
+        description: "Fecha de posteo contable"
+      Monto:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto original del documento"
+      MontoNeto:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto sin impuestos"
+      MtoTax:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto de impuestos"
+      RetenIVA:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Retención de IVA aplicada"
+      Saldo:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Saldo pendiente de cobro"
+      SaldoOrg:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Saldo original sin pagos"
+      CancelI:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Retención ISLR realizada"
+      CancelA:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Pagado con adelanto"
+      CancelE:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Pagado en efectivo"
+      CancelC:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Pagado con cheque"
+      CancelG:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Pagado con giros"
+      EsChqDev:
+        type: "smallint"
+        constraint: "NOT NULL"
+        values: "1=cheque devuelto, 0=cheque válido"
+        description: "Indicador de cheque rechazado"
+      UltIntMora:
+        type: "datetime2"
+        description: "Fecha del último cálculo de interés moratorio"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación"
+
+# ===============================================
+# SECCIÓN 4: TABLAS OPCIONALES (INTEGRACIÓN CXC)
+# ===============================================
+
+optional_tables:
+  
+  GePagos:
+    description: "Tabla para integración de pagos desde plataformas externas"
+    type: "Integration"
+    category: "Optional CxC"
+    required_for: "Sistemas de pago online y gateway de pagos"
+    fields:
+      id:
+        type: "int"
+        constraint: "PK, NOT NULL, IDENTITY(1,1)"
+        description: "Identificador único autoincremental"
+      idPago:
+        type: "varchar(10)"
+        constraint: "NOT NULL, UNIQUE"
+        description: "ID del pago en la plataforma de pagos"
+      codCliente:
+        type: "varchar(20)"
+        constraint: "NOT NULL"
+        description: "Código cliente (referencia a SACLIE.CodClie)"
+      DescripClie:
+        type: "varchar(100)"
+        constraint: "NOT NULL"
+        description: "Nombre cliente para referencia"
+      Usuario:
+        type: "varchar(50)"
+        constraint: "NOT NULL"
+        description: "Usuario que registró el pago"
+      fecha:
+        type: "datetime2"
+        constraint: "NOT NULL"
+        description: "Fecha del pago reportado"
+      MontoPago:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto total reportado en pago"
+      MontoCancelado:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto que se cancelará en el sistema"
+      status:
+        type: "tinyint"
+        constraint: "NOT NULL"
+        values: "1=Pendiente, 3=Aprobado, 9=Rechazado"
+        description: "Estado del pago"
+      UrlImagen:
+        type: "varchar(max)"
+        description: "URL de comprobante/recibo"
+      fechaCaptura:
+        type: "datetime2"
+        constraint: "NOT NULL"
+        description: "Fecha de captura de datos en el sistema"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación"
+    notes:
+      - "Tabla puente entre sistema de pagos externo y cuentas por cobrar"
+      - "Status pendiente indica pago en proceso de validación"
+      - "Status aprobado permite aplicación contra CxC"
+      - "Status rechazado genera alert para seguimiento"
+  
+  GeDocumentos:
+    description: "Detalles de documentos (facturas) asociados a cada pago"
+    type: "Integration"
+    category: "Optional CxC"
+    required_for: "Aplicación de pagos contra facturas específicas"
+    foreign_keys:
+      - target: "GePagos"
+        field: "idPago"
+        description: "Relación con registro de pago"
+    fields:
+      id:
+        type: "int"
+        constraint: "PK, NOT NULL, IDENTITY(1,1)"
+        description: "Identificador único"
+      idPago:
+        type: "varchar(10)"
+        constraint: "NOT NULL, FK"
+        description: "Referencia a GePagos(idPago)"
+      tipoDoc:
+        type: "varchar(4)"
+        constraint: "NOT NULL"
+        values: "FACT (Factura), N/E (Nota de Entrega/Crédito)"
+        description: "Tipo de documento"
+      numeroDoc:
+        type: "varchar(30)"
+        constraint: "NOT NULL"
+        description: "Número de factura o documento"
+      emision:
+        type: "datetime2"
+        constraint: "NOT NULL"
+        description: "Fecha emisión del documento"
+      vencimiento:
+        type: "datetime2"
+        constraint: "NOT NULL"
+        description: "Fecha vencimiento de pago"
+      montoDoc:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto total del documento"
+      porcentajeDescuento:
+        type: "decimal(5,2)"
+        constraint: "NOT NULL"
+        description: "% de descuento ofrecido (pronto pago, etc)"
+      montoDescuento:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto en BS del descuento"
+      porcentajeRetencion:
+        type: "decimal(5,2)"
+        constraint: "NOT NULL"
+        description: "% de retención fiscal aplicada"
+      montoRetencion:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto retenido en BS"
+      NroRetencion:
+        type: "varchar(50)"
+        description: "Número de comprobante de retención"
+      UrlRetencion:
+        type: "varchar(max)"
+        description: "URL documento de retención"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación"
+    notes:
+      - "Un pago (GePagos) puede cubrir múltiples documentos (GeDocumentos)"
+      - "Soporta pagos parciales de facturas"
+      - "Descuentos y retenciones se detallen por documento"
+  
+  GeInstrumentos:
+    description: "Instrumentos de pago utilizados en cada transacción"
+    type: "Integration"
+    category: "Optional CxC"
+    required_for: "Detalle de medios de pago"
+    foreign_keys:
+      - target: "GePagos"
+        field: "idPago"
+        description: "Relación con pago"
+    fields:
+      id:
+        type: "int"
+        constraint: "PK, NOT NULL, IDENTITY(1,1)"
+        description: "Identificador único"
+      idPago:
+        type: "varchar(10)"
+        constraint: "NOT NULL, FK"
+        description: "Referencia a GePagos(idPago)"
+      banco:
+        type: "varchar(50)"
+        description: "Banco de la empresa receptora"
+      formaPago:
+        type: "varchar(50)"
+        constraint: "NOT NULL"
+        values: "CHEQUE, TRANSFERENCIA, EFECTIVO, TARJETA, OTROS"
+        description: "Forma de pago utilizada"
+      nroPlanilla:
+        type: "varchar(30)"
+        description: "Número de planilla o referencia bancaria"
+      fecha:
+        type: "datetime2"
+        constraint: "NOT NULL"
+        description: "Fecha de pago del instrumento"
+      tasa:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Tasa de cambio aplicada (si aplica)"
+      cheque:
+        type: "varchar(20)"
+        description: "Número de cheque (si es cheque)"
+      bancoCliente:
+        type: "varchar(50)"
+        description: "Banco del cliente emisor"
+      monto:
+        type: "decimal(28,4)"
+        constraint: "NOT NULL"
+        description: "Monto en este instrumento"
+      create:
+        type: "varchar(100)"
+        description: "Fecha y hora de creación"
+    notes:
+      - "Un pago puede estar compuesto por múltiples instrumentos"
+      - "Ejemplo: 50% cheque, 50% transferencia"
+      - "Tasa de cambio se registra para auditoría"
+
+# ===============================================
+# SECCIÓN 5: ÍNDICES RECOMENDADOS
+# ===============================================
+
+recommended_indexes:
+  performance:
+    - table: "SAFACT"
+      columns: ["FechaE", "CodClie"]
+      reason: "Búsquedas de facturas por cliente y rango de fecha"
+    
+    - table: "SAACXC"
+      columns: ["CodClie", "Saldo"]
+      reason: "Consultas de deuda actual por cliente"
+    
+    - table: "SAITEMFAC"
+      columns: ["NumeroD", "TipoFac"]
+      reason: "Acceso rápido a líneas de facturas"
+    
+    - table: "GePagos"
+      columns: ["codCliente", "fecha"]
+      reason: "Histórico de pagos por cliente"
+  
+  integrity:
+    - table: "SACLIE"
+      columns: ["ID3"]
+      reason: "Verificación de duplicados de identificación"
+    
+    - table: "SAPROV"
+      columns: ["ID3"]
+      reason: "Verificación de duplicados de RIF"
+
+# ===============================================
+# SECCIÓN 6: RESTRICCIONES Y VALIDACIONES
+# ===============================================
+
+validations:
+  
+  numeric_ranges:
+    - field: "decimal(5,2) [porcentajes]"
+      example: ["Descto", "IntMora"]
+      valid_range: "0.00 a 100.00"
+    
+    - field: "decimal(28,4) [montos]"
+      example: ["Monto", "Saldo"]
+      valid_range: "-999,999,999.9999 a 999,999,999.9999"
+  
+  status_fields:
+    - field: "smallint [booleanos]"
+      valid_values: ["0", "1"]
+      example: "Activo, EsCredito, EsReten"
+  
+  date_validations:
+    - rule: "FechaV >= FechaE"
+      description: "Fecha vencimiento no puede ser menor a fecha emisión"
+    
+    - rule: "FechaI >= FechaE"
+      description: "Fecha de posteo no puede ser anterior a emisión"
+  
+  accounting_rules:
+    - rule: "Monto = MtoTax + TGravable + TExento + Fletes"
+      description: "El total debe ser suma de componentes"
+    
+    - rule: "Saldo = Monto - (CancelE + CancelC + CancelG + CancelA)"
+      description: "Saldo es monto menos pagos realizados"
+
+# ===============================================
+# SECCIÓN 7: GUÍA DE IMPLEMENTACIÓN
+# ===============================================
+
+implementation_guide:
+  
+  phase_1_mandatory:
+    description: "Tablas obligatorias para funcionamiento básico"
+    tables:
+      - "SACONF"
+      - "SAPAIS, SAESTADO, SACIUDAD"
+      - "SACLIE, SAVEND, SAPROV"
+      - "SADEPO"
+      - "SAINSTA, SATAXES, SAOPER"
+      - "SAFACT, SAITEMFAC"
+      - "SACOMP, SAITEMCOM"
+      - "SAACXC, SAACXP"
+    estimated_effort: "40-60 horas"
+  
+  phase_2_extended:
+    description: "Tablas para funcionalidad completa"
+    tables:
+      - "SACONV, SAITCV"
+      - "SAOFER, SAITEO"
+      - "SAPAGCXC, SAPAGCXP"
+      - "SACVEN, SACMEC"
+      - "SAEXIS, SALOTE, SAINITI"
+    estimated_effort: "30-40 horas"
+  
+  phase_3_optional:
+    description: "Tablas opcionales según desarrollo"
+    tables:
+      - "GePagos, GeDocumentos, GeInstrumentos"
+      - "SAEVTA, SAECOM, SAECLI, SAEVEN, SAEPRV"
+    estimated_effort: "20-30 horas"
+
+# ===============================================
+# SECCIÓN 8: CONSULTAS COMUNES
+# ===============================================
+
+common_queries:
+  
+  query_1:
+    description: "Obtener facturas pendientes de cobro de un cliente"
+    tables:
+      - "SAFACT"
+      - "SAACXC"
+    condition: "CodClie = ? AND Saldo > 0"
+  
+  query_2:
+    description: "Listar cuentas por cobrar vencidas"
+    tables:
+      - "SAACXC"
+      - "SACLIE"
+    condition: "FechaV < GETDATE() AND Saldo > 0"
+  
+  query_3:
+    description: "Obtener aplicación de pago a documentos"
+    tables:
+      - "GePagos"
+      - "GeDocumentos"
+      - "GeInstrumentos"
+    condition: "idPago = ? AND status = 3"
+  
+  query_4:
+    description: "Ventas por vendedor en período"
+    tables:
+      - "SAFACT"
+      - "SAVEND"
+    groupby: "CodVend, MONTH(FechaE)"
+
+# ===============================================
+# SECCIÓN 9: NOTAS IMPORTANTES
+# ===============================================
+
+important_notes:
+  - note: "Todas las fechas se almacenan en datetime2 con zona horaria local"
+    impact: "Considerar en conversiones y reportes internacionales"
+  
+  - note: "Los montos usan decimal(28,4) para máxima precisión"
+    impact: "Evita errores de redondeo en cálculos contables"
+  
+  - note: "Las tablas GePagos, GeDocumentos y GeInstrumentos son puentes"
+    impact: "Permiten integrar sistemas de pago externos sin modificar estructura core"
+  
+  - note: "Relaciones lógicas (sin FK) se usan por flexibilidad"
+    impact: "Requiere validación en aplicación y triggers en BD"
+  
+  - note: "Status en GePagos usa tinyint para representar estados"
+    impact: "Permite agregar más estados sin cambio de tipo"
+  
+  - note: "UrlImagen y UrlRetencion usan varchar(max)"
+    impact: "Pueden almacenar URLs largas (base64 de imágenes también)"
+  
+  - note: "El campo create es varchar, NO autoincremental"
+    impact: "Debe ser completado en aplicación o trigger con GETDATE()"
+  
+  - note: "Falta tabla SAINITA (inicial por instancia)"
+    impact: "Sugerida para control de inventario por categoría"
+
+# ===============================================
+# FIN DEL DICCIONARIO
+# ===============================================
+version_history:
+  v2.0.0:
+    date: "2025-12-24"
+    changes: "Modelo inicial de Saint Administrativo"
+  v2.1.0:
+    date: "2025-12-29"
+    changes: "Enriquecimiento con tipos de datos, relaciones lógicas y tablas opcionales CxC"
+    additions:
+      - "Especificación completa de tipos de datos"
+      - "Relaciones explícitas en formato DBML"
+      - "Tablas opcionales para integración de pagos"
+      - "Validaciones y restricciones detalladas"
+      - "Guía de implementación por fases"
