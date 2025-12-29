@@ -46,3 +46,11 @@
 - [x] `ConsultarCXCClienteUseCase`: Returns list of pending invoices [Implemented]
 - [x] `RegistrarPagoManualUseCase`: Orchestrates payment logic and DB update [Implemented]
 - [x] Define DTOs for data transfer [Implemented]
+
+### Sprint 1.4: Presentation Layer - UI CXC
+- [x] FastAPI Route: `GET /cxc/clientes` -> List clients [Implemented]
+- [x] Jinja2 Template: `cxc/listado_clientes.html` (Table + Search) [Implemented]
+- [x] FastAPI Route: `GET /cxc/cliente/{id}/facturas` -> Detail modal [Implemented]
+- [x] Jinja2 Template: `cxc/detalle_facturas.html` (Aging + Partial) [Implemented]
+- [x] FastAPI Route: `POST /cxc/pago/registrar` -> Form submission via HTMX [Implemented]
+- [x] Verify UI flows and responsiveness [Verified]

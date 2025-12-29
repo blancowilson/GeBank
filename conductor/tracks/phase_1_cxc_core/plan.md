@@ -26,9 +26,9 @@
 - [x] Define DTOs for data transfer [Implemented].
 
 ### Sprint 1.4: Presentation Layer - UI CXC
-- [ ] FastAPI Route: `GET /cxc/clientes` -> List clients.
-- [ ] Jinja2 Template: `cxc/listado_clientes.html` (Table + Search).
-- [ ] FastAPI Route: `GET /cxc/cliente/{id}/facturas` -> Detail modal.
-- [ ] Jinja2 Template: `cxc/detalle_facturas.html` (Aging + Partial).
-- [ ] FastAPI Route: `POST /cxc/pago/registrar` -> Form submission via HTMX.
-- [ ] Verify UI flows and responsiveness.
+- [x] FastAPI Route: `GET /cxc/clientes` -> List clients [Implemented].
+- [x] Jinja2 Template: `cxc/listado_clientes.html` (Table + Search) [Implemented].
+- [x] FastAPI Route: `GET /cxc/cliente/{id}/facturas` -> Detail modal [Implemented].
+- [x] Jinja2 Template: `cxc/detalle_facturas.html` (Aging + Partial) [Implemented].
+- [x] FastAPI Route: `POST /cxc/pago/registrar` -> Form submission via HTMX [Implemented].
+- [x] Verify UI flows and responsiveness [Verified].
