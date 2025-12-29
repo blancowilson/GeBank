@@ -43,6 +43,6 @@
 - [x] Integration tests with test database [Verified with pytest]
 
 ### Sprint 1.3: Application Layer - Use Cases
-- [ ] `ConsultarCXCClienteUseCase`: Returns list of pending invoices
-- [ ] `RegistrarPagoManualUseCase`: Orchestrates payment logic and DB update
-- [ ] Define DTOs for data transfer
+- [x] `ConsultarCXCClienteUseCase`: Returns list of pending invoices [Implemented]
+- [x] `RegistrarPagoManualUseCase`: Orchestrates payment logic and DB update [Implemented]
+- [x] Define DTOs for data transfer [Implemented]
