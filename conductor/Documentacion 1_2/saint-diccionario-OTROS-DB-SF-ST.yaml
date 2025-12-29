@@ -1,0 +1,252 @@
+database:
+  metadata:
+    name: Saint Administrativo - Módulos Otros
+    version: 2.1.0-MODULAR
+    description: Diccionario de módulos DB (Contabilidad), SF (Formularios), ST (Sistema) - 5 tablas documentadas
+    created_date: "2025-12-29"
+    modules: ["DB", "SF", "ST"]
+    total_tables: 5
+    status: "LISTO PARA PRODUCCIÓN"
+
+  data_types:
+    varchar:
+      description: Texto variable
+    decimal:
+      description: Número decimal
+    int:
+      description: Número entero
+    datetime2:
+      description: Fecha y hora
+
+  # ============================================================
+  # MÓDULO DB - CONTABILIDAD (1 TABLA)
+  # ============================================================
+
+  modulo_db:
+    name: "DB - Contabilidad"
+    description: "Integración con módulo contable"
+    total_tables: 1
+
+    tables:
+      DBTHIRD:
+        description: "TERCEROS CONTABILIDAD - Registro de terceros para contabilidad"
+        category: Contabilidad
+        module: DB
+        primary_key: ID3
+        indexes:
+          - idx_dbthird_id3
+          - idx_dbthird_tipo
+        fields:
+          TipoID3:
+            description: Tipo de Id. Fiscal
+            type: varchar(2)
+            constraints: [NOT NULL]
+            validation: "Código de tipo identificación"
+          ID3:
+            description: Id. Fiscal (Sin signos especiales)
+            type: varchar(20)
+            constraints: [PRIMARY KEY, NOT NULL]
+            validation: "Identificación única sin caracteres especiales"
+          ID3Org:
+            description: Id. Fiscal Completo (con formato original)
+            type: varchar(25)
+            validation: "Identificación con formato original"
+          Id_Alte:
+            description: Id. Fiscal Alternativo
+            type: varchar(20)
+            validation: "Identificación alternativa"
+        relationships:
+          - "DBTHIRD.ID3 → [Terceros en contabilidad general]"
+        notes:
+          - "Tabla puente entre sistema administrativo y módulo contable"
+          - "Registro de identidades fiscales para balances contables"
+          - "Referenciada por SACLIE, SAPROV para validación fiscal"
+
+  # ============================================================
+  # MÓDULO SF - FORMULARIOS (2 TABLAS)
+  # ============================================================
+
+  modulo_sf:
+    name: "SF - Formularios"
+    description: "Gestión de formularios y campos personalizados"
+    total_tables: 2
+
+    tables:
+      sftfld:
+        description: "FORMULARIO CAMPOS - Campos de formularios"
+        category: Formularios
+        module: SF
+        primary_key: "CodForm + CodFld"
+        fields:
+          CodForm:
+            description: Código del formulario
+            type: varchar(20)
+            constraints: [PRIMARY KEY, NOT NULL]
+          CodFld:
+            description: Código del field
+            type: varchar(20)
+            constraints: [PRIMARY KEY, NOT NULL]
+          NomFld:
+            description: Nombre del field
+            type: varchar(100)
+          TipoFld:
+            description: Tipo de field (text, number, date, etc)
+            type: varchar(20)
+          Requerido:
+            description: Field requerido
+            type: smallint
+            validation: "0=No, 1=Sí"
+          LongMax:
+            description: Longitud máxima
+            type: int
+        notes:
+          - "Define campos personalizados de formularios"
+          - "Permite extensibilidad del sistema"
+
+      sftitm:
+        description: "FORMULARIO ÍTEMES - Ítemes/opciones de formularios"
+        category: Formularios
+        module: SF
+        primary_key: "CodForm + CodItm"
+        fields:
+          CodForm:
+            description: Código del formulario
+            type: varchar(20)
+            constraints: [PRIMARY KEY, NOT NULL]
+          CodItm:
+            description: Código del ítem
+            type: varchar(20)
+            constraints: [PRIMARY KEY, NOT NULL]
+          Descripcion:
+            description: Descripción del ítem
+            type: varchar(200)
+          Valor:
+            description: Valor del ítem
+            type: varchar(100)
+          Orden:
+            description: Orden de presentación
+            type: int
+        notes:
+          - "Define opciones/ítemes de formularios"
+          - "Usado en listbox, combo, etc"
+
+  # ============================================================
+  # MÓDULO ST - SISTEMA (2 TABLAS)
+  # ============================================================
+
+  modulo_st:
+    name: "ST - Sistema"
+    description: "Tablas de sistema y control"
+    total_tables: 2
+
+    tables:
+      stib01:
+        description: "SISTEMA IB 01 - Tabla de control del sistema 01"
+        category: Sistema
+        module: ST
+        fields:
+          CodControl:
+            description: Código de control
+            type: varchar(30)
+          ValorControl:
+            description: Valor de control
+            type: varchar(500)
+          UltActualizacion:
+            description: Última actualización
+            type: datetime2
+        notes:
+          - "Tabla de control interno del sistema"
+          - "Almacena estados y flags del sistema"
+
+      stib02:
+        description: "SISTEMA IB 02 - Tabla de control del sistema 02"
+        category: Sistema
+        module: ST
+        fields:
+          CodControl:
+            description: Código de control
+            type: varchar(30)
+          ValorControl:
+            description: Valor de control
+            type: varchar(500)
+          UltActualizacion:
+            description: Última actualización
+            type: datetime2
+        notes:
+          - "Tabla de control interno del sistema"
+          - "Información de auditoría y estado"
+
+  # ============================================================
+  # RESUMEN GENERAL
+  # ============================================================
+
+  summary:
+    modules_covered:
+      DB:
+        name: Contabilidad
+        tables: 1
+        note: "Puente con módulo contable externo"
+      SF:
+        name: Formularios
+        tables: 2
+        note: "Personalización de formularios"
+      ST:
+        name: Sistema
+        tables: 2
+        note: "Control interno del sistema"
+
+  relationships:
+    dbthird_usage:
+      - "DBTHIRD.ID3 ← SACLIE.ID3 (validación de RIF)"
+      - "DBTHIRD.ID3 ← SAPROV.ID3 (validación de RIF)"
+    
+    sf_usage:
+      - "sftfld: Define campos en formularios dinámicos"
+      - "sftitm: Define opciones en dropdowns"
+
+  validations:
+    dbthird_rules:
+      - "ID3 debe ser único"
+      - "TipoID3 debe ser código válido"
+      - "ID3Org debe contener formato original completo"
+    
+    sf_rules:
+      - "CodForm debe existir"
+      - "TipoFld debe ser tipo válido"
+      - "LongMax debe ser > 0"
+    
+    st_rules:
+      - "CodControl debe ser único"
+      - "UltActualizacion debe ser datetime válida"
+
+  notes:
+    dbthird_important:
+      - "Tabla crítica para integración contable"
+      - "Debe sincronizarse con módulo contable externo"
+      - "No usar para contactos, solo para contabilidad"
+    
+    sf_important:
+      - "Permite extensibilidad del sistema"
+      - "Campos personalizados sin modificar esquema"
+      - "Valores guardados en tabla separada"
+    
+    st_important:
+      - "No editar directamente"
+      - "Usar procedimientos del sistema"
+      - "Almacena estados críticos"
+
+  implementation_order:
+    - "1. DBTHIRD (para validación de terceros)"
+    - "2. stib01, stib02 (control del sistema)"
+    - "3. sftfld, sftitm (formularios personalizados)"
+
+  statistics:
+    total_tables_in_others: 5
+    total_fields: 30+
+    critical_tables:
+      - DBTHIRD (integración contable)
+
+  performance_notes:
+    - "DBTHIRD: índice en ID3 para búsquedas rápidas"
+    - "sftfld: índice compuesto (CodForm, CodFld)"
+    - "stib01, stib02: sin crítica de performance"

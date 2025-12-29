@@ -8,7 +8,6 @@ from app.infrastructure.database.session import Base
 
 class SaClie(Base):
     __tablename__ = "SACLIE"
-    # implicit schema="dbo"
     
     CodClie = Column(String(15), primary_key=True, nullable=False)
     Descrip = Column(String(100))
@@ -118,6 +117,40 @@ class SaAcxc(Base):
     # Relationships
     cliente = relationship("SaClie", back_populates="cxc_documents")
 
+class SaBanc(Base):
+    __tablename__ = "SBBANC"
+    
+    CodBanc = Column(String(5), primary_key=True, nullable=False)
+    Nombre = Column(String(100), nullable=False)
+    CodBIF = Column(String(10))
+    
+    # Relationships
+    transacciones = relationship("SbTran", back_populates="banco")
+
+class SbTran(Base):
+    __tablename__ = "SBTRAN"
+    
+    CodBanc = Column(String(5), ForeignKey("SBBANC.CodBanc"), primary_key=True, nullable=False)
+    NumTran = Column(Integer, primary_key=True, nullable=False)
+    
+    Fecha = Column(DateTime, nullable=False)
+    Monto = Column(DECIMAL(15, 2), nullable=False)
+    Tipo = Column(String(20)) # Deposito, Retiro, Transferencia
+    
+    # Relationships
+    banco = relationship("SaBanc", back_populates="transacciones")
+
+class SsUsrs(Base):
+    __tablename__ = "SSUSRS"
+    
+    CodUsua = Column(String(20), primary_key=True, nullable=False)
+    Usuario = Column(String(50), nullable=False, unique=True)
+    Password = Column(String(255), nullable=False)
+    Nombre = Column(String(100))
+    Email = Column(String(100))
+    Estado = Column(SmallInteger, default=1)
+    FechaCreacion = Column(DateTime)
+    UltimoAcceso = Column(DateTime)
 
 # ==========================================
 # Insytech / AppConciliacion Tables

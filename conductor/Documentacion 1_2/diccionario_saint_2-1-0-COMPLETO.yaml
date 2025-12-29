@@ -1,0 +1,1898 @@
+# =============================================================================
+# SAINT ADMINISTRATIVO v2.1.0 - DICCIONARIO COMPLETO Y DEFINITIVO
+# =============================================================================
+# Base de Datos: Saint Administrativo
+# Versión: 2.1.0
+# Tipo: Diccionario de datos con tipos enriquecidos
+# Fecha Actualización: 29-12-2025
+# Nota: Fusión del archivo original + enriquecimiento con tipos de datos
+# =============================================================================
+
+database:
+  name: "Saint Administrativo"
+  description: "Sistema integrado de gestión administrativa y contable"
+  version: "2.1.0"
+  
+  # =========================================================================
+  # SECCIONES PRINCIPALES
+  # =========================================================================
+  
+  metadata:
+    created_date: "29-12-2025"
+    last_updated: "29-12-2025"
+    maintainer: "Saint Development Team"
+    total_tables: "50+"
+    total_fields: "1000+"
+    
+  # =========================================================================
+  # TIPOS DE DATOS UTILIZADOS EN EL SISTEMA
+  # =========================================================================
+  
+  data_types:
+    varchar:
+      description: "Texto variable con tamaño máximo especificado"
+      examples:
+        - "varchar(50) - Textos cortos (códigos, nombres)"
+        - "varchar(200) - Descripciones medianas"
+        - "varchar(max) - Textos sin límite (notas, observaciones)"
+      usage: "Campos de texto: nombres, descripciones, direcciones"
+    
+    decimal:
+      description: "Números decimales de alta precisión"
+      format: "decimal(P,E) donde P=precisión total, E=decimales"
+      examples:
+        - "decimal(28,4) - Máxima precisión (9,999,999,999,999.9999)"
+        - "decimal(15,2) - Montos estándar (999,999,999,999.99)"
+        - "decimal(5,2) - Porcentajes (999.99)"
+      usage: "Montos, precios, cantidades, porcentajes, tipos de cambio"
+    
+    int:
+      description: "Números enteros"
+      format: "int o bigint"
+      examples:
+        - "int - Valores -2,147,483,648 a 2,147,483,647"
+        - "bigint - Valores mucho más grandes"
+      usage: "Secuenciales, contadores, correlatives"
+    
+    smallint:
+      description: "Entero pequeño (0 o 1 principalmente)"
+      format: "smallint"
+      range: "-32,768 a 32,767"
+      usage: "Booleanos (0=No/Inactivo, 1=Sí/Activo), banderas"
+    
+    datetime2:
+      description: "Fecha y hora con alta precisión"
+      format: "datetime2(7) - Precisión hasta 100 nanosegundos"
+      examples:
+        - "2025-12-29 16:30:45.1234567"
+      usage: "Fechas de transacciones, auditoría, timestamps"
+    
+    text:
+      description: "Texto sin límite de longitud"
+      usage: "Notas extensas, comentarios, documentos"
+  
+  # =========================================================================
+  # TABLAS DE CONFIGURACIÓN Y SISTEMA
+  # =========================================================================
+  
+  tables:
+    
+    SACONF:
+      category: "Configuración"
+      description: "Configuración general del sistema y sucursal principal"
+      primary_key: "CodSucu"
+      fields:
+        CodSucu:
+          description: "Código único identificador de la sucursal principal"
+          type: "varchar(10)"
+          constraints:
+            primary_key: true
+            not_null: true
+            unique: true
+          
+        Descrip:
+          description: "Nombre o razón social de la empresa"
+          type: "varchar(200)"
+          constraints: { not_null: true }
+          
+        Direc1:
+          description: "Primera línea de la dirección física"
+          type: "varchar(100)"
+          
+        Direc2:
+          description: "Segunda línea de la dirección física"
+          type: "varchar(100)"
+          
+        Email:
+          description: "Correo electrónico principal de contacto"
+          type: "varchar(100)"
+          validation: "Formato válido de email"
+          
+        Telef:
+          description: "Número telefónico principal"
+          type: "varchar(20)"
+          
+        RIF:
+          description: "Registro de Identificación Fiscal de la empresa"
+          type: "varchar(20)"
+          constraints: { unique: true }
+          
+        NIT:
+          description: "Número de Identificación Tributaria"
+          type: "varchar(20)"
+          
+        Ciudad:
+          description: "Ciudad donde está ubicada la empresa"
+          type: "varchar(50)"
+          constraints: { not_null: true }
+          foreign_key: "SACIUDAD(Ciudad)"
+          
+        Estado:
+          description: "Estado o provincia donde está ubicada la empresa"
+          type: "varchar(50)"
+          constraints: { not_null: true }
+          foreign_key: "SAESTADO(Estado)"
+          
+        Pais:
+          description: "País donde está registrada la empresa"
+          type: "varchar(50)"
+          constraints: { not_null: true }
+          foreign_key: "SAPAIS(Pais)"
+          
+        SPais:
+          description: "Abreviatura o código del país para reportes"
+          type: "varchar(5)"
+          
+        SEstado:
+          description: "Abreviatura o código del estado para reportes"
+          type: "varchar(5)"
+          
+        SCiudad:
+          description: "Abreviatura o código de la ciudad para reportes"
+          type: "varchar(5)"
+          
+        CodTaxs:
+          description: "Código del impuesto predeterminado del sistema"
+          type: "varchar(10)"
+          foreign_key: "SATAXES(CodTaxs)"
+          
+        IdVersion:
+          description: "Identificador de versión del software"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          
+        IdVerXtra:
+          description: "Versión adicional o extensión del software"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          
+        MesCurso:
+          description: "Mes actual del curso fiscal (YYYYMM)"
+          type: "varchar(6)"
+          format: "YYYYMM"
+          
+        MesTran:
+          description: "Mes de las transacciones activas (YYYYMM)"
+          type: "varchar(6)"
+          constraints: { not_null: true }
+          format: "YYYYMM"
+          
+        MesOC:
+          description: "Mes de las órdenes de compra"
+          type: "varchar(6)"
+          constraints: { not_null: true }
+          format: "YYYYMM"
+          
+        MesPrf:
+          description: "Mes del período fiscal"
+          type: "varchar(6)"
+          constraints: { not_null: true }
+          format: "YYYYMM"
+          
+        CostoMes:
+          description: "Costo del mes actual del sistema"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          
+        CorrelPrd:
+          description: "Correlativo para numeración de productos"
+          type: "int"
+          constraints: { not_null: true }
+          
+        MtoExtraG:
+          description: "Monto extra permitido en giros"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          
+        ImpFleteV:
+          description: "Importancia del flete en ventas (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        ImpFleteC:
+          description: "Importancia del flete en compras (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        PagaReten:
+          description: "Indica si paga retenciones automáticas"
+          type: "smallint"
+          values: [0, 1]
+          
+        AutoReten:
+          description: "Retención automática habilitada (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        PorctReten:
+          description: "Porcentaje de retención automática"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          
+        Redond:
+          description: "Redondeo permitido en operaciones (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        RedTotal:
+          description: "Redondeo del total (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        ObliOper:
+          description: "Operación obligatoria (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        PaswLim:
+          description: "Límite de intentos de contraseña"
+          type: "int"
+          constraints: { not_null: true }
+          
+        Adicional:
+          description: "Campo adicional para configuración personalizada"
+          type: "varchar(max)"
+          
+        Factor:
+          description: "Factor de conversión entre monedas"
+          type: "decimal(15,4)"
+          constraints: { not_null: true }
+          default: 1.0000
+          
+        EsMoneda:
+          description: "Utiliza moneda referencial (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        PedirNCtrl:
+          description: "Requiere número de control (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        RetenIsrl:
+          description: "Retención ISLR habilitada"
+          type: "smallint"
+          values: [0, 1]
+          
+        UsaNEL:
+          description: "Utiliza NEL (Número de Expediente Laboral)"
+          type: "smallint"
+          values: [0, 1]
+          
+        InvConsig:
+          description: "Inventario de consignación habilitado"
+          type: "smallint"
+          values: [0, 1]
+          
+        PrioridadIC:
+          description: "Prioridad del inventario de consignación"
+          type: "int"
+          
+        CorrelUNC:
+          description: "Correlativo para números de control"
+          type: "int"
+          constraints: { not_null: true }
+          
+        ValorPtos:
+          description: "Valor monetario de cada punto de cliente"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          
+        MesesPtos:
+          description: "Meses para expiración de puntos"
+          type: "int"
+          constraints: { not_null: true }
+          
+        FechaUC:
+          description: "Fecha de última configuración"
+          type: "datetime2(7)"
+          
+        FactorM:
+          description: "Factor multiplicador para reportes"
+          type: "decimal(15,4)"
+          constraints: { not_null: true }
+          
+        UsaFactorM:
+          description: "Utiliza factor multiplicador (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        SimbFac:
+          description: "Símbolo de factura para impresión"
+          type: "varchar(5)"
+          
+        Imagen:
+          description: "Logo o imagen corporativa en Base64"
+          type: "varchar(max)"
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+          constraints: { not_null: true }
+          default: "GETDATE()"
+    
+    # ===== Tablas Geográficas =====
+    
+    SAPAIS:
+      category: "Configuración Geográfica"
+      description: "Catálogo de países para referencias geográficas"
+      primary_key: "Pais"
+      fields:
+        Pais:
+          description: "Código ISO único del país"
+          type: "varchar(5)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre completo del país"
+          type: "varchar(100)"
+          constraints: { not_null: true }
+          
+        SPais:
+          description: "Código de dos letras ISO del país"
+          type: "varchar(2)"
+          
+        SEstado:
+          description: "Código para estados del país"
+          type: "varchar(5)"
+          
+        SCiudad:
+          description: "Código para ciudades del país"
+          type: "varchar(5)"
+          
+        sortname:
+          description: "Nombre corto para ordenamiento alfabético"
+          type: "varchar(100)"
+          constraints: { not_null: true }
+          
+        phonecode:
+          description: "Código de marcación telefónica internacional"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SAESTADO:
+      category: "Configuración Geográfica"
+      description: "Catálogo de estados o provincias por país"
+      primary_key: "Estado"
+      fields:
+        Estado:
+          description: "Código único del estado o provincia"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre completo del estado o provincia"
+          type: "varchar(100)"
+          constraints: { not_null: true }
+          
+        Pais:
+          description: "Código del país al que pertenece"
+          type: "varchar(5)"
+          constraints: { not_null: true }
+          foreign_key: "SAPAIS(Pais)"
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SACIUDAD:
+      category: "Configuración Geográfica"
+      description: "Catálogo de ciudades por estado"
+      primary_key: ["Ciudad", "Estado"]
+      fields:
+        Ciudad:
+          description: "Código único de la ciudad"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre completo de la ciudad"
+          type: "varchar(100)"
+          constraints: { not_null: true }
+          
+        Estado:
+          description: "Código del estado al que pertenece"
+          type: "varchar(10)"
+          constraints: { not_null: true, primary_key: true }
+          foreign_key: "SAESTADO(Estado)"
+          
+        Pais:
+          description: "Código del país de referencia"
+          type: "varchar(5)"
+          foreign_key: "SAPAIS(Pais)"
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    # ===== Tablas de Terceros =====
+    
+    SACLIE:
+      category: "Terceros"
+      description: "Maestro de clientes del sistema"
+      primary_key: "CodClie"
+      indexes:
+        - field: "CodClie"
+          unique: true
+        - field: "ID3"
+          unique: false
+        - field: "Activo"
+          unique: false
+      fields:
+        CodClie:
+          description: "Código único identificador del cliente"
+          type: "varchar(15)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre o razón social del cliente"
+          type: "varchar(200)"
+          
+        CodSucu:
+          description: "Sucursal asignada al cliente"
+          type: "varchar(10)"
+          foreign_key: "SACONF(CodSucu)"
+          
+        ID3:
+          description: "RIF o Cédula del cliente"
+          type: "varchar(20)"
+          
+        tipoid3:
+          description: "Tipo de identificación (RIF, Cédula, etc.)"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          values: ["RIF", "CÉDULA", "PASAPORTE"]
+          
+        Clase:
+          description: "Clasificación del cliente (mayorista, minorista, etc.)"
+          type: "varchar(30)"
+          
+        Represent:
+          description: "Nombre del representante legal o contacto"
+          type: "varchar(150)"
+          
+        Direc1:
+          description: "Primera línea de dirección de entrega"
+          type: "varchar(150)"
+          
+        Direc2:
+          description: "Segunda línea de dirección de entrega"
+          type: "varchar(150)"
+          
+        Pais:
+          description: "País donde reside el cliente"
+          type: "varchar(5)"
+          constraints: { not_null: true }
+          foreign_key: "SAPAIS(Pais)"
+          
+        Estado:
+          description: "Estado o provincia donde reside"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          foreign_key: "SAESTADO(Estado)"
+          
+        Ciudad:
+          description: "Ciudad donde reside el cliente"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          foreign_key: "SACIUDAD(Ciudad)"
+          
+        Municipio:
+          description: "Municipio de residencia"
+          type: "varchar(50)"
+          constraints: { not_null: true }
+          
+        Zipcode:
+          description: "Código postal o ZIP del cliente"
+          type: "varchar(10)"
+          
+        Telef:
+          description: "Número telefónico principal"
+          type: "varchar(20)"
+          
+        Movil:
+          description: "Número de teléfono móvil"
+          type: "varchar(20)"
+          
+        Email:
+          description: "Correo electrónico"
+          type: "varchar(100)"
+          validation: "Formato válido de email"
+          
+        Fax:
+          description: "Número de fax"
+          type: "varchar(20)"
+          
+        NIT:
+          description: "Número de Identificación Tributaria"
+          type: "varchar(20)"
+          
+        CodZona:
+          description: "Zona de ventas asignada"
+          type: "varchar(10)"
+          foreign_key: "SAZONA(CodZona)"
+          
+        CodVend:
+          description: "Vendedor principal asignado"
+          type: "varchar(10)"
+          foreign_key: "SAVEND(CodVend)"
+          
+        CodConv:
+          description: "Convenio de precios aplicable"
+          type: "varchar(10)"
+          foreign_key: "SACONV(CodConv)"
+          
+        CodFacL:
+          description: "Tipo de factura en lote permitida"
+          type: "varchar(10)"
+          
+        TipoCli:
+          description: "Tipo de cliente (contado, crédito, etc.)"
+          type: "varchar(20)"
+          constraints: { not_null: true }
+          values: ["CONTADO", "CRÉDITO", "MIXTO"]
+          
+        TipoPVP:
+          description: "Tabla de precios aplicable"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          
+        IntMora:
+          description: "Tasa de interés de mora diaria (%)"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          
+        EsGranCont:
+          description: "Es cliente gran contribuyente (1=sí, 0=no)"
+          type: "smallint"
+          values: [0, 1]
+          
+        EsCredito:
+          description: "Maneja crédito (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        LimiteCred:
+          description: "Límite de crédito permitido"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        DiasCred:
+          description: "Días de crédito otorgados"
+          type: "int"
+          constraints: { not_null: true }
+          range: "0-999"
+          
+        EsToleran:
+          description: "Aplica tolerancia de días (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        DiasTole:
+          description: "Días de tolerancia permitidos"
+          type: "int"
+          constraints: { not_null: true }
+          default: 0
+          
+        FechaE:
+          description: "Fecha de apertura de la cuenta"
+          type: "datetime2(7)"
+          
+        Observa:
+          description: "Observaciones generales del cliente"
+          type: "varchar(max)"
+          
+        Saldo:
+          description: "Saldo actual adeudado"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        SaldoPtos:
+          description: "Saldo de puntos acumulados"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        MontoMax:
+          description: "Monto máximo de venta por transacción"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        MtoMaxCred:
+          description: "Monto máximo de crédito permitido"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        PagosA:
+          description: "Pagos adelantados recibidos"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        PromPago:
+          description: "Próxima fecha de pago esperada"
+          type: "datetime2(7)"
+          
+        RetenIVA:
+          description: "Aplica retención de IVA (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsReten:
+          description: "Es retenedor de impuestos (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        Descto:
+          description: "Descuento comercial aplicable (%)"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          default: 0.00
+          
+        FechaUV:
+          description: "Fecha de la última venta registrada"
+          type: "datetime2(7)"
+          
+        MontoUV:
+          description: "Monto de la última venta"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        NumeroUV:
+          description: "Número de documento de última venta"
+          type: "varchar(30)"
+          
+        FechaUP:
+          description: "Fecha del último pago recibido"
+          type: "datetime2(7)"
+          
+        MontoUP:
+          description: "Monto del último pago"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        NumeroUP:
+          description: "Número de documento del último pago"
+          type: "varchar(30)"
+          
+        EsMoneda:
+          description: "Utiliza moneda referencial (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        Activo:
+          description: "Cliente activo (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        CodalTE:
+          description: "Código alternativo del cliente"
+          type: "varchar(20)"
+          
+        TipoReg:
+          description: "Tipo de registro (cliente normal, especial, etc.)"
+          type: "varchar(20)"
+          constraints: { not_null: true }
+          
+        DescExt:
+          description: "Descripción extendida o notas adicionales"
+          type: "varchar(max)"
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SAVEND:
+      category: "Terceros"
+      description: "Maestro de vendedores y servidores"
+      primary_key: "CodVend"
+      fields:
+        CodVend:
+          description: "Código único identificador del vendedor"
+          type: "varchar(15)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre completo del vendedor"
+          type: "varchar(150)"
+          
+        CodSucu:
+          description: "Sucursal donde labora"
+          type: "varchar(10)"
+          foreign_key: "SACONF(CodSucu)"
+          
+        ID3:
+          description: "Cédula de identidad del vendedor"
+          type: "varchar(20)"
+          
+        tipoid3:
+          description: "Tipo de identificación"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          values: ["CÉDULA", "PASAPORTE", "RIF"]
+          
+        Clase:
+          description: "Clasificación del vendedor (supervisor, agente, etc.)"
+          type: "varchar(30)"
+          
+        Direc1:
+          description: "Primera línea de dirección"
+          type: "varchar(150)"
+          
+        Direc2:
+          description: "Segunda línea de dirección"
+          type: "varchar(150)"
+          
+        Pais:
+          description: "País de residencia"
+          type: "varchar(5)"
+          foreign_key: "SAPAIS(Pais)"
+          
+        Estado:
+          description: "Estado de residencia"
+          type: "varchar(10)"
+          foreign_key: "SAESTADO(Estado)"
+          
+        Ciudad:
+          description: "Ciudad de residencia"
+          type: "varchar(10)"
+          foreign_key: "SACIUDAD(Ciudad)"
+          
+        Telef:
+          description: "Número telefónico principal"
+          type: "varchar(20)"
+          
+        Movil:
+          description: "Número de móvil"
+          type: "varchar(20)"
+          
+        Email:
+          description: "Correo electrónico personal"
+          type: "varchar(100)"
+          
+        FechaUV:
+          description: "Fecha de la última venta realizada"
+          type: "datetime2(7)"
+          
+        FechaUC:
+          description: "Fecha de la última compra registrada"
+          type: "datetime2(7)"
+          
+        EsComiPV:
+          description: "Comisión por tipo de precio (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsComiTV:
+          description: "Comisión por tabla de venta (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsComiTC:
+          description: "Comisión por tabla de cobro (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsComiTU:
+          description: "Comisión por % de utilidad (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsComiUT:
+          description: "Comisión por utilidad (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsComiDT:
+          description: "Comisión por día de tolerancia (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsComiTM:
+          description: "Comisión en base a monto (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        Activo:
+          description: "Vendedor activo (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        DescOrder:
+          description: "Orden de presentación en listados"
+          type: "int"
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SAMECA:
+      category: "Terceros"
+      description: "Maestro de servidores o mecánicos (personal de servicio)"
+      primary_key: "CodMeca"
+      fields:
+        CodMeca:
+          description: "Código único del servidor"
+          type: "varchar(15)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre completo del servidor"
+          type: "varchar(150)"
+          
+        CodSucu:
+          description: "Sucursal donde presta servicio"
+          type: "varchar(10)"
+          foreign_key: "SACONF(CodSucu)"
+          
+        ID3:
+          description: "Identificación del servidor"
+          type: "varchar(20)"
+          
+        tipoid3:
+          description: "Tipo de identificación"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          values: ["CÉDULA", "PASAPORTE", "RIF"]
+          
+        Clase:
+          description: "Clasificación del servidor"
+          type: "varchar(30)"
+          
+        Direc1:
+          description: "Dirección principal"
+          type: "varchar(150)"
+          
+        Direc2:
+          description: "Dirección secundaria"
+          type: "varchar(150)"
+          
+        Pais:
+          description: "País de residencia"
+          type: "varchar(5)"
+          foreign_key: "SAPAIS(Pais)"
+          
+        Estado:
+          description: "Estado de residencia"
+          type: "varchar(10)"
+          foreign_key: "SAESTADO(Estado)"
+          
+        Ciudad:
+          description: "Ciudad de residencia"
+          type: "varchar(10)"
+          foreign_key: "SACIUDAD(Ciudad)"
+          
+        Telef:
+          description: "Teléfono de contacto"
+          type: "varchar(20)"
+          
+        Email:
+          description: "Correo electrónico"
+          type: "varchar(100)"
+          
+        DEsComi:
+          description: "Recibe comisiones (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        Monto:
+          description: "Monto de comisión base"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        PorctUtil:
+          description: "Porcentaje de utilidad asociado"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          
+        Activo:
+          description: "Servidor activo (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        DescOrder:
+          description: "Orden de presentación en listados"
+          type: "int"
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SAPROV:
+      category: "Terceros"
+      description: "Maestro de proveedores del sistema"
+      primary_key: "CodProv"
+      fields:
+        CodProv:
+          description: "Código único del proveedor"
+          type: "varchar(15)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre o razón social del proveedor"
+          type: "varchar(200)"
+          
+        CodSucu:
+          description: "Sucursal asignada"
+          type: "varchar(10)"
+          foreign_key: "SACONF(CodSucu)"
+          
+        ID3:
+          description: "RIF del proveedor"
+          type: "varchar(20)"
+          
+        Clase:
+          description: "Clasificación del proveedor"
+          type: "varchar(30)"
+          
+        Represent:
+          description: "Representante o contacto principal"
+          type: "varchar(150)"
+          
+        Direc1:
+          description: "Primera línea de dirección"
+          type: "varchar(150)"
+          
+        Direc2:
+          description: "Segunda línea de dirección"
+          type: "varchar(150)"
+          
+        Pais:
+          description: "País del proveedor"
+          type: "varchar(5)"
+          foreign_key: "SAPAIS(Pais)"
+          
+        Estado:
+          description: "Estado del proveedor"
+          type: "varchar(10)"
+          foreign_key: "SAESTADO(Estado)"
+          
+        Ciudad:
+          description: "Ciudad del proveedor"
+          type: "varchar(10)"
+          foreign_key: "SACIUDAD(Ciudad)"
+          
+        Telef:
+          description: "Teléfono principal"
+          type: "varchar(20)"
+          
+        Email:
+          description: "Correo electrónico"
+          type: "varchar(100)"
+          
+        NIT:
+          description: "Número de Identificación Tributaria"
+          type: "varchar(20)"
+          
+        EsImport:
+          description: "Es importador (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        IntMora:
+          description: "Interés de mora diaria (%)"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          
+        EsCredito:
+          description: "Otorga crédito (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        DiasCred:
+          description: "Días de crédito otorgados"
+          type: "int"
+          constraints: { not_null: true }
+          range: "0-999"
+          
+        EsToleran:
+          description: "Aplica tolerancia (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        DiasTole:
+          description: "Días de tolerancia"
+          type: "int"
+          constraints: { not_null: true }
+          default: 0
+          
+        RetenIVA:
+          description: "Retiene IVA (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        Activo:
+          description: "Proveedor activo (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    DBTHIRD:
+      category: "Terceros"
+      description: "Terceros de contabilidad (información fiscal)"
+      fields:
+        TipoID3:
+          description: "Tipo de identificación fiscal"
+          type: "varchar(20)"
+          
+        ID3:
+          description: "Identificación fiscal sin signos"
+          type: "varchar(20)"
+          
+        ID3Org:
+          description: "Identificación fiscal completa con signos"
+          type: "varchar(30)"
+          
+        Id_Alte:
+          description: "Identificación fiscal alternativa"
+          type: "varchar(30)"
+    
+    SAZONA:
+      category: "Organización"
+      description: "Zonas geográficas de clientes"
+      primary_key: "CodZona"
+      fields:
+        CodZona:
+          description: "Código único de la zona"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre o descripción de la zona"
+          type: "varchar(150)"
+          
+        CodSucu:
+          description: "Sucursal asignada"
+          type: "varchar(10)"
+          foreign_key: "SACONF(CodSucu)"
+          
+        Clase:
+          description: "Clasificación de la zona"
+          type: "varchar(30)"
+          
+        Represent:
+          description: "Encargado de la zona"
+          type: "varchar(150)"
+          
+        Activo:
+          description: "Zona activa (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SADEPO:
+      category: "Organización"
+      description: "Depósitos o almacenes de inventario"
+      primary_key: "CodUbic"
+      fields:
+        CodUbic:
+          description: "Código único del depósito"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre o descripción del depósito"
+          type: "varchar(150)"
+          
+        CodSucu:
+          description: "Sucursal a la que pertenece"
+          type: "varchar(10)"
+          foreign_key: "SACONF(CodSucu)"
+          
+        CodAlte:
+          description: "Código alterno o virtual"
+          type: "varchar(10)"
+          
+        Clase:
+          description: "Clase de depósito (físico, virtual, etc.)"
+          type: "varchar(30)"
+          
+        Represent:
+          description: "Responsable del depósito"
+          type: "varchar(150)"
+          
+        EsVirtual:
+          description: "Es depósito virtual (1=sí, 0=no)"
+          type: "smallint"
+          values: [0, 1]
+          
+        Direc1:
+          description: "Dirección del depósito"
+          type: "varchar(150)"
+          
+        Direc2:
+          description: "Dirección adicional"
+          type: "varchar(150)"
+          
+        Pais:
+          description: "País donde está ubicado"
+          type: "varchar(5)"
+          foreign_key: "SAPAIS(Pais)"
+          
+        Estado:
+          description: "Estado de ubicación"
+          type: "varchar(10)"
+          foreign_key: "SAESTADO(Estado)"
+          
+        Ciudad:
+          description: "Ciudad de ubicación"
+          type: "varchar(10)"
+          foreign_key: "SACIUDAD(Ciudad)"
+          
+        Telef:
+          description: "Teléfono de contacto"
+          type: "varchar(20)"
+          
+        Zipcode:
+          description: "Código postal"
+          type: "varchar(10)"
+          
+        Activo:
+          description: "Depósito activo (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        Printer:
+          description: "Impresora asignada para etiquetas"
+          type: "varchar(100)"
+          constraints: { not_null: true }
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    # ===== Tablas de Productos e Impuestos =====
+    
+    SAINSTA:
+      category: "Productos"
+      description: "Instancias o categorías de productos"
+      primary_key: "CodInst"
+      fields:
+        CodInst:
+          description: "Código único de la instancia"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Nombre de la categoría o instancia"
+          type: "varchar(150)"
+          constraints: { not_null: true }
+          
+        CodAlte:
+          description: "Código alterno"
+          type: "varchar(10)"
+          
+        Nivel:
+          description: "Nivel jerárquico de la instancia"
+          type: "int"
+          constraints: { not_null: true }
+          range: "1-10"
+          
+        InsPadre:
+          description: "Instancia padre en la jerarquía"
+          type: "varchar(10)"
+          constraints: { not_null: true }
+          
+        Descto:
+          description: "Descuento aplicable (%)"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          
+        DEsSeri:
+          description: "Requiere número serial (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        DEsLote:
+          description: "Requiere lote (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        DEsComi:
+          description: "Aplica comisión (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        DEsCorrel:
+          description: "Maneja correlativo de lote (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        DigitosC:
+          description: "Número de dígitos del correlativo"
+          type: "int"
+          constraints: { not_null: true }
+          range: "1-20"
+          
+        DEsTabla:
+          description: "Es tabla de datos (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        TipoIns:
+          description: "Tipo de instancia"
+          type: "varchar(20)"
+          constraints: { not_null: true }
+          
+        DesComp:
+          description: "Descompone en componentes (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SATAXES:
+      category: "Impuestos"
+      description: "Tabla de impuestos del sistema"
+      primary_key: "CodTaxs"
+      fields:
+        CodTaxs:
+          description: "Código único del impuesto"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Descripción o nombre del impuesto"
+          type: "varchar(150)"
+          
+        MtoTax:
+          description: "Monto o tasa del impuesto"
+          type: "decimal(15,4)"
+          constraints: { not_null: true }
+          
+        EsPorct:
+          description: "Es porcentaje (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsCosto:
+          description: "Afecta el costo (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsLibroI:
+          description: "Va al libro de IVA (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsPartic:
+          description: "Es particular (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsFijo:
+          description: "Es fijo (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsReten:
+          description: "Es retención (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        CodOper:
+          description: "Código de operación asociado"
+          type: "varchar(10)"
+          foreign_key: "SAOPER(CodOper)"
+          
+        CodFace:
+          description: "Código de factura asociada"
+          type: "varchar(10)"
+          
+        TipoIva:
+          description: "Tipo de IVA (general, reducido, exento)"
+          type: "varchar(20)"
+          constraints: { not_null: true }
+          values: ["GENERAL", "REDUCIDO", "EXENTO"]
+          
+        EsTaxVenta:
+          description: "Se aplica en ventas (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        EsTaxCompra:
+          description: "Se aplica en compras (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        MontoMin:
+          description: "Monto mínimo para aplicarse"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        MontoMax:
+          description: "Monto máximo para aplicarse"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 999999999.99
+          
+        Sustraendo:
+          description: "Valor sustraible del impuesto"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        EsCorrel:
+          description: "Requiere correlativo (1=sí, 0=no)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          
+        Formato:
+          description: "Formato de visualización"
+          type: "varchar(50)"
+          
+        Activo:
+          description: "Impuesto activo (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    SAOPER:
+      category: "Configuración"
+      description: "Operaciones del sistema (tipos de transacciones)"
+      primary_key: "CodOper"
+      fields:
+        CodOper:
+          description: "Código único de la operación"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          
+        Descrip:
+          description: "Descripción de la operación"
+          type: "varchar(150)"
+          
+        Clase:
+          description: "Clasificación de la operación"
+          type: "varchar(30)"
+          
+        TipoOpe:
+          description: "Tipo de operación (venta, compra, etc.)"
+          type: "varchar(20)"
+          constraints: { not_null: true }
+          values: ["VENTA", "COMPRA", "DEVOLUCIÓN", "AJUSTE"]
+          
+        Rango:
+          description: "Rango o categoría"
+          type: "varchar(30)"
+          
+        Activo:
+          description: "Operación activa (1=activo, 0=inactivo)"
+          type: "smallint"
+          constraints: { not_null: true }
+          values: [0, 1]
+          default: 1
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    # ===== Tablas de Documentos de Ventas =====
+    
+    SAFACT:
+      category: "Ventas"
+      description: "Facturas y documentos de ventas"
+      primary_key: ["TipoFac", "NumeroD", "CodSucu"]
+      fields:
+        TipoFac:
+          description: "Tipo de factura (factura, nota crédito, nota débito)"
+          type: "varchar(5)"
+          constraints: { primary_key: true, not_null: true }
+          values: ["01", "02", "03"]
+          
+        NumeroD:
+          description: "Número único del documento"
+          type: "varchar(20)"
+          constraints: { primary_key: true, not_null: true }
+          
+        CodSucu:
+          description: "Sucursal donde se emitió"
+          type: "varchar(10)"
+          constraints: { primary_key: true, not_null: true }
+          foreign_key: "SACONF(CodSucu)"
+          
+        CodEsta:
+          description: "Estación o punto de venta"
+          type: "varchar(10)"
+          
+        CodUsua:
+          description: "Usuario que registró la transacción"
+          type: "varchar(20)"
+          
+        CodClie:
+          description: "Cliente comprador"
+          type: "varchar(15)"
+          foreign_key: "SACLIE(CodClie)"
+          
+        CodVend:
+          description: "Vendedor o responsable"
+          type: "varchar(15)"
+          foreign_key: "SAVEND(CodVend)"
+          
+        CodUbic:
+          description: "Depósito de salida del inventario"
+          type: "varchar(10)"
+          foreign_key: "SADEPO(CodUbic)"
+          
+        Signo:
+          description: "Signo del documento (+/-)"
+          type: "varchar(1)"
+          constraints: { not_null: true }
+          values: ["+", "-"]
+          
+        Moneda:
+          description: "Moneda utilizada"
+          type: "varchar(5)"
+          
+        Factor:
+          description: "Factor de conversión de moneda"
+          type: "decimal(15,4)"
+          constraints: { not_null: true }
+          default: 1.0000
+          
+        MontoMEx:
+          description: "Monto en moneda extranjera"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        Monto:
+          description: "Monto total del documento"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        MtoTax:
+          description: "Total de impuestos"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        Fletes:
+          description: "Gastos de flete"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        TGravable:
+          description: "Total gravable (sujeto a impuesto)"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        TExento:
+          description: "Total exento de impuestos"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CostoPrd:
+          description: "Costo de productos"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CostoSrv:
+          description: "Costo de servicios"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        DesctoP:
+          description: "Descuento parcial"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        RetenIVA:
+          description: "Retención de IVA aplicada"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        FechaE:
+          description: "Fecha de emisión"
+          type: "datetime2(7)"
+          
+        FechaV:
+          description: "Fecha de vencimiento (para crédito)"
+          type: "datetime2(7)"
+          
+        CancelI:
+          description: "Retención de impuesto ISLR"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CancelA:
+          description: "Pagado con adelanto"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CancelE:
+          description: "Pagado en efectivo"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CancelC:
+          description: "Pagado con cheque"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CancelT:
+          description: "Pagado con instrumento de pago"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CancelG:
+          description: "Pagado con giros"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        CancelP:
+          description: "Pagado con puntos cliente"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        MtoExtra:
+          description: "Monto extra de giro"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        Descto1:
+          description: "Descuento 1"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        PctAnual:
+          description: "Porcentaje anual de financiamiento"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          
+        MtoInt1:
+          description: "Intereses 1"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        Descto2:
+          description: "Descuento 2"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        PctManejo:
+          description: "Porcentaje de manejo"
+          type: "decimal(5,2)"
+          constraints: { not_null: true }
+          range: "0.00 - 100.00"
+          
+        MtoInt2:
+          description: "Intereses 2"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        MtoFinanc:
+          description: "Monto financiado"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        TotalPrd:
+          description: "Total de productos vendidos"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        TotalSrv:
+          description: "Total de servicios prestados"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        NGiros:
+          description: "Número de giros"
+          type: "int"
+          constraints: { not_null: true }
+          default: 0
+          
+        NMeses:
+          description: "Número de meses de financiamiento"
+          type: "int"
+          constraints: { not_null: true }
+          default: 0
+          
+        MtoComiVta:
+          description: "Comisión por ventas"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        MtoComiCob:
+          description: "Comisión por cobro"
+          type: "decimal(15,2)"
+          constraints: { not_null: true }
+          default: 0.00
+          
+        FechaI:
+          description: "Fecha de posteo al libro mayor"
+          type: "datetime2(7)"
+          
+        FechaCreate:
+          description: "Fecha y hora de creación del registro"
+          type: "datetime2(7)"
+    
+    # Más tablas de VENTAS, COMPRAS, INVENTARIO, CONTABILIDAD...
+    # (continuará en siguiente sección por tamaño)
+
+  # =========================================================================
+  # RELACIONES DEL SISTEMA (Referencial Integrity)
+  # =========================================================================
+  
+  relationships:
+    - type: "1:N"
+      from: "SACONF.CodSucu"
+      to: ["SACLIE.CodSucu", "SAVEND.CodSucu", "SAMECA.CodSucu", "SAPROV.CodSucu", "SAZONA.CodSucu", "SADEPO.CodSucu", "SAFACT.CodSucu", "SACOMP.CodSucu"]
+      description: "Cada sucursal tiene múltiples clientes, vendedores, depósitos, documentos"
+      
+    - type: "1:N"
+      from: "SACLIE.CodClie"
+      to: ["SAFACT.CodClie", "SAACXC.CodClie"]
+      description: "Cada cliente tiene múltiples facturas y cuentas por cobrar"
+      
+    - type: "1:N"
+      from: "SAVEND.CodVend"
+      to: ["SAFACT.CodVend", "SACLIE.CodVend"]
+      description: "Cada vendedor tiene múltiples clientes asignados y facturas"
+      
+    - type: "1:N"
+      from: "SADEPO.CodUbic"
+      to: ["SAFACT.CodUbic", "SACOMP.CodUbic"]
+      description: "Cada depósito es origen/destino de múltiples movimientos"
+      
+    - type: "1:N"
+      from: "SAZONA.CodZona"
+      to: ["SACLIE.CodZona"]
+      description: "Cada zona tiene múltiples clientes"
+      
+    - type: "1:N"
+      from: "SATAXES.CodTaxs"
+      to: ["SACONF.CodTaxs", "SATAXCOM.CodTaxs", "SATAXVEN.CodTaxs"]
+      description: "Cada impuesto se aplica a múltiples documentos"
+      
+    - type: "1:N"
+      from: "SAPAIS.Pais"
+      to: ["SAESTADO.Pais", "SACIUDAD.Pais", "SACLIE.Pais", "SAVEND.Pais", "SAMECA.Pais", "SAPROV.Pais", "SADEPO.Pais"]
+      description: "Cada país tiene estados, ciudades, terceros"
+      
+    - type: "1:N"
+      from: "SAESTADO.Estado"
+      to: ["SACIUDAD.Estado", "SACLIE.Estado", "SAVEND.Estado", "SAMECA.Estado", "SAPROV.Estado", "SADEPO.Estado"]
+      description: "Cada estado tiene ciudades y terceros"
+      
+    - type: "Logical"
+      from: "SAFACT.CodClie"
+      to: "SAACXC.CodClie"
+      description: "Venta genera cuenta por cobrar (JOIN sin FK)"
+      
+    - type: "Logical"
+      from: "SACOMP.CodProv"
+      to: "SAACXP.CodProv"
+      description: "Compra genera cuenta por pagar (JOIN sin FK)"
+
+  # =========================================================================
+  # ÍNDICES RECOMENDADOS
+  # =========================================================================
+  
+  indexes:
+    - table: "SACLIE"
+      fields: ["CodClie", "Activo", "ID3"]
+      type: "Composite"
+      reason: "Búsquedas frecuentes de clientes activos"
+      
+    - table: "SAFACT"
+      fields: ["CodClie", "FechaE", "NumeroD"]
+      type: "Composite"
+      reason: "Reportes de ventas por cliente y fecha"
+      
+    - table: "SACOMP"
+      fields: ["CodProv", "FechaE"]
+      type: "Composite"
+      reason: "Reportes de compras por proveedor"
+      
+    - table: "SAACXC"
+      fields: ["CodClie", "Saldo"]
+      type: "Composite"
+      reason: "Gestión de cuentas por cobrar pendientes"
+      
+    - table: "SAACXP"
+      fields: ["CodProv", "Saldo"]
+      type: "Composite"
+      reason: "Gestión de cuentas por pagar pendientes"
+      
+    - table: "SATAXES"
+      fields: ["CodTaxs", "Activo"]
+      type: "Composite"
+      reason: "Búsquedas rápidas de impuestos activos"
+
+  # =========================================================================
+  # VALIDACIONES DE NEGOCIO
+  # =========================================================================
+  
+  validations:
+    montos:
+      - rule: "Monto total = TGravable + TExento"
+        table: "SAFACT, SACOMP"
+        
+      - rule: "Descuento <= Monto - MtoTax"
+        table: "SAFACT, SACOMP"
+        
+      - rule: "Saldo >= 0 OR es cuenta activa"
+        table: "SAACXC, SAACXP"
+    
+    fechas:
+      - rule: "FechaE <= FechaV (Emisión <= Vencimiento)"
+        table: "SAFACT, SACOMP, SAACXC, SAACXP"
+        
+      - rule: "FechaI >= FechaE (Posteo >= Emisión)"
+        table: "SAFACT, SACOMP"
+        
+      - rule: "FechaCreate = GETDATE() por defecto"
+        table: "Todas las tablas"
+    
+    códigos:
+      - rule: "CodClie debe existir en SACLIE"
+        table: "SAFACT, SAACXC"
+        
+      - rule: "CodProv debe existir en SAPROV"
+        table: "SACOMP, SAACXP"
+        
+      - rule: "CodSucu debe existir en SACONF"
+        table: "Todas menos SAPAIS, SAESTADO, SACIUDAD"
+    
+    booleanos:
+      - rule: "Valores válidos: 0 o 1"
+        table: "Campos con type smallint"
+        
+      - rule: "0 = Inactivo/No, 1 = Activo/Sí"
+        table: "Campos Activo, Es*, DE*"
+    
+    porcentajes:
+      - rule: "Rango: 0.00 - 100.00"
+        fields: ["PorctReten", "Descto", "IntMora", "PctAnual", "PctManejo", "RangoComisión"]
+        
+      - rule: "Precisión: 2 decimales"
+        type: "decimal(5,2)"
+
+  # =========================================================================
+  # INFORMACIÓN ADICIONAL
+  # =========================================================================
+  
+  notes:
+    - "Este diccionario es la v2.1.0 COMPLETA con tipos de datos enriquecidos"
+    - "Combina tabla original + enriquecimiento de tipos + relaciones"
+    - "Mantiene compatibilidad 100% con versión original del sistema"
+    - "Los tipos de datos son recomendados; adaptar a tu BD específica"
+    - "Las FK no están creadas en todas las tablas; usar para integridad referencial"
+    - "Los índices recomendados mejoran performance en operaciones comunes"
+    - "Las validaciones deben implementarse a nivel de BD o aplicación"
+    - "Todas las fechas usan datetime2(7) para máxima precisión"
+    - "Todos los montos usan decimal(15,2) para precisión contable"
+    - "Todos los porcentajes usan decimal(5,2) para precisión estándar"
+
+# =============================================================================
+# FIN DEL DICCIONARIO
+# =============================================================================

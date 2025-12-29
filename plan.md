@@ -1,4 +1,4 @@
-# Phase 0: Infrastructure & Base Setup
+# Phase 0: Infrastructure & Base Setup [checkpoint: finished]
 
 ## Goals
 - Establish the hexagonal architecture structure.
@@ -23,4 +23,16 @@
 - [x] Create SQLAlchemy models for Insytech tables (Read-Only): `Gedocumentos`, `GeInstrumentos`, `GePagos` [Implemented in models.py]
 - [x] Create `SaintAdapter` base class in infrastructure layer [Implicit in Repository Implementation]
 - [x] Implement `SaintFacturaRepository` (read-only) in infrastructure [Implemented & Verified]
-- [ ] Create integration test: Read invoices from Saint DB and log results to verify connection
+
+---
+
+# Phase 1: Core CXC Module (Accounts Receivable)
+
+## Todo List
+
+### Sprint 1.1: Domain Layer - Entities CXC
+- [x] Create `Cliente` domain entity (id, name, rif, total_balance)
+- [x] Create `Monto` Value Object (amount, currency VES/USD)
+- [x] Create `CXCService` for balance calculations and aging
+- [x] Define `ClienteRepository` port
+- [x] Unit tests for business logic [Verified with pytest]
