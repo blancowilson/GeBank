@@ -6,10 +6,12 @@
 - **Dynamic Updates:** Use **HTMX** for partial DOM updates (modals, table filtering, form submissions) to provide a seamless, SPA-like experience without the complexity of a heavy frontend framework.
 - **Local Interactivity:** Use **Alpine.js** for minimal client-side state management (e.g., toggling menus, client-side validation).
 
-## Multi-Currency Handling (VES/USD)
+## Multi-Currency Handling (USD Base -> VES Referential)
+- **Base Currency:** The primary currency for all transactions and balances is **U.S. Dollars ($)**.
+- **Referential Currency:** Bolívares (VES) are treated as a referential currency. Calculations to VES should be performed using the established `Factor` at the transaction time.
 - **Explicit & Distinct Display:** VES and USD must be visually distinguishable (e.g., using different color codes or currency symbols) to prevent user errors in a high-stakes financial environment.
-- **Dual Visibility:** Always display the original transaction amount alongside its conversion based on the current system exchange rate.
-- **Precision:** Financial calculations must maintain a precision of at least two decimal places for USD and VES, handling rounding errors (e.g., $0.01 thresholds) gracefully during reconciliation.
+- **Precision:** Financial calculations must maintain a precision of at least two decimal places for both currencies.
+- **Data Source for BS:** For accurate Bolívares representation and to avoid rounding errors, queries should rely on the `VW_ADM_FACT_CONBS` and `VW_ADM_ITEMSFACTURABS` SQL views where possible.
 
 ## Tone & Communication
 - **Professional & Precise:** Error messages and system notifications must be clear, technical, and actionable, especially regarding bank reconciliation failures or database synchronization errors.

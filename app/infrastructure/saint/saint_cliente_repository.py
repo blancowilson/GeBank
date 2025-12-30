@@ -12,21 +12,36 @@ class SaintClienteRepository(ClienteRepository):
         self.session = session
 
     async def obtener_todos(self, skip: int = 0, limit: int = 100) -> List[Cliente]:
-        stmt = select(SaClie).offset(skip).limit(limit)
+        stmt = (
+            select(
+                SaClie.CodClie,
+                SaClie.Descrip,
+                SaClie.ID3,
+                SaClie.Saldo,
+                SaClie.Activo,
+            )
+            .order_by(SaClie.CodClie)
+            .offset(skip)
+            .limit(limit)
+        )
         result = await self.session.execute(stmt)
-        sa_clientes = result.scalars().all()
+        sa_clientes = result.all() # Use .all() for tuples
         return [self._map_to_domain(c) for c in sa_clientes]
 
     async def obtener_por_id(self, cliente_id: str) -> Optional[Cliente]:
-        stmt = select(SaClie).where(SaClie.CodClie == cliente_id)
+        stmt = select(
+            SaClie.CodClie, SaClie.Descrip, SaClie.ID3, SaClie.Saldo, SaClie.Activo
+        ).where(SaClie.CodClie == cliente_id)
         result = await self.session.execute(stmt)
-        sa_cliente = result.scalar_one_or_none()
+        sa_cliente = result.first()  # Use .first() for tuple result
         if not sa_cliente:
             return None
         return self._map_to_domain(sa_cliente)
 
     async def buscar_por_nombre(self, query: str) -> List[Cliente]:
-        stmt = select(SaClie).where(
+        stmt = select(
+            SaClie.CodClie, SaClie.Descrip, SaClie.ID3, SaClie.Saldo, SaClie.Activo
+        ).where(
             or_(
                 SaClie.Descrip.ilike(f"%{query}%"),
                 SaClie.ID3.ilike(f"%{query}%"),
@@ -34,7 +49,7 @@ class SaintClienteRepository(ClienteRepository):
             )
         )
         result = await self.session.execute(stmt)
-        sa_clientes = result.scalars().all()
+        sa_clientes = result.all()
         return [self._map_to_domain(c) for c in sa_clientes]
 
     def _map_to_domain(self, sa_cliente: SaClie) -> Cliente:

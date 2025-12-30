@@ -1,34 +1,38 @@
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, func
+from decimal import Decimal
 
 from app.domain.repositories.factura_repository import FacturaRepository
 from app.domain.entities.factura import Factura
-from app.infrastructure.database.models import SaFact, SaAcxc
+from app.infrastructure.database.models import SaFact, SaAcxc, VwAdmFactConBs
 
 class SaintFacturaRepository(FacturaRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
     async def obtener_por_id(self, numero: str, tipo: str) -> Optional[Factura]:
-        stmt = select(SaFact).where(
+        stmt = select(
+            SaFact, 
+            (func.isnull(VwAdmFactConBs.SUBTOTAL_BS, 0) + func.isnull(VwAdmFactConBs.IMPUESTO_BS, 0)).label("total_bs")
+        ).join_from(
+            SaFact, VwAdmFactConBs, and_(
+                SaFact.NumeroD == VwAdmFactConBs.NumeroD,
+                SaFact.TipoFac == VwAdmFactConBs.TipoFac
+            ),
+            isouter=True
+        ).where(
             and_(SaFact.NumeroD == numero, SaFact.TipoFac == tipo)
         )
-        result = await self.session.execute(stmt)
-        sa_fact = result.scalar_one_or_none()
+        record = (await self.session.execute(stmt)).first()
         
-        if not sa_fact:
+        if not record:
             return None
-            
-        # Buscar saldo en SAACXC
-        # Nota: La relación podría simplificar esto, pero lo hacemos explícito por claridad
-        stmt_cxc = select(SaAcxc).where(
-            and_(SaAcxc.NumeroD == numero, SaAcxc.CodClie == sa_fact.CodClie)
-        )
-        result_cxc = await self.session.execute(stmt_cxc)
-        sa_cxc = result_cxc.scalar_one_or_none()
-        
-        saldo = sa_cxc.Saldo if sa_cxc else sa_fact.Monto # Si no hay CxC, asumimos monto total (o 0, depende regla negocio)
+
+        sa_fact, total_bs = record
+        saldo = (await self.session.execute(
+            select(SaAcxc.Saldo).where(and_(SaAcxc.NumeroD == numero, SaAcxc.CodClie == sa_fact.CodClie))
+        )).scalar_one_or_none() or sa_fact.Monto
 
         return Factura(
             numero=sa_fact.NumeroD,
@@ -37,31 +41,41 @@ class SaintFacturaRepository(FacturaRepository):
             cliente_id=sa_fact.CodClie,
             vendedor_id=sa_fact.CodVend,
             monto_total=sa_fact.Monto,
+            monto_total_bs=total_bs if total_bs is not None else Decimal("0.00"),
             saldo_pendiente=saldo,
             fecha_emision=sa_fact.FechaE,
             fecha_vencimiento=sa_fact.FechaV
         )
 
     async def obtener_pendientes_por_cliente(self, cliente_id: str) -> List[Factura]:
-        # Consultamos SAACXC directamente porque es donde vive el saldo
-        stmt = select(SaAcxc).where(
+        stmt = select(
+            SaAcxc.NumeroD, SaAcxc.CodSucu, SaAcxc.CodClie, SaAcxc.Monto, 
+            SaAcxc.Saldo, SaAcxc.FechaE, SaAcxc.FechaV, SaAcxc.TipoCXC,
+            (func.isnull(VwAdmFactConBs.SUBTOTAL_BS, 0) + func.isnull(VwAdmFactConBs.IMPUESTO_BS, 0)).label("total_bs")
+        ).join_from(
+            SaAcxc, VwAdmFactConBs, and_(
+                SaAcxc.NumeroD == VwAdmFactConBs.NumeroD
+            ),
+            isouter=True
+        ).where(
             and_(
                 SaAcxc.CodClie == cliente_id,
-                SaAcxc.Saldo > 0
+                SaAcxc.Saldo > 0,
+                SaAcxc.TipoCXC == '10' # Filter for invoices (TipoCXC = '10')
             )
         )
-        result = await self.session.execute(stmt)
-        cxc_records = result.scalars().all()
+        records = (await self.session.execute(stmt)).all()
         
         facturas = []
-        for cxc in cxc_records:
-            # Podríamos hacer join con SAFACT para más detalles si fuera necesario
+        for cxc in records:
+            total_bs = cxc.total_bs or Decimal("0.00")
             facturas.append(Factura(
                 numero=cxc.NumeroD,
-                tipo="FAC", # Asumimos FAC, idealmente SAACXC tiene TipoDoc
+                tipo=cxc.TipoCXC, # Use TipoCXC from SAACXC
                 sucursal=cxc.CodSucu,
                 cliente_id=cxc.CodClie,
                 monto_total=cxc.Monto,
+                monto_total_bs=total_bs,
                 saldo_pendiente=cxc.Saldo,
                 fecha_emision=cxc.FechaE,
                 fecha_vencimiento=cxc.FechaV

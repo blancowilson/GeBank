@@ -10,6 +10,7 @@ class Factura(BaseModel):
     cliente_id: str
     vendedor_id: Optional[str] = None
     monto_total: Decimal
+    monto_total_bs: Optional[Decimal] = None
     saldo_pendiente: Decimal
     fecha_emision: datetime
     fecha_vencimiento: Optional[datetime] = None

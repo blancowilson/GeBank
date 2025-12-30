@@ -1,9 +1,7 @@
 <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="this.parentElement.parentElement.remove()"></div>
-
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
         <div class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full border border-gray-700">
             <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
@@ -11,18 +9,16 @@
                         <h3 class="text-xl leading-6 font-bold text-white mb-4" id="modal-title">
                             Facturas Pendientes: {{ cxc.descripcion }}
                         </h3>
-                        
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div class="bg-gray-700 p-3 rounded-lg">
-                                <p class="text-xs text-gray-400 uppercase">Saldo Total VES</p>
-                                <p class="text-lg font-bold text-green-400">Bs. {{ "{:,.2f}".format(cxc.saldo_total_ves) }}</p>
+                                <p class="text-xs text-gray-400 uppercase">Saldo Total (Bs.)</p>
+                                <p class="text-lg font-bold text-green-400">Bs. {{ "{:,.2f}".format(cxc.saldo_total_ves or 0) }}</p>
                             </div>
                             <div class="bg-gray-700 p-3 rounded-lg">
-                                <p class="text-xs text-gray-400 uppercase">Saldo Total USD</p>
-                                <p class="text-lg font-bold text-blue-400">$ {{ "{:,.2f}".format(cxc.saldo_total_usd) }}</p>
+                                <p class="text-xs text-gray-400 uppercase">Saldo Total ($)</p>
+                                <p class="text-lg font-bold text-blue-400">$ {{ "{:,.2f}".format(cxc.saldo_total_usd or 0) }}</p>
                             </div>
                         </div>
-
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-700">
                                 <thead class="bg-gray-900">
@@ -30,8 +26,9 @@
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Número</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Emisión</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Días</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Monto Total</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Saldo</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Total (Bs.)</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Total ($)</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase">Saldo ($)</th>
                                         <th class="px-4 py-2"></th>
                                     </tr>
                                 </thead>
@@ -45,8 +42,9 @@
                                                 {{ f.antiguedad_dias }} días
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3 text-sm text-gray-300">{{ "{:,.2f}".format(f.monto_total) }}</td>
-                                        <td class="px-4 py-3 text-sm text-white font-bold">{{ "{:,.2f}".format(f.saldo_pendiente) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-300">{{ "{:,.2f}".format(f.monto_total_bs or 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-300">{{ "{:,.2f}".format(f.monto_total or 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-white font-bold">{{ "{:,.2f}".format(f.saldo_pendiente or 0) }}</td>
                                         <td class="px-4 py-3 text-right">
                                             <button class="bg-purple-main hover:bg-purple-600 text-white text-xs py-1 px-3 rounded"
                                                     onclick="alert('Funcionalidad de pago manual en desarrollo')">Pagar</button>

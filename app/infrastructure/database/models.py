@@ -11,7 +11,7 @@ class SaClie(Base):
     
     CodClie = Column(String(15), primary_key=True, nullable=False)
     Descrip = Column(String(100))
-    ID3 = Column(String(20)) # RIF/CI
+    ID3 = Column(String(20))
     tipoid3 = Column(String(5))
     Pais = Column(String(30))
     Estado = Column(String(30))
@@ -30,9 +30,7 @@ class SaClie(Base):
     Saldo = Column(DECIMAL(28, 4))
     SaldoPtos = Column(DECIMAL(28, 4))
     Activo = Column(SmallInteger, default=1)
-    create_at = Column("create", String(100)) 
 
-    # Relationships
     facturas = relationship("SaFact", back_populates="cliente")
     cxc_documents = relationship("SaAcxc", back_populates="cliente")
 
@@ -47,7 +45,6 @@ class SaVend(Base):
     Email = Column(String(100))
     Activo = Column(SmallInteger, default=1)
     
-    # Relationships
     facturas = relationship("SaFact", back_populates="vendedor")
 
 class SaFact(Base):
@@ -79,10 +76,7 @@ class SaFact(Base):
     CancelE = Column(DECIMAL(28, 4))
     CancelC = Column(DECIMAL(28, 4))
     CancelG = Column(DECIMAL(28, 4))
-    
-    create_at = Column("create", String(100))
 
-    # Relationships
     cliente = relationship("SaClie", back_populates="facturas")
     vendedor = relationship("SaVend", back_populates="facturas")
 
@@ -94,6 +88,8 @@ class SaAcxc(Base):
     NroUnico = Column(Integer, primary_key=True, nullable=False)
     
     NumeroD = Column(String(20))
+    TipoCXC = Column(String(5))
+    TipoCXC = Column(String(5))
     FechaE = Column(DateTime)
     FechaV = Column(DateTime)
     FechaI = Column(DateTime)
@@ -112,18 +108,15 @@ class SaAcxc(Base):
     CancelG = Column(DECIMAL(28, 4))
     
     EsChqDev = Column(SmallInteger)
-    create_at = Column("create", String(100))
 
-    # Relationships
     cliente = relationship("SaClie", back_populates="cxc_documents")
     pagos = relationship("SaPagcxc", back_populates="cxc_document")
 
 class SaPagcxc(Base):
     __tablename__ = "SAPAGCXC"
     
-    # In Saint, this usually relates via NroPpal to SaAcxc.NroUnico
     NroPpal = Column(Integer, ForeignKey("SAACXC.NroUnico"), primary_key=True, nullable=False)
-    NroUnico = Column(Integer, primary_key=True, nullable=False) # Seq
+    NroUnico = Column(Integer, primary_key=True, nullable=False)
     
     CodClie = Column(String(15), nullable=False)
     FechaE = Column(DateTime, nullable=False)
@@ -140,7 +133,6 @@ class SaBanc(Base):
     Nombre = Column(String(100), nullable=False)
     CodBIF = Column(String(10))
     
-    # Relationships
     transacciones = relationship("SbTran", back_populates="banco")
 
 class SbTran(Base):
@@ -151,9 +143,8 @@ class SbTran(Base):
     
     Fecha = Column(DateTime, nullable=False)
     Monto = Column(DECIMAL(15, 2), nullable=False)
-    Tipo = Column(String(20)) # Deposito, Retiro, Transferencia
+    Tipo = Column(String(20))
     
-    # Relationships
     banco = relationship("SaBanc", back_populates="transacciones")
 
 class SsUsrs(Base):
@@ -178,18 +169,16 @@ class GePagos(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     idPago = Column(String(10), nullable=False, unique=True)
-    codCliente = Column(String(20), nullable=False) # Reference to SACLIE
+    codCliente = Column(String(20), nullable=False)
     DescripClie = Column(String(100), nullable=False)
     Usuario = Column(String(50), nullable=False)
     fecha = Column(DateTime, nullable=False)
     MontoPago = Column(DECIMAL(28, 4), nullable=False)
     MontoCancelado = Column(DECIMAL(28, 4), nullable=False)
-    status = Column(SmallInteger, nullable=False) # 1=Pend, 3=Apr, 9=Rech
+    status = Column(SmallInteger, nullable=False)
     UrlImagen = Column(Text)
     fechaCaptura = Column(DateTime, nullable=False)
-    create_at = Column("create", String(100))
 
-    # Relationships
     documentos = relationship("GeDocumentos", back_populates="pago")
     instrumentos = relationship("GeInstrumentos", back_populates="pago")
 
@@ -210,9 +199,7 @@ class GeDocumentos(Base):
     montoRetencion = Column(DECIMAL(28, 4), nullable=False)
     NroRetencion = Column(String(50))
     UrlRetencion = Column(Text)
-    create_at = Column("create", String(100))
 
-    # Relationships
     pago = relationship("GePagos", back_populates="documentos")
 
 class GeInstrumentos(Base):
@@ -229,7 +216,23 @@ class GeInstrumentos(Base):
     cheque = Column(String(20))
     bancoCliente = Column(String(50))
     monto = Column(DECIMAL(28, 4), nullable=False)
-    create_at = Column("create", String(100))
 
-    # Relationships
     pago = relationship("GePagos", back_populates="instrumentos")
+
+# ==========================================
+# SQL Views as Mapped Classes
+# ==========================================
+
+class VwAdmFactConBs(Base):
+    __tablename__ = 'VW_ADM_FACT_CONBS'
+    # This view is read-only
+    
+    TipoFac = Column(String, primary_key=True)
+    NumeroD = Column(String, primary_key=True)
+    SUBTOTAL_BS = Column(DECIMAL)
+    IMPUESTO_BS = Column(DECIMAL)
+    FACTOR = Column(DECIMAL)
+
+    @property
+    def TOTAL_BS(self):
+        return (self.SUBTOTAL_BS or 0) + (self.IMPUESTO_BS or 0)
