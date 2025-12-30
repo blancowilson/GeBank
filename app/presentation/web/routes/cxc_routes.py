@@ -69,13 +69,17 @@ async def detalle_facturas(
     
     cxc_data = await use_case.execute(cliente_id, sort_by=sort_by, order=order)
 
-    # For HTMX sort requests, return only the table body
-    if "HX-Request" in request.headers:
+    # Check if this is a sort request from within the modal (HX-Target will be "facturas-tbody")
+    hx_target = request.headers.get("HX-Target", "")
+    
+    if hx_target == "facturas-tbody":
+        # Return only table rows for sorting within the modal
         return templates.TemplateResponse(
             "cxc/_facturas_table_rows.html",
             {"request": request, "facturas": cxc_data.facturas_pendientes if cxc_data else []}
         )
-        
+    
+    # Return full modal for initial load (when clicking the eye icon)
     return templates.TemplateResponse(
         "cxc/detalle_facturas.html",
         {"request": request, "cxc": cxc_data}
