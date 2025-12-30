@@ -1,13 +1,16 @@
-<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="modal-facturas">
+<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true"
+    id="modal-facturas">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <!-- Overlay -->
-        <div class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="document.getElementById('modal-facturas').remove()"></div>
+        <div class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm transition-opacity" aria-hidden="true"
+            onclick="document.getElementById('modal-facturas').remove()"></div>
 
         <!-- Centering trick -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
         <!-- Modal Content -->
-        <div class="inline-block align-bottom bg-white dark:bg-surface-dark rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full border border-[#ece7f3] dark:border-[#382e48]">
+        <div
+            class="inline-block align-bottom bg-white dark:bg-surface-dark rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full border border-[#ece7f3] dark:border-[#382e48]">
             <div class="px-6 py-5 border-b border-[#ece7f3] dark:border-[#382e48] flex justify-between items-center">
                 <div class="flex flex-col">
                     <h3 class="text-xl font-bold text-[#130d1b] dark:text-white" id="modal-title">
@@ -15,7 +18,8 @@
                     </h3>
                     <span class="text-xs text-[#6b4c9a] dark:text-[#a589cc]">Saldos pendientes y vencimientos</span>
                 </div>
-                <button class="text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary transition-colors" onclick="document.getElementById('modal-facturas').remove()">
+                <button class="text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary transition-colors"
+                    onclick="document.getElementById('modal-facturas').remove()">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
@@ -23,13 +27,19 @@
             <div class="p-6">
                 <!-- KPI Summary in Modal -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    <div class="flex flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48]">
-                        <p class="text-[#6b4c9a] dark:text-[#a589cc] text-[10px] font-bold uppercase tracking-widest">Saldo Pendiente (VES)</p>
-                        <p class="text-xl font-black text-[#130d1b] dark:text-white">Bs. {{ "{:,.2f}".format(cxc.saldo_total_ves or 0) }}</p>
+                    <div
+                        class="flex flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48]">
+                        <p class="text-[#6b4c9a] dark:text-[#a589cc] text-[10px] font-bold uppercase tracking-widest">
+                            Saldo Pendiente (VES)</p>
+                        <p class="text-xl font-black text-[#130d1b] dark:text-white">Bs. {{
+                            "{:,.2f}".format(cxc.saldo_total_ves or 0) }}</p>
                     </div>
-                    <div class="flex flex-col gap-1 rounded-lg p-4 bg-primary/5 dark:bg-primary/20 border border-primary/20">
-                        <p class="text-primary dark:text-[#a589cc] text-[10px] font-bold uppercase tracking-widest">Saldo Pendiente (USD)</p>
-                        <p class="text-xl font-black text-primary dark:text-white">$ {{ "{:,.2f}".format(cxc.saldo_total_usd or 0) }}</p>
+                    <div
+                        class="flex flex-col gap-1 rounded-lg p-4 bg-primary/5 dark:bg-primary/20 border border-primary/20">
+                        <p class="text-primary dark:text-[#a589cc] text-[10px] font-bold uppercase tracking-widest">
+                            Saldo Pendiente (USD)</p>
+                        <p class="text-xl font-black text-primary dark:text-white">$ {{
+                            "{:,.2f}".format(cxc.saldo_total_usd or 0) }}</p>
                     </div>
                 </div>
 
@@ -37,7 +47,8 @@
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-background-light dark:bg-[#1f162e]">
                             {% set next_order = 'asc' if request.query_params.get('order') == 'desc' else 'desc' %}
-                            <tr class="text-[10px] text-[#6b4c9a] dark:text-[#a589cc] uppercase font-bold tracking-widest">
+                            <tr
+                                class="text-[10px] text-[#6b4c9a] dark:text-[#a589cc] uppercase font-bold tracking-widest">
                                 <th class="px-4 py-3">Nº Factura</th>
                                 <th class="px-4 py-3">Emisión</th>
                                 <th class="px-4 py-3 text-center cursor-pointer hover:text-primary"
@@ -55,18 +66,22 @@
                             </tr>
                         </thead>
                         <tbody id="facturas-tbody" class="text-sm divide-y divide-[#ece7f3] dark:divide-[#382e48]">
-                            {% include 'cxc/_facturas_table_rows.html' with facturas=cxc.facturas_pendientes %}
+                            {% set facturas = cxc.facturas_pendientes %}
+                            {% include 'cxc/_facturas_table_rows.html' %}
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="bg-background-light dark:bg-[#1f162e] px-6 py-4 flex justify-end gap-3 border-t border-[#ece7f3] dark:border-[#382e48]">
-                <button type="button" class="px-4 py-2 rounded-lg border border-[#ece7f3] dark:border-[#382e48] text-[#130d1b] dark:text-white hover:bg-white dark:hover:bg-[#382e48] text-sm font-bold transition-colors"
-                        onclick="document.getElementById('modal-facturas').remove()">
+            <div
+                class="bg-background-light dark:bg-[#1f162e] px-6 py-4 flex justify-end gap-3 border-t border-[#ece7f3] dark:border-[#382e48]">
+                <button type="button"
+                    class="px-4 py-2 rounded-lg border border-[#ece7f3] dark:border-[#382e48] text-[#130d1b] dark:text-white hover:bg-white dark:hover:bg-[#382e48] text-sm font-bold transition-colors"
+                    onclick="document.getElementById('modal-facturas').remove()">
                     Cerrar
                 </button>
-                <button class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 text-sm font-bold transition-colors shadow-md flex items-center gap-2">
+                <button
+                    class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 text-sm font-bold transition-colors shadow-md flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">print</span>
                     Estado de Cuenta
                 </button>
