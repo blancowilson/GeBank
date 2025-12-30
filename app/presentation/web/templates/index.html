@@ -1,13 +1,89 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="px-4 py-6 sm:px-0">
-    <div class="border-4 border-dashed border-gray-700 rounded-lg h-96 flex items-center justify-center">
-        <div class="text-center">
-            <span class="material-symbols-outlined text-6xl text-purple-main mb-4">dashboard</span>
-            <h2 class="text-2xl font-semibold text-gray-400">Bienvenido a GeBankSaint</h2>
-            <p class="text-gray-500 mt-2">Integración Automatizada de Cobranzas</p>
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-end gap-3 pb-2">
+    <div class="flex min-w-72 flex-col gap-1">
+        <h1 class="text-[#130d1b] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Dashboard Principal</h1>
+        <p class="text-[#6b4c9a] dark:text-[#a589cc] text-base font-medium leading-normal">Resumen financiero y operativo en tiempo real</p>
+    </div>
+    <div class="flex gap-3">
+        <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-surface-dark border border-[#ece7f3] dark:border-[#382e48] text-[#130d1b] dark:text-white hover:bg-gray-50 dark:hover:bg-[#382e48] text-sm font-bold leading-normal tracking-[0.015em] transition-colors shadow-sm gap-2">
+            <span class="material-symbols-outlined text-[18px]">upload_file</span>
+            <span class="truncate">Subir Reporte</span>
+        </button>
+        <a href="/cxc/clientes" class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em] shadow-md gap-2">
+            <span class="material-symbols-outlined text-[18px]">group</span>
+            <span class="truncate">Ver Clientes</span>
+        </a>
+    </div>
+</div>
+
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- KPI 1 -->
+    <div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-surface-dark border border-[#d9cfe7] dark:border-[#382e48] shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+            <p class="text-[#6b4c9a] dark:text-[#a589cc] text-sm font-medium leading-normal">CXC Total (USD)</p>
+            <span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
         </div>
+        <p class="text-[#130d1b] dark:text-white tracking-tight text-2xl font-bold leading-tight mt-1">$0.00</p>
+        <div class="flex items-center gap-1 mt-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Datos pendientes de sincronización</span>
+        </div>
+    </div>
+    
+    <!-- KPI 2 -->
+    <div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-surface-dark border border-[#d9cfe7] dark:border-[#382e48] shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+            <p class="text-[#6b4c9a] dark:text-[#a589cc] text-sm font-medium leading-normal">Clientes con Deuda</p>
+            <span class="material-symbols-outlined text-orange-500 text-[20px]">warning</span>
+        </div>
+        <p class="text-[#130d1b] dark:text-white tracking-tight text-2xl font-bold leading-tight mt-1">0</p>
+        <div class="flex items-center gap-1 mt-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Total clientes registrados</span>
+        </div>
+    </div>
+
+    <!-- KPI 3 -->
+    <div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-surface-dark border border-[#d9cfe7] dark:border-[#382e48] shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+            <p class="text-[#6b4c9a] dark:text-[#a589cc] text-sm font-medium leading-normal">Pagos Hoy</p>
+            <span class="material-symbols-outlined text-[#078845] text-[20px]">payments</span>
+        </div>
+        <p class="text-[#130d1b] dark:text-white tracking-tight text-2xl font-bold leading-tight mt-1">$0.00</p>
+        <div class="flex items-center gap-1 mt-2">
+            <span class="text-xs text-gray-500 dark:text-gray-400">0 transacciones hoy</span>
+        </div>
+    </div>
+
+    <!-- KPI 4 -->
+    <div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-surface-dark border border-[#d9cfe7] dark:border-[#382e48] shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+            <p class="text-[#6b4c9a] dark:text-[#a589cc] text-sm font-medium leading-normal">Eficiencia de Cobro</p>
+            <span class="material-symbols-outlined text-primary text-[20px]">published_with_changes</span>
+        </div>
+        <p class="text-[#130d1b] dark:text-white tracking-tight text-2xl font-bold leading-tight mt-1">--%</p>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-3">
+            <div class="bg-primary h-1.5 rounded-full" style="width: 0%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Welcome Section -->
+<div class="flex flex-col gap-4 rounded-xl bg-white dark:bg-surface-dark border border-[#d9cfe7] dark:border-[#382e48] p-10 shadow-sm items-center text-center">
+    <div class="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+        <span class="material-symbols-outlined text-3xl">dashboard</span>
+    </div>
+    <h3 class="text-[#130d1b] dark:text-white text-2xl font-bold leading-tight">Bienvenido a GeBankSaint</h3>
+    <p class="text-[#6b4c9a] dark:text-[#a589cc] max-w-md">
+        Su plataforma centralizada para el control de cobranzas, integración con Insytech y conciliación bancaria automática.
+    </p>
+    <div class="flex gap-4 mt-2">
+        <a href="/cxc/clientes" class="text-primary font-bold hover:underline flex items-center gap-1">
+            Explorar Clientes
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
     </div>
 </div>
 {% endblock %}

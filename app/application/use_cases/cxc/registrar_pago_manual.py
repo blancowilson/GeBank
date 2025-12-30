@@ -2,6 +2,7 @@ from app.domain.repositories.pago_repository import PagoRepository
 from app.domain.repositories.factura_repository import FacturaRepository
 from app.domain.entities.pago import Pago
 from app.domain.value_objects.monto import Monto, Moneda
+from app.shared.utils.audit_logger import audit
 from datetime import datetime
 from decimal import Decimal
 
@@ -14,6 +15,7 @@ class RegistrarPagoManualUseCase:
         self.pago_repo = pago_repo
         self.factura_repo = factura_repo
 
+    @audit(action="REGISTRAR_PAGO_MANUAL", target_entity="PAGO")
     async def execute(
         self, 
         cliente_id: str, 

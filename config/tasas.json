@@ -1,0 +1,16 @@
+[
+    {
+        "key": "TASA_OFICIAL",
+        "label": "Tasa BCV",
+        "valor": 35.5,
+        "icon": "account_balance",
+        "es_referencia_divisa": false
+    },
+    {
+        "key": "TASA_ALT",
+        "label": "USDT / Paralelo",
+        "valor": 48.0,
+        "icon": "currency_bitcoin",
+        "es_referencia_divisa": true
+    }
+]

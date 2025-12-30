@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Subir Estado de Cuenta{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs & Heading -->
+<div class="flex flex-col gap-2 mb-8">
+    <div class="flex items-center gap-2 text-sm text-[#6b4c9a] dark:text-[#a589cc]">
+        <a class="hover:text-primary transition-colors" href="/">Home</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="hover:text-primary transition-colors cursor-pointer">Bancos</span>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="font-medium text-primary">Subir Estado de Cuenta</span>
+    </div>
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2">
+        <div>
+            <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Subir Estado de Cuenta</h1>
+            <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Importa tus movimientos bancarios para iniciar la conciliación automática.</p>
+        </div>
+        <div class="flex gap-3">
+            <button class="px-4 py-2 text-sm font-bold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">history</span>
+                Historial de Cargas
+            </button>
+            <button class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-md transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">download</span>
+                Descargar Plantilla
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Main Upload & Configuration Area -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Upload Dropzone (Left - Large) -->
+    <div class="lg:col-span-2 bg-white dark:bg-surface-dark rounded-xl border-2 border-dashed border-[#d9cfe7] dark:border-[#382e48] hover:border-primary/60 transition-colors group cursor-pointer relative overflow-hidden"
+         id="dropzone">
+        
+        <form id="upload-form" hx-encoding="multipart/form-data" hx-post="/bancos/upload" hx-target="#upload-result">
+            <input type="file" name="file" class="hidden" id="file-input" accept=".xls,.xlsx,.csv,.txt">
+            
+            <div class="absolute top-0 right-0 p-4 opacity-50 pointer-events-none">
+                <span class="material-symbols-outlined text-9xl text-gray-100 dark:text-[#382e48] rotate-12 transform translate-x-4 -translate-y-4">upload_file</span>
+            </div>
+            
+            <div class="relative z-10 flex flex-col items-center justify-center p-12 text-center h-full min-h-[280px]" 
+                 onclick="document.getElementById('file-input').click()">
+                <div class="size-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <span class="material-symbols-outlined text-3xl">cloud_upload</span>
+                </div>
+                <h3 class="text-xl font-bold text-[#130d1b] dark:text-white mb-2">Arrastra tu archivo aquí</h3>
+                <p class="text-[#6b4c9a] dark:text-[#a589cc] max-w-sm mx-auto mb-6">Soportamos estados de cuenta en formatos .TXT, .CSV, .XLSX de Insytech.</p>
+                <button type="button" class="bg-white dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] hover:border-primary text-[#130d1b] dark:text-white px-6 py-2.5 rounded-lg font-bold shadow-sm transition-all flex items-center gap-2">
+                    Explorar archivos
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Configuration (Right - Sidebar) -->
+    <div class="lg:col-span-1 flex flex-col gap-6">
+        <div class="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] flex flex-col gap-5 h-full">
+            <h3 class="font-bold text-[#130d1b] dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">tune</span>
+                Configuración de Análisis
+            </h3>
+            
+            <label class="flex flex-col gap-2">
+                <span class="text-sm font-bold text-[#130d1b] dark:text-white">Formato esperado</span>
+                <div class="relative">
+                    <select name="format" form="upload-form" class="w-full appearance-none bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] text-[#130d1b] dark:text-white rounded-lg px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary cursor-pointer font-medium">
+                        <option value="insytech_excel" selected>Insytech (Excel)</option>
+                        <option value="saint_txt">Saint Standard (TXT)</option>
+                        <option value="banco_generic">Banco Genérico (CSV)</option>
+                    </select>
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b4c9a] pointer-events-none">
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3 rounded-lg border border-[#d9cfe7] dark:border-[#382e48] hover:bg-purple-50 dark:hover:bg-[#382e48]/50 cursor-pointer transition-colors">
+                <div class="flex items-center h-5">
+                    <input type="checkbox" name="simulate" form="upload-form" class="size-5 text-primary border-gray-300 rounded focus:ring-primary bg-background-light dark:bg-[#1f162e] dark:border-[#382e48]">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold text-[#130d1b] dark:text-white">Modo Simulación</span>
+                    <span class="text-xs text-[#6b4c9a] dark:text-[#a589cc]">Analizar sin guardar cambios en base de datos.</span>
+                </div>
+            </label>
+
+            <div class="mt-auto pt-4 border-t border-[#ece7f3] dark:border-[#382e48]">
+                <button type="submit" form="upload-form" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined animate-spin htmx-indicator">progress_activity</span>
+                    <span>Procesar Archivo</span>
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Result Container -->
+<div id="upload-result">
+    <!-- El resultado del análisis (tablas, resumen) se cargará aquí vía HTMX -->
+</div>
+
+<script>
+    // Simple script to update file name when selected
+    document.getElementById('file-input').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            const fileName = e.target.files[0].name;
+            const btn = document.querySelector('#dropzone button');
+            btn.innerHTML = `<span class="material-symbols-outlined text-green-500">check_circle</span> ${fileName}`;
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+<!-- Divider / Step Indicator -->
+<div class="flex items-center gap-4 py-6">
+    <div class="h-px flex-1 bg-[#ece7f3] dark:bg-[#382e48]"></div>
+    <span class="text-xs font-semibold text-[#6b4c9a] dark:text-[#a589cc] uppercase tracking-wider">Vista Previa de Resultados</span>
+    <div class="h-px flex-1 bg-[#ece7f3] dark:bg-[#382e48]"></div>
+</div>
+
+<!-- Analysis Results Dashboard -->
+<section class="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-backwards">
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] flex flex-col justify-between">
+            <span class="text-sm font-medium text-[#6b4c9a] dark:text-[#a589cc] mb-1">Total Registros</span>
+            <div class="flex items-end gap-2">
+                <span class="text-3xl font-bold text-[#130d1b] dark:text-white">{{ stats.total }}</span>
+                <span class="text-xs text-[#6b4c9a] dark:text-[#a589cc] mb-1">transacciones</span>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border-l-4 border-l-emerald-500 flex flex-col justify-between">
+            <span class="text-sm font-medium text-[#6b4c9a] dark:text-[#a589cc] mb-1">Conciliado Auto</span>
+            <div class="flex items-end gap-2">
+                <span class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{{ stats.conciliados }}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
+                    {{ stats.porcentaje_conciliado }}%
+                </span>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border-l-4 border-l-amber-500 flex flex-col justify-between">
+            <span class="text-sm font-medium text-[#6b4c9a] dark:text-[#a589cc] mb-1">Pendiente Revisión</span>
+            <div class="flex items-end gap-2">
+                <span class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ stats.pendientes }}</span>
+                <span class="text-xs text-[#6b4c9a] dark:text-[#a589cc] mb-1">sugerencias</span>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border-l-4 border-l-red-500 flex flex-col justify-between">
+            <span class="text-sm font-medium text-[#6b4c9a] dark:text-[#a589cc] mb-1">Sin Match</span>
+            <div class="flex items-end gap-2">
+                <span class="text-3xl font-bold text-red-600 dark:text-red-400">{{ stats.sin_match }}</span>
+                <span class="text-xs text-red-400 mb-1">requiere manual</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Split Table: Detected vs Matches -->
+    <div class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] overflow-hidden">
+        <div class="p-4 border-b border-[#ece7f3] dark:border-[#382e48] flex flex-wrap gap-4 justify-between items-center bg-background-light/50 dark:bg-[#1f162e]/50">
+            <h3 class="font-bold text-[#130d1b] dark:text-white">Detalle de Conciliación</h3>
+            <div class="flex gap-2">
+                <button class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-[#6b4c9a] dark:text-[#a589cc] bg-white dark:bg-surface-dark border border-[#ece7f3] dark:border-[#382e48] rounded-md hover:bg-background-light dark:hover:bg-[#382e48]">
+                    <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    Filtros
+                </button>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-background-light dark:bg-[#1f162e] text-[#6b4c9a] dark:text-[#a589cc] font-semibold uppercase tracking-wider text-xs">
+                    <tr>
+                        <th class="px-6 py-3 w-[40%] border-r border-[#ece7f3] dark:border-[#382e48]">Transacción Detectada (Archivo)</th>
+                        <th class="px-6 py-3 w-[60%]">Acción Sugerida</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#ece7f3] dark:divide-[#382e48]">
+                    {% for txn in transacciones %}
+                    <tr class="hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-colors group">
+                        <!-- Left: Bank Data -->
+                        <td class="px-6 py-4 border-r border-[#ece7f3] dark:border-[#382e48] relative">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-[#130d1b] dark:text-white">{{ txn.description }}</p>
+                                    <p class="text-xs text-[#6b4c9a] dark:text-[#a589cc]">{{ txn.raw_date }} • Ref: {{ txn.reference }}</p>
+                                </div>
+                                <p class="font-bold {{ 'text-green-600 dark:text-green-400' if txn.transaction_type == 'CREDIT' else 'text-[#130d1b] dark:text-white' }} font-mono">
+                                    {{ "-" if txn.transaction_type == 'DEBIT' else "+" }}${{ "{:,.2f}".format(txn.amount) }}
+                                </p>
+                            </div>
+                        </td>
+                        <!-- Right: Match Data (Simulado) -->
+                        <td class="px-6 py-4">
+                            {% if txn.amount > 1000 %}
+                                <!-- High Value / Match Simulation -->
+                                <div class="flex items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-emerald-100 dark:bg-emerald-900/50 p-2 rounded-lg text-emerald-600 dark:text-emerald-400">
+                                            <span class="material-symbols-outlined">receipt_long</span>
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <p class="font-bold text-[#130d1b] dark:text-white">Posible Pago Cliente</p>
+                                                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded border border-emerald-200">98% Probabilidad</span>
+                                            </div>
+                                            <p class="text-xs text-[#6b4c9a] dark:text-[#a589cc]">Coincide con saldo pendiente cercano</p>
+                                        </div>
+                                    </div>
+                                    <button class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded shadow-sm transition-colors">
+                                        Conciliar
+                                    </button>
+                                </div>
+                            {% else %}
+                                <!-- Low Value / Review Simulation -->
+                                <div class="flex items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-amber-100 dark:bg-amber-900/50 p-2 rounded-lg text-amber-600 dark:text-amber-400">
+                                            <span class="material-symbols-outlined">warning</span>
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <p class="font-bold text-[#130d1b] dark:text-white">Gasto Operativo</p>
+                                                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded border border-amber-200">Revisar</span>
+                                            </div>
+                                            <p class="text-xs text-[#6b4c9a] dark:text-[#a589cc]">Sin coincidencia exacta</p>
+                                        </div>
+                                    </div>
+                                    <button class="px-3 py-1.5 bg-white dark:bg-surface-dark border border-[#d9cfe7] dark:border-[#382e48] text-[#130d1b] dark:text-white text-xs font-bold rounded shadow-sm transition-colors">
+                                        Manual
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

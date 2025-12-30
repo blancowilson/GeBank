@@ -1,0 +1,71 @@
+<div class="flex flex-col rounded-xl bg-white dark:bg-surface-dark border border-[#d9cfe7] dark:border-[#382e48] shadow-sm overflow-hidden">
+    <!-- Table Header/Search -->
+    <div class="flex flex-wrap items-center justify-between px-6 py-5 border-b border-[#ece7f3] dark:border-[#382e48] gap-4">
+        <h2 class="text-[#130d1b] dark:text-white text-xl font-bold leading-tight">Listado de Clientes</h2>
+        <div class="flex flex-1 justify-end max-w-md">
+            <label class="flex flex-col w-full !h-10">
+                <div class="flex w-full flex-1 items-stretch rounded-lg h-full border border-[#ece7f3] dark:border-[#382e48] overflow-hidden">
+                    <div class="text-[#6b4c9a] dark:text-[#a589cc] flex border-none bg-background-light dark:bg-surface-dark items-center justify-center pl-3">
+                        <span class="material-symbols-outlined text-[20px]">search</span>
+                    </div>
+                    <input type="text" name="search" placeholder="Buscar por código, nombre o RIF..." value="{{ request.query_params.get('search', '') }}"
+                           class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden text-[#130d1b] dark:text-white focus:outline-0 focus:ring-0 border-none bg-background-light dark:bg-surface-dark focus:border-none h-full placeholder:text-[#6b4c9a] dark:placeholder:text-[#6a5e80] px-3 text-sm font-normal leading-normal"
+                           hx-get="{{ url_for('listar_clientes') }}" hx-trigger="keyup changed delay:500ms" hx-include="[name='sort_by'], [name='order']">
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+            <thead class="bg-background-light dark:bg-[#1f162e]">
+                {% set current_sort = request.query_params.get('sort_by', 'deuda') %}
+                {% set current_order = request.query_params.get('order', 'desc') %}
+                <tr hx-include="[name='search']">
+                    <th class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors">
+                        <a href="{{ request.url.remove_query_params('page').include_query_params(sort_by='codigo', order=('desc' if current_sort == 'codigo' and current_order == 'asc' else 'asc')) }}">
+                            <div class="flex items-center gap-1">Código {% if current_sort == 'codigo' %}<span class="material-symbols-outlined text-sm">{{ 'expand_less' if current_order == 'asc' else 'expand_more' }}</span>{% endif %}</div>
+                        </a>
+                    </th>
+                    <th class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors">
+                         <a href="{{ request.url.remove_query_params('page').include_query_params(sort_by='nombre', order=('desc' if current_sort == 'nombre' and current_order == 'asc' else 'asc')) }}">
+                            <div class="flex items-center gap-1">Descripción / RIF {% if current_sort == 'nombre' %}<span class="material-symbols-outlined text-sm">{{ 'expand_less' if current_order == 'asc' else 'expand_more' }}</span>{% endif %}</div>
+                        </a>
+                    </th>
+                    <th class="px-6 py-4 font-semibold cursor-pointer hover:text-primary transition-colors text-right">
+                        <a href="{{ request.url.remove_query_params('page').include_query_params(sort_by='deuda', order=('desc' if current_sort == 'deuda' and current_order == 'asc' else 'asc')) }}">
+                            <div class="flex items-center justify-end gap-1">Saldo Total ($) {% if current_sort == 'deuda' %}<span class="material-symbols-outlined text-sm">{{ 'expand_less' if current_order == 'asc' else 'expand_more' }}</span>{% endif %}</div>
+                        </a>
+                    </th>
+                    <th class="px-6 py-4 font-semibold text-center">Estado</th>
+                    <th class="px-6 py-4 font-semibold w-10"></th>
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-[#ece7f3] dark:divide-[#382e48]">
+                {% include 'cxc/_clientes_table_rows.html' %}
+            </tbody>
+            <tfoot class="bg-background-light dark:bg-[#1f162e] font-bold">
+                <tr class="text-sm text-[#130d1b] dark:text-white">
+                    <td colspan="2" class="px-6 py-3 text-right uppercase text-xs text-[#6b4c9a] dark:text-[#a589cc]">Total de la Página:</td>
+                    <td class="px-6 py-3 text-right"><span class="text-primary dark:text-[#a589cc] mr-1">$</span>{{ "{:,.2f}".format(total_pagina_usd) }}</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="px-6 py-4 border-t border-[#ece7f3] dark:border-[#382e48] flex items-center justify-between">
+        <p class="text-sm text-[#6b4c9a] dark:text-[#a589cc]">
+            Mostrando <span class="font-bold">{{ ((pagination.current_page - 1) * pagination.page_size) + 1 }}</span> a <span class="font-bold">{{ ((pagination.current_page - 1) * pagination.page_size) + clientes|length }}</span> de <span class="font-bold">{{ pagination.total_items }}</span> clientes
+        </p>
+        <div class="flex gap-1 items-center">
+            {% set base_url = request.url.remove_query_params('page') %}
+            <a href="{{ base_url.include_query_params(page=1) if pagination.prev_page else '#' }}" class="p-2 rounded hover:bg-purple-50 dark:hover:bg-[#382e48] text-[#6b4c9a] dark:text-[#a589cc] {{ 'opacity-50 pointer-events-none' if not pagination.prev_page }}"><span class="material-symbols-outlined">first_page</span></a>
+            <a href="{{ base_url.include_query_params(page=pagination.prev_page) if pagination.prev_page else '#' }}" class="p-2 rounded hover:bg-purple-50 dark:hover:bg-[#382e48] text-[#6b4c9a] dark:text-[#a589cc] {{ 'opacity-50 pointer-events-none' if not pagination.prev_page }}"><span class="material-symbols-outlined">chevron_left</span></a>
+            <span class="text-sm px-2">Página {{ pagination.current_page }} de {{ pagination.total_pages }}</span>
+            <a href="{{ base_url.include_query_params(page=pagination.next_page) if pagination.next_page else '#' }}" class="p-2 rounded hover:bg-purple-50 dark:hover:bg-[#382e48] text-[#6b4c9a] dark:text-[#a589cc] {{ 'opacity-50 pointer-events-none' if not pagination.next_page }}"><span class="material-symbols-outlined">chevron_right</span></a>
+            <a href="{{ base_url.include_query_params(page=pagination.total_pages) if pagination.next_page else '#' }}" class="p-2 rounded hover:bg-purple-50 dark:hover:bg-[#382e48] text-[#6b4c9a] dark:text-[#a589cc] {{ 'opacity-50 pointer-events-none' if not pagination.next_page }}"><span class="material-symbols-outlined">last_page</span></a>
+        </div>
+    </div>
+</div>

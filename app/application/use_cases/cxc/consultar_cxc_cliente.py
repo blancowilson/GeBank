@@ -15,7 +15,7 @@ class ConsultarCXCClienteUseCase:
         self.factura_repo = factura_repo
         self.cxc_service = cxc_service
 
-    async def execute(self, cliente_id: str) -> Optional[CXCClienteDTO]:
+    async def execute(self, cliente_id: str, sort_by: str = 'antiguedad_dias', order: str = 'desc') -> Optional[CXCClienteDTO]:
         cliente = await self.cliente_repo.obtener_por_id(cliente_id)
         if not cliente:
             return None
@@ -32,6 +32,10 @@ class ConsultarCXCClienteUseCase:
                 antiguedad_dias=self.cxc_service.calcular_antiguedad_dias(f.fecha_emision)
             ) for f in facturas
         ]
+        
+        # Sorting logic
+        reverse = (order == 'desc')
+        facturas_dto.sort(key=lambda x: getattr(x, sort_by, 0), reverse=reverse)
         
         return CXCClienteDTO(
             id=cliente.id,

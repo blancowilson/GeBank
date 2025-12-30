@@ -1,0 +1,48 @@
+{% for cliente in clientes %}
+<tr class="hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-colors group">
+    <td class="px-6 py-4 text-[#130d1b] dark:text-white font-mono text-xs">{{ cliente.id }}</td>
+    <td class="px-6 py-4 text-[#130d1b] dark:text-white">
+        <div class="flex items-center gap-3">
+            <div class="size-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-[#a589cc] text-xs font-bold border border-primary/20">
+                {{ cliente.descripcion[:2] | upper }}
+            </div>
+            <div class="flex flex-col">
+                <span class="font-bold">{{ cliente.descripcion }}</span>
+                <span class="text-xs text-[#6b4c9a] dark:text-[#a589cc]">{{ cliente.rif }}</span>
+            </div>
+        </div>
+    </td>
+    <td class="px-6 py-4 text-right text-[#130d1b] dark:text-white font-bold">
+        <span class="text-primary dark:text-[#a589cc] mr-1">$</span>{{ "{:,.2f}".format(cliente.saldo_usd.valor) }}
+    </td>
+    <td class="px-6 py-4 text-center">
+        {% if cliente.medicion_deuda == 'Buena' %}
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                <span class="size-1.5 rounded-full bg-green-600"></span> Solvente
+            </span>
+        {% elif cliente.medicion_deuda == 'Regular' %}
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+                <span class="size-1.5 rounded-full bg-yellow-600"></span> Pendiente
+            </span>
+        {% else %}
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                <span class="size-1.5 rounded-full bg-red-600"></span> Crítico
+            </span>
+        {% endif %}
+    </td>
+    <td class="px-6 py-4 text-gray-400">
+        <button hx-get="/cxc/cliente/{{ cliente.id }}/facturas" 
+                hx-target="#modal-container"
+                class="material-symbols-outlined cursor-pointer hover:text-primary dark:hover:text-[#a589cc] transition-colors">
+            visibility
+        </button>
+    </td>
+</tr>
+{% endfor %}
+{% if not clientes %}
+<tr>
+    <td colspan="5" class="px-6 py-10 text-center text-[#6b4c9a] dark:text-[#a589cc]">
+        No se encontraron clientes que coincidan con la búsqueda.
+    </td>
+</tr>
+{% endif %}

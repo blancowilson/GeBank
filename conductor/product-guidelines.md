@@ -6,12 +6,15 @@
 - **Dynamic Updates:** Use **HTMX** for partial DOM updates (modals, table filtering, form submissions) to provide a seamless, SPA-like experience without the complexity of a heavy frontend framework.
 - **Local Interactivity:** Use **Alpine.js** for minimal client-side state management (e.g., toggling menus, client-side validation).
 
-## Multi-Currency Handling (USD Base -> VES Referential)
-- **Base Currency:** The primary currency for all transactions and balances is **U.S. Dollars ($)**.
-- **Referential Currency:** Bolívares (VES) are treated as a referential currency. Calculations to VES should be performed using the established `Factor` at the transaction time.
-- **Explicit & Distinct Display:** VES and USD must be visually distinguishable (e.g., using different color codes or currency symbols) to prevent user errors in a high-stakes financial environment.
+## Multi-Currency Handling (Configurable Base Currency)
+- **Base Currency:** The system will support a configurable base currency (e.g., USD, VES). This choice will determine how all monetary calculations and conversions are performed. By default, U.S. Dollars ($) will be the base currency.
+- **Referential Currency:** The other currency will be treated as referential. Conversions to/from the referential currency will be done using the established `Factor` at the transaction time.
+    - If Base Currency is USD: VES is referential, calculated by USD * Factor.
+    - If Base Currency is VES: USD is referential, calculated by VES / Factor.
+- **Explicit & Distinct Display:** Both currencies must be visually distinguishable (e.g., using different color codes or currency symbols) to prevent user errors in a high-stakes financial environment.
 - **Precision:** Financial calculations must maintain a precision of at least two decimal places for both currencies.
 - **Data Source for BS:** For accurate Bolívares representation and to avoid rounding errors, queries should rely on the `VW_ADM_FACT_CONBS` and `VW_ADM_ITEMSFACTURABS` SQL views where possible.
+- **Configuration:** A future configuration module will allow administrators to define the base currency and manage conversion factors.
 
 ## Tone & Communication
 - **Professional & Precise:** Error messages and system notifications must be clear, technical, and actionable, especially regarding bank reconciliation failures or database synchronization errors.

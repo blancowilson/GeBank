@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     # Celery & Redis
     CELERY_BROKER_URL: str
     CELERY_RESULT_BACKEND: str
+
+    # Currency Settings
+    BASE_CURRENCY: str = "USD" # USD, VES, EUR
+    REFERENTIAL_CURRENCY: str = "VES" # VES, USD, EUR
     
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
