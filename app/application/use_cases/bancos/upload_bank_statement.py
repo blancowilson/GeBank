@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 from app.domain.services.parser_service import BankFileParserService
 from app.domain.repositories.staging_banco_repository import StagingBancoRepository
 from app.domain.entities.staging_transaction import StagingTransaction
@@ -13,21 +14,32 @@ class UploadBankStatementUseCase:
         transaction_rows = self.parser_service.parse_file(bank_id, file_type, file_content, filename)
         
         # 2. Convert TransactionRow objects to StagingTransaction domain entities
-        staging_transactions = [
-            StagingTransaction(
+        staging_transactions = []
+        for row in transaction_rows:
+            # Attempt to parse date, assuming YYYY-MM-DD format for now.
+            try:
+                # Handle cases where raw_date might be a datetime object from pandas already
+                if isinstance(row.raw_date, datetime):
+                    parsed_date = row.raw_date
+                else:
+                    # Try parsing from a common string format
+                    parsed_date = datetime.strptime(str(row.raw_date).split(" ")[0], '%Y-%m-%d')
+            except ValueError:
+                # If parsing fails, use a default or handle the error
+                parsed_date = datetime.now() # Fallback, should be logged
+
+            staging_transactions.append(StagingTransaction(
                 id=None,
                 cod_banco=row.bank_name, # Or a mapped bank_id
                 referencia=row.reference,
-                fecha=row.raw_date, # This needs conversion to datetime
+                fecha=parsed_date,
                 monto=row.amount,
                 moneda=row.currency,
                 tipo_movimiento=row.transaction_type,
                 descripcion=row.description,
                 estatus=StagingTransaction.PENDIENTE,
                 nombre_archivo=filename
-            )
-            for row in transaction_rows
-        ]
+            ))
         
         # 3. Persist the batch of transactions to the staging table
         await self.staging_repo.guardar_lote(staging_transactions)

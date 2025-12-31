@@ -51,11 +51,11 @@
                 <tbody class="divide-y divide-[#ece7f3] dark:divide-[#382e48]">
                     {% for txn in transacciones %}
                     <tr class="hover:bg-background-light dark:hover:bg-[#1f162e]">
-                        <td class="px-6 py-4">{{ txn.raw_date }}</td>
-                        <td class="px-6 py-4">{{ txn.description }}</td>
-                        <td class="px-6 py-4">{{ txn.reference }}</td>
-                        <td class="px-6 py-4">{{ txn.amount }} {{ txn.currency }}</td>
-                        <td class="px-6 py-4">{{ txn.transaction_type }}</td>
+                        <td class="px-6 py-4">{{ txn.fecha }}</td>
+                        <td class="px-6 py-4">{{ txn.descripcion }}</td>
+                        <td class="px-6 py-4">{{ txn.referencia }}</td>
+                        <td class="px-6 py-4">{{ "%.2f"|format(txn.monto) }} {{ txn.moneda }}</td>
+                        <td class="px-6 py-4">{{ txn.tipo_movimiento }}</td>
                     </tr>
                     {% else %}
                     <tr>
