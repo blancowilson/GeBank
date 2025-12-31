@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update
 from app.domain.entities.pago_insytech import GePagos, GeDocumentos, GeInstrumentos
 from app.domain.repositories.insytech_repository import InsytechRepository
 from app.infrastructure.database.models import GePagos as DBGePagos, \
@@ -144,6 +144,18 @@ class InsytechRepositoryImpl(InsytechRepository):
                 MontoCancelado=pago.MontoCancelado,
                 status=pago.status,
                 UrlImagen=pago.UrlImagen,
-                fechaCaptura=pago.fechaCaptura
+                fechaCaptura=pago.fechaCaptura,
+                conciliado_por=pago.conciliado_por,
+                fecha_conciliacion=pago.fecha_conciliacion
             ) for pago in db_pagos
         ]
+        
+    async def actualizar_pago(self, pago: GePagos) -> GePagos:
+        stmt = update(DBGePagos).where(DBGePagos.idPago == pago.idPago).values(
+            status=pago.status,
+            conciliado_por=pago.conciliado_por,
+            fecha_conciliacion=pago.fecha_conciliacion
+        )
+        await self.session.execute(stmt)
+        await self.session.commit()
+        return pago

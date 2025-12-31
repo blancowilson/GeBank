@@ -226,6 +226,10 @@ class GePagos(Base):
     status = Column(SmallInteger, nullable=False)
     UrlImagen = Column(Text)
     fechaCaptura = Column(DateTime, nullable=False)
+    
+    # Audit fields
+    conciliado_por = Column(String(50), nullable=True)
+    fecha_conciliacion = Column(DateTime, nullable=True)
 
     documentos = relationship("GeDocumentos", back_populates="pago")
     instrumentos = relationship("GeInstrumentos", back_populates="pago")

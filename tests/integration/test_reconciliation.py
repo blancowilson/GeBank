@@ -54,7 +54,7 @@ async def test_reconciliation_success(client: AsyncClient):
     assert response.status_code == 200
     assert "Match Encontrado" in response.text
     assert "Pago Reportado" in response.text
-    assert "ID: RECON001" in response.text
+    assert "ID:</strong> RECON001" in response.text
     assert "1500.00 USD" in response.text
     
     # Verify that the final status is "Conciliado"

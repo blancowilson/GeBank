@@ -19,7 +19,6 @@ class InsytechRepository(ABC):
         """Obtiene los documentos asociados a un pago."""
         pass
 
-    @abstractmethod
     async def obtener_instrumentos_por_pago(self, pago_id: str) -> List[GeInstrumentos]:
         """Obtiene los instrumentos asociados a un pago."""
         pass
@@ -27,4 +26,9 @@ class InsytechRepository(ABC):
     @abstractmethod
     async def obtener_pagos_por_status(self, status: int, limit: int = 100) -> List[GePagos]:
         """Obtiene una lista de pagos según su estado."""
+        pass
+        
+    @abstractmethod
+    async def actualizar_pago(self, pago: GePagos) -> GePagos:
+        """Actualiza un pago existente, incluyendo su estado y campos de auditoría."""
         pass

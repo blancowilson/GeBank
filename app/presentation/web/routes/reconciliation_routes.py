@@ -61,6 +61,8 @@ async def attempt_reconciliation(request: Request, pago_id: str, db: AsyncSessio
             {"request": request, "result": result}
         )
     except Exception as e:
+        import traceback
+        traceback.print_exc() # Print full stack trace to terminal
         return templates.TemplateResponse(
             "shared/error_toast.html",
             {"request": request, "message": f"Error de conciliación: {e}"}

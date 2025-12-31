@@ -34,8 +34,8 @@ class SaintTransactionRepositoryImpl(SaintTransactionRepository):
             Monto=transaccion.monto,
             MtoCr=transaccion.monto if transaccion.tipo_movimiento == 'CREDITO' else 0,
             MtoDb=transaccion.monto if transaccion.tipo_movimiento == 'DEBITO' else 0,
-            Descrip=transaccion.descripcion[:60], # Truncar a 60 caracteres
-            Beneficiario=transaccion.descripcion.split(' ')[0][:50], # Placeholder
+            Descrip=(transaccion.descripcion or "")[:60], # Handle None
+            Beneficiario=(transaccion.descripcion or "").split(' ')[0][:50], # Handle None
             Estado=2, # 2 = conciliado
             Consolidado=0 # 0 = no consolidado
         )

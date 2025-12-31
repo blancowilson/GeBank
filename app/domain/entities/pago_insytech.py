@@ -16,6 +16,8 @@ class GePagos:
     status: int # 1=Pendiente, 3=Aprobado, 9=Rechazado
     UrlImagen: Optional[str]
     fechaCaptura: datetime
+    conciliado_por: Optional[str] = None
+    fecha_conciliacion: Optional[datetime] = None
     
     # Constants for Status
     PENDIENTE = 1
