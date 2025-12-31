@@ -216,7 +216,7 @@ class GePagos(Base):
     __table_args__ = {"schema": "AppConciliacion"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    idPago = Column(String(10), nullable=False, unique=True)
+    idPago = Column(String(20), nullable=False, unique=True)
     codCliente = Column(String(20), nullable=False)
     DescripClie = Column(String(100), nullable=False)
     Usuario = Column(String(50), nullable=False)
@@ -235,7 +235,7 @@ class GeDocumentos(Base):
     __table_args__ = {"schema": "AppConciliacion"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    idPago = Column(String(10), ForeignKey("AppConciliacion.GePagos.idPago"), nullable=False)
+    idPago = Column(String(20), ForeignKey("AppConciliacion.GePagos.idPago"), nullable=False)
     tipoDoc = Column(String(4), nullable=False)
     numeroDoc = Column(String(30), nullable=False)
     emision = Column(DateTime, nullable=False)
@@ -255,7 +255,7 @@ class GeInstrumentos(Base):
     __table_args__ = {"schema": "AppConciliacion"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    idPago = Column(String(10), ForeignKey("AppConciliacion.GePagos.idPago"), nullable=False)
+    idPago = Column(String(20), ForeignKey("AppConciliacion.GePagos.idPago"), nullable=False)
     banco = Column(String(50))
     formaPago = Column(String(50), nullable=False)
     nroPlanilla = Column(String(30))
