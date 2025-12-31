@@ -54,3 +54,29 @@
 - [x] Jinja2 Template: `cxc/detalle_facturas.html` (Aging + Partial) [Implemented]
 - [x] FastAPI Route: `POST /cxc/pago/registrar` -> Form submission via HTMX [Implemented]
 - [x] Verify UI flows and responsiveness [Verified]
+
+---
+
+# Phase 2: Insytech Integration & Reconciliation Engine
+
+## Todo List
+
+### Sprint 2.1: Infrastructure & Database Expansion
+- [ ] Create `Staging_Bancos` table in `AppConciliacion` schema
+- [ ] Implement `StagingTransaction` entity and repository
+
+### Sprint 2.2: Ingestion & Parsing
+- [ ] Enhance `TasaService` for historical conversion logic
+- [ ] Implement `ReceivePaymentPacketUseCase` (GePagos/Docs/Instruments)
+- [ ] Implement `BankFileParserService` and `UploadBankStatementUseCase`
+
+### Sprint 2.3: Reconciliation Logic
+- [ ] Implement `ReconciliationEngine` domain service (Match Logic)
+- [ ] Implement `ConciliarPagoUseCase`
+
+### Sprint 2.4: Persistence (Saint Sync)
+- [ ] Implement adapters to write to `SBTRAN` and update `SAACXC` upon approval
+
+### Sprint 2.5: UI
+- [ ] Create "Bandeja de Entrada" (Staging) view
+- [ ] Create "Conciliación Detallada" view
