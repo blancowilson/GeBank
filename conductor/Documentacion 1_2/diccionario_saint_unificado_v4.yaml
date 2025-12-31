@@ -166,9 +166,6 @@ tables:
         type: varchar](20)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       longitud:
         type: int
         description: ''
@@ -271,9 +268,6 @@ tables:
         type: decimal](28,4)
         description: Comisión
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       creditos:
         type: decimal](28,4)
         description: ''
@@ -542,9 +536,6 @@ tables:
       codusua:
         type: varchar](10)
         description: Cod. Cliente
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       creditos:
         type: decimal](28,4)
         description: ''
@@ -730,9 +721,6 @@ tables:
         type: varchar](20)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       estrans:
         type: smallint
         description: ''
@@ -760,9 +748,6 @@ tables:
     fields:
       autsri:
         type: varchar](80)
-        description: ''
-      create:
-        type: varchar
         description: ''
       fechae:
         type: datetime2
@@ -804,9 +789,6 @@ tables:
         type: varchar](20)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       nrooper:
         type: int
         description: ''
@@ -829,9 +811,6 @@ tables:
         description: ''
       codesta:
         type: varchar](10)
-        description: ''
-      create:
-        type: varchar
         description: ''
       fechav:
         type: datetime2
@@ -863,9 +842,6 @@ tables:
         type: int
         description: Cod. Ciudad
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: nvarchar](40)
         description: Descripción
@@ -890,9 +866,6 @@ tables:
         type: varchar](10)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
   SACLIE:
     description: CLIENTES
     type: Entity
@@ -932,9 +905,6 @@ tables:
       codzona:
         type: varchar](10)
         description: Cod. Zona
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descext:
         type: varchar
         description: Descripción extendida o notas adicionales
@@ -1116,9 +1086,6 @@ tables:
         type: varchar](10)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
   SACLIOFE:
     description: Tabla SACLIOFE importada desde SQL
     type: Operational
@@ -1132,9 +1099,6 @@ tables:
         type: varchar](5)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       numerod:
         type: varchar](10)
         description: ''
@@ -1148,9 +1112,6 @@ tables:
         type: varchar](10)
         description: Cod. Servidor
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       desde:
         type: decimal](28,4)
         description: Desde
@@ -1184,9 +1145,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
   SACOMP:
     description: COMPRAS
     type: Transaction
@@ -1249,9 +1207,6 @@ tables:
         type: decimal](28,4)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       credito:
         type: decimal](28,4)
         description: ''
@@ -1553,9 +1508,6 @@ tables:
         type: decimal](28,4)
         description: Costo del mes actual del sistema
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       dctoaplica:
         type: int
         description: ''
@@ -1854,9 +1806,6 @@ tables:
       codsucu:
         type: varchar
         description: Cod. Sucursal
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripción
@@ -1905,9 +1854,6 @@ tables:
         type: varchar](5)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       desde:
         type: int
         description: ''
@@ -1946,9 +1892,6 @@ tables:
         constraint: NOT NULL
       codusua:
         type: varchar](10)
-        description: ''
-      create:
-        type: varchar
         description: ''
       devmtotax1:
         type: decimal](28,4)
@@ -2070,9 +2013,6 @@ tables:
         type: varchar](10)
         description: Cod. Vendedor
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       desde:
         type: decimal](28,4)
         description: Desde
@@ -2119,9 +2059,6 @@ tables:
         type: varchar](10)
         description: Cod. Deposito
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripción
@@ -2170,9 +2107,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       credito:
         type: decimal](28,4)
         description: Credito
@@ -2238,9 +2172,6 @@ tables:
         type: decimal](28,4)
         description: Contado
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       credito:
         type: decimal](28,4)
         description: Credito
@@ -2290,9 +2221,6 @@ tables:
         type: decimal](28,4)
         description: Comision
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       mtoventas:
         type: decimal](28,4)
         description: Monto Ventas
@@ -2322,9 +2250,6 @@ tables:
         type: varchar](5)
         description: Cod. Sucursal
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       mtocargos:
         type: decimal](28,4)
         description: Monto Cargos
@@ -2378,9 +2303,6 @@ tables:
         type: decimal](28,4)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       exfinal:
         type: decimal](28,4)
         description: ''
@@ -2422,9 +2344,6 @@ tables:
         type: decimal](28,4)
         description: Contado
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       credito:
         type: decimal](28,4)
         description: Credito
@@ -2486,9 +2405,6 @@ tables:
         type: varchar](15)
         description: Cod. Producto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
   SAESRV:
     description: ESTADÍSTICA DE SERVICIO
     type: Statistics
@@ -2510,9 +2426,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       mtocompra:
         type: decimal](28,4)
         description: Monto Compra
@@ -2542,9 +2455,6 @@ tables:
         type: varchar](10)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](50)
         description: ''
@@ -2557,9 +2467,6 @@ tables:
     type: Master
     category: Geography
     fields:
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: nvarchar](40)
         description: Descripcion
@@ -2581,9 +2488,6 @@ tables:
         type: varchar](10)
         description: Cod. Int. De Pago
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       impuesto:
         type: decimal](28,4)
         description: Impuesto
@@ -2629,9 +2533,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       mtocomicob:
         type: decimal](28,4)
         description: Monto Comision de Cobro
@@ -2669,9 +2570,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       credito:
         type: decimal](28,4)
         description: Credito
@@ -2729,9 +2627,6 @@ tables:
         type: varchar](10)
         description: Cod. Depósito
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       existen:
         type: decimal](28,4)
         description: Existencia
@@ -2847,9 +2742,6 @@ tables:
         type: decimal](28,4)
         description: Costo Servicio
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       credito:
         type: decimal](28,4)
         description: ''
@@ -3193,9 +3085,6 @@ tables:
       codvend:
         type: varchar](10)
         description: Cod. Vendedor
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](60)
         description: Descripción
@@ -3223,9 +3112,6 @@ tables:
     category: General
     fields:
       autosearch:
-        type: varchar
-        description: ''
-      create:
         type: varchar
         description: ''
       datatype:
@@ -3262,9 +3148,6 @@ tables:
     type: Operational
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](70)
         description: Descripcion
@@ -3289,9 +3172,6 @@ tables:
         type: varchar](15)
         description: Cod. Cliente
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       foldername:
         type: varchar](60)
         description: ''
@@ -3318,9 +3198,6 @@ tables:
         type: varchar](10)
         description: Cod. Servidor
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       foldername:
         type: varchar](60)
         description: ''
@@ -3363,9 +3240,6 @@ tables:
         type: decimal](28,4)
         description: Costo final
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       exfinal:
         type: decimal](28,4)
         description: Existencia final en bultos
@@ -3398,9 +3272,6 @@ tables:
         type: int
         description: Cod. Instancia
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descomi:
         type: smallint
         description: Es comision
@@ -3474,9 +3345,6 @@ tables:
         constraint: PK, NOT NULL
       codtarj:
         type: varchar](10)
-        description: ''
-      create:
-        type: varchar
         description: ''
       descrip:
         type: varchar](40)
@@ -3554,9 +3422,6 @@ tables:
       codtarj:
         type: varchar](10)
         description: ''
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](40)
         description: Descripción
@@ -3627,9 +3492,6 @@ tables:
       codtarj:
         type: varchar](10)
         description: ''
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](40)
         description: ''
@@ -3688,9 +3550,6 @@ tables:
         type: varchar](10)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esporct:
         type: smallint
         description: ''
@@ -3722,9 +3581,6 @@ tables:
         constraint: PK, NOT NULL
       codtarj:
         type: varchar](10)
-        description: ''
-      create:
-        type: varchar
         description: ''
       cuenta:
         type: varchar
@@ -3810,9 +3666,6 @@ tables:
         type: varchar](15)
         description: Cod. Producto
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       foldername:
         type: varchar](60)
         description: ''
@@ -3839,9 +3692,6 @@ tables:
         type: varchar](15)
         description: Cod. Proveedor
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       foldername:
         type: varchar](60)
         description: ''
@@ -3879,9 +3729,6 @@ tables:
         type: decimal](28,4)
         description: Comision
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       desde:
         type: decimal](28,4)
         description: Desde
@@ -4001,9 +3848,6 @@ tables:
         type: decimal](28,4)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       desattr1:
         type: varchar
         description: Uso Interno
@@ -4274,9 +4118,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       desattr1:
         type: varchar
         description: Uso Interno
@@ -4529,9 +4370,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       desattr1:
         type: varchar
         description: Uso Interno
@@ -4722,9 +4560,6 @@ tables:
         type: decimal](28,4)
         description: Comision
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       detalchq:
         type: varchar](40)
         description: detalle de cheque
@@ -4791,9 +4626,6 @@ tables:
         type: decimal](28,4)
         description: comision
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       desde:
         type: decimal](28,4)
         description: Fecha de Emisión
@@ -4862,9 +4694,6 @@ tables:
         type: varchar](15)
         description: Cod. Producto
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       esserv:
         type: smallint
         description: Es Servicio
@@ -4921,9 +4750,6 @@ tables:
     type: Operational
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       deleted:
         type: datetime2
         description: Esta borrado
@@ -4963,9 +4789,6 @@ tables:
         type: varchar](10)
         description: Cod. Vendedor
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       foldername:
         type: varchar](60)
         description: ''
@@ -4988,9 +4811,6 @@ tables:
     type: Operational
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       fieldname1:
         type: varchar
         description: USO INTERNO
@@ -5045,9 +4865,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       fechae:
         type: datetime2
         description: Fecha de Emision
@@ -5140,9 +4957,6 @@ tables:
       codsucu:
         type: varchar
         description: Cod. Servidores
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descomi:
         type: smallint
         description: Departamento es Comisión
@@ -5202,9 +5016,6 @@ tables:
         type: int
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: nvarchar](40)
         description: ''
@@ -5238,9 +5049,6 @@ tables:
       codusua:
         type: varchar](10)
         description: Cod. Usuario
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripción
@@ -5325,9 +5133,6 @@ tables:
       codusua:
         type: varchar](10)
         description: Cod. Usuario
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       esconsig:
         type: varchar
         description: Es consignacion
@@ -5432,9 +5237,6 @@ tables:
         type: varchar](10)
         description: Cod. Operación
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripción
@@ -5561,9 +5363,6 @@ tables:
         type: decimal](28,4)
         description: Comision
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripción
@@ -5651,9 +5450,6 @@ tables:
         type: varchar](5)
         description: Sucursal
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripción
@@ -5715,9 +5511,6 @@ tables:
     type: Master
     category: Geography
     fields:
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: nvarchar](40)
         description: Descripción
@@ -5759,9 +5552,6 @@ tables:
         type: varchar](15)
         description: Producto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esfijo:
         type: int
         description: ''
@@ -5809,9 +5599,6 @@ tables:
       codvend:
         type: varchar](10)
         description: codigo vendedor
-      create:
-        type: varchar
-        description: ''
       fechae:
         type: datetime2
         description: fecha de emision
@@ -5964,9 +5751,6 @@ tables:
         type: decimal](28,4)
         description: Costo Promedio
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       factor:
         type: decimal](28,4)
         description: Factor de cambio
@@ -6085,9 +5869,6 @@ tables:
         type: decimal](28,4)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       docimpo:
         type: varchar](20)
         description: ''
@@ -6174,9 +5955,6 @@ tables:
         type: varchar](5)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       nrounico:
         type: int
         description: ''
@@ -6229,9 +6007,6 @@ tables:
         type: decimal](28,4)
         description: Costo Promedio
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       desattr1:
         type: varchar
         description: Uso Interno
@@ -6457,9 +6232,6 @@ tables:
       codsucu:
         type: varchar
         description: Cod. Sucursal
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descorder:
         type: varchar](10)
         description: ''
@@ -6617,9 +6389,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       fechav:
         type: datetime2
         description: ''
@@ -6652,9 +6421,6 @@ tables:
         type: decimal](28,4)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       credito:
         type: decimal](28,4)
         description: ''
@@ -6706,9 +6472,6 @@ tables:
         type: decimal](28,4)
         description: costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       esserv:
         type: smallint
         description: ''
@@ -6736,9 +6499,6 @@ tables:
     type: Operational
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       floderid:
         type: varchar
         description: ''
@@ -6766,9 +6526,6 @@ tables:
         type: int
         description: Cod. Instancia
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       desde:
         type: decimal](28,4)
         description: Desde
@@ -6798,9 +6555,6 @@ tables:
         type: varchar](10)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       desde:
         type: decimal](28,4)
         description: ''
@@ -6830,9 +6584,6 @@ tables:
         type: varchar](10)
         description: Codigo de instrumento de pago
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       desde:
         type: decimal](28,4)
         description: desde
@@ -6872,9 +6623,6 @@ tables:
       codubic:
         type: varchar](10)
         description: Cod. Deposito
-      create:
-        type: varchar
-        description: ''
       esconsig:
         type: varchar
         description: Es consignacion
@@ -6913,9 +6661,6 @@ tables:
       codubic:
         type: varchar](10)
         description: Cod. Deposito
-      create:
-        type: varchar
-        description: ''
       esconsig:
         type: varchar
         description: Es consignacion
@@ -6957,9 +6702,6 @@ tables:
       codubic:
         type: varchar](10)
         description: Cod. Deposito
-      create:
-        type: varchar
-        description: ''
       esconsig:
         type: varchar
         description: Es consignacion
@@ -7003,9 +6745,6 @@ tables:
         type: varchar](10)
         description: Cod. Deposito
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       nroserial:
         type: varchar](40)
         description: Numero del Serial
@@ -7038,9 +6777,6 @@ tables:
         type: decimal](28,4)
         description: Costo
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](40)
         description: Descripción 1
@@ -7165,9 +6901,6 @@ tables:
         type: varchar](5)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](80)
         description: ''
@@ -7200,9 +6933,6 @@ tables:
     type: Operational
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       tablealias:
         type: varchar](60)
         description: ''
@@ -7236,9 +6966,6 @@ tables:
         type: varchar](10)
         description: Cod. Int. De Pago
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](40)
         description: Descripcion
@@ -7312,9 +7039,6 @@ tables:
         type: varchar](10)
         description: Cod. Impuesto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esreten:
         type: smallint
         description: ''
@@ -7355,9 +7079,6 @@ tables:
         type: varchar](10)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esreten:
         type: smallint
         description: ''
@@ -7398,9 +7119,6 @@ tables:
         type: varchar](10)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esreten:
         type: smallint
         description: ''
@@ -7444,9 +7162,6 @@ tables:
         type: varchar](10)
         description: Cod. Int. De Pago
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripcion
@@ -7534,9 +7249,6 @@ tables:
         type: varchar](10)
         description: Cod. Impuesto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       monto:
         type: decimal](28,4)
         description: Monto
@@ -7581,9 +7293,6 @@ tables:
         type: varchar](10)
         description: Cod. Impuesto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       monto:
         type: decimal](28,4)
         description: Monto
@@ -7625,9 +7334,6 @@ tables:
         type: varchar](10)
         description: Cod. Impuesto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esporct:
         type: smallint
         description: Es Porcentaje
@@ -7649,9 +7355,6 @@ tables:
         type: varchar](10)
         description: Cod. Impuesto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esporct:
         type: smallint
         description: Es Porcentaje
@@ -7673,9 +7376,6 @@ tables:
         type: varchar](10)
         description: Cod. Impuesto
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       esreten:
         type: smallint
         description: ''
@@ -7709,9 +7409,6 @@ tables:
         type: varchar](5)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](100)
         description: ''
@@ -7751,9 +7448,6 @@ tables:
       codzona:
         type: varchar](10)
         description: ''
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](40)
         description: ''
@@ -7779,9 +7473,6 @@ tables:
     fields:
       codmenu:
         type: varchar](10)
-        description: ''
-      create:
-        type: varchar
         description: ''
       descrip:
         type: varchar](70)
@@ -7820,9 +7511,6 @@ tables:
         type: varchar](10)
         description: Cod. Vendedor
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descorder:
         type: varchar](10)
         description: Orden de presentación en listados
@@ -7914,9 +7602,6 @@ tables:
         type: varchar](10)
         description: Cod. Zona
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: Fecha y hora de creación del registro
       descrip:
         type: varchar](40)
         description: Descripción
@@ -7930,9 +7615,6 @@ tables:
     fields:
       codbanc:
         type: varchar](30)
-        description: ''
-      create:
-        type: varchar
         description: ''
       descripcion:
         type: varchar](70)
@@ -7970,9 +7652,6 @@ tables:
         type: varchar](30)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       fechap:
         type: datetime2
         description: ''
@@ -8005,9 +7684,6 @@ tables:
         type: varchar](30)
         description: Cod. Banco
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       ctaconc:
         type: int
         description: Uso Interno
@@ -8198,9 +7874,6 @@ tables:
       concepto3:
         type: varchar](60)
         description: Concepto 3
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](60)
         description: Descripción
@@ -8286,9 +7959,6 @@ tables:
         type: varchar](30)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       tipodoc:
         type: varchar](15)
         description: ''
@@ -8309,9 +7979,6 @@ tables:
       codusua:
         type: varchar](30)
         description: Usuario que realizó la conciliación
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](50)
         description: Descripción conciliación
@@ -8471,9 +8138,6 @@ tables:
         type: int
         description: Consolida?
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       ctaaux1:
         type: varchar](30)
         description: Cta. Retenciones y comisiones tarjet.
@@ -8600,9 +8264,6 @@ tables:
         type: varchar](30)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](70)
         description: ''
@@ -8626,9 +8287,6 @@ tables:
         type: varchar](30)
         description: Código de la cuenta
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       ctabase:
         type: int
         description: ''
@@ -8706,9 +8364,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       data:
         type: varchar](100)
         description: ''
@@ -8740,9 +8395,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](70)
         description: ''
@@ -8759,9 +8411,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](40)
         description: Descripción
@@ -8806,9 +8455,6 @@ tables:
         type: decimal](28,4)
         description: Comisión tarjeta
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       dctopgo:
         type: varchar](60)
         description: Dcto. Pago
@@ -8912,9 +8558,6 @@ tables:
       comentario2:
         type: varchar](50)
         description: comentario 3
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](60)
         description: Descripcion de la operación Frecuente
@@ -8973,9 +8616,6 @@ tables:
         type: int
         description: Transacción consolidada
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](60)
         description: Descripción
@@ -9048,9 +8688,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](70)
         description: ''
@@ -9076,9 +8713,6 @@ tables:
         type: varchar](30)
         description: ''
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](70)
         description: ''
@@ -9120,9 +8754,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       nrounico:
         type: int
         description: ''
@@ -9140,9 +8771,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       grupo:
         type: int
         description: ''
@@ -9184,9 +8812,6 @@ tables:
         type: varchar](30)
         description: Código banco
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](50)
         description: Nombre del formato
@@ -9203,9 +8828,6 @@ tables:
         type: varchar](5)
         description: Codigo moneda
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](60)
         description: Descripcion de la moneda
@@ -9230,9 +8852,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       estado:
         type: int
         description: ''
@@ -9288,9 +8907,6 @@ tables:
         description: ''
       comentario3:
         type: varchar](50)
-        description: ''
-      create:
-        type: varchar
         description: ''
       ctaidb:
         type: varchar](15)
@@ -9420,9 +9036,6 @@ tables:
       codtercero:
         type: varchar](30)
         description: ''
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](70)
         description: ''
@@ -9459,9 +9072,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       document:
         type: varchar](50)
         description: ''
@@ -9521,9 +9131,6 @@ tables:
         type: varchar](30)
         description: Cod. Operaciones Freguentes
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](60)
         description: Descripción
@@ -9595,9 +9202,6 @@ tables:
         description: ''
       comentario3:
         type: varchar](50)
-        description: ''
-      create:
-        type: varchar
         description: ''
       ctaidb:
         type: varchar](15)
@@ -9730,9 +9334,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       estado:
         type: int
         description: ''
@@ -9791,9 +9392,6 @@ tables:
       codbene:
         type: varchar](30)
         description: Código Beneficiario
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](60)
         description: Descripción del pago
@@ -9823,9 +9421,6 @@ tables:
     fields:
       codbanco:
         type: varchar](70)
-        description: ''
-      create:
-        type: varchar
         description: ''
       desbanco:
         type: varchar](70)
@@ -9956,9 +9551,6 @@ tables:
         type: int
         description: Consolidado
         constraint: NOT NULL
-      create:
-        type: varchar
-        description: ''
       crefer:
         type: varchar](35)
         description: Código referencia para presentación en módulo transacciones
@@ -10122,9 +9714,6 @@ tables:
       comentario3:
         type: varchar](50)
         description: Comentario3
-      create:
-        type: varchar
-        description: ''
       crefer:
         type: varchar](35)
         description: Uso Interno
@@ -10192,9 +9781,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       folderid:
         type: int
         description: ''
@@ -10212,9 +9798,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       deleted:
         type: datetime2
         description: ''
@@ -10258,9 +9841,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       modulo:
         type: int
         description: ''
@@ -10282,9 +9862,6 @@ tables:
         type: varchar](30)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       inddta:
         type: int
         description: ''
@@ -10305,9 +9882,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](70)
         description: ''
@@ -10328,9 +9902,6 @@ tables:
     type: Other
     category: General
     fields:
-      create:
-        type: varchar
-        description: ''
       fmtnme:
         type: varchar](70)
         description: ''
@@ -10350,9 +9921,6 @@ tables:
         type: int
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       descrip:
         type: varchar](50)
         description: ''
@@ -10374,9 +9942,6 @@ tables:
         type: varchar](13)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       nivel:
         type: int
         description: ''
@@ -10412,9 +9977,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       fdata:
         type: decimal](28,4)
         description: ''
@@ -10462,9 +10024,6 @@ tables:
         type: varchar](15)
         description: ''
         constraint: PK, NOT NULL
-      create:
-        type: varchar
-        description: ''
       habilitado:
         type: int
         description: ''
@@ -10491,9 +10050,6 @@ tables:
         constraint: PK, NOT NULL
       codvend:
         type: varchar](15)
-        description: ''
-      create:
-        type: varchar
         description: ''
       descrip:
         type: varchar](50)
@@ -10565,9 +10121,6 @@ tables:
         description: ''
       comentario3:
         type: varchar](50)
-        description: ''
-      create:
-        type: varchar
         description: ''
       desbanco:
         type: varchar](70)
@@ -10656,9 +10209,6 @@ tables:
       codcta:
         type: varchar](50)
         description: ''
-      create:
-        type: varchar
-        description: ''
       descripcion:
         type: varchar](50)
         description: ''
@@ -10736,9 +10286,6 @@ external_tables:
         type: "datetime2"
         constraint: "NOT NULL"
         description: "Fecha de captura de datos en el sistema"
-      create:
-        type: "varchar(100)"
-        description: "Fecha y hora de creación"
     notes:
       - "Tabla puente entre sistema de pagos externo y cuentas por cobrar"
       - "Status pendiente indica pago en proceso de validación"
@@ -10806,9 +10353,6 @@ external_tables:
       UrlRetencion:
         type: "varchar(max)"
         description: "URL documento de retención"
-      create:
-        type: "varchar(100)"
-        description: "Fecha y hora de creación"
     notes:
       - "Un pago (GePagos) puede cubrir múltiples documentos (GeDocumentos)"
       - "Soporta pagos parciales de facturas"
@@ -10861,9 +10405,6 @@ external_tables:
         type: "decimal(28,4)"
         constraint: "NOT NULL"
         description: "Monto en este instrumento"
-      create:
-        type: "varchar(100)"
-        description: "Fecha y hora de creación"
     notes:
       - "Un pago puede estar compuesto por múltiples instrumentos"
       - "Ejemplo: 50% cheque, 50% transferencia"

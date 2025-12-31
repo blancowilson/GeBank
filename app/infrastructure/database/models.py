@@ -267,6 +267,33 @@ class GeInstrumentos(Base):
 
     pago = relationship("GePagos", back_populates="instrumentos")
 
+class StagingBancos(Base):
+    __tablename__ = "Staging_Bancos"
+    __table_args__ = {"schema": "AppConciliacion"}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    
+    # Matching fields
+    cod_banco = Column(String(30), nullable=False) # Maps to SBBANC.CodBanc
+    referencia = Column(String(50), nullable=False)
+    fecha = Column(DateTime, nullable=False)
+    
+    # Amounts and Currency
+    monto = Column(DECIMAL(28, 4), nullable=False)
+    moneda = Column(String(5), nullable=False) # 'VES', 'USD'
+    
+    # Transaction Type (Debito/Credito)
+    tipo_movimiento = Column(String(10), nullable=False) # 'DEBITO', 'CREDITO'
+    
+    # Raw Data
+    descripcion = Column(String(255))
+    
+    # Status
+    estatus = Column(SmallInteger, default=0) # 0=Pendiente, 1=Conciliado, 2=Error
+    
+    # Metadata
+    nombre_archivo = Column(String(100))
+
 # ==========================================
 # SQL Views as Mapped Classes
 # ==========================================

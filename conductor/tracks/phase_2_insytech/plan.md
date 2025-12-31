@@ -15,11 +15,11 @@
 ## Todo List
 
 ### Sprint 2.1: Infrastructure & Database Expansion
-- [ ] **DB Migration:** Create `Staging_Bancos` table in `AppConciliacion` schema.
+- [x] **DB Migration:** Create `Staging_Bancos` table in `AppConciliacion` schema.
     - Fields: `id`, `banco`, `referencia`, `monto_credito`, `monto_debito`, `moneda`, `fecha_banco`, `descripcion_raw`.
-- [ ] **DB Migration:** Ensure `GePagos`, `GeDocumentos`, `GeInstrumentos` match the latest schema (Status: Verified).
-- [ ] **Domain Entity:** Create `StagingTransaction` entity.
-- [ ] **Repository:** Implement `StagingBancoRepository` (Insert raw, Find by Ref+Amount).
+- [x] **DB Migration:** Ensure `GePagos`, `GeDocumentos`, `GeInstrumentos` match the latest schema (Status: Verified).
+- [x] **Domain Entity:** Create `StagingTransaction` entity.
+- [x] **Repository:** Implement `StagingBancoRepository` (Insert raw, Find by Ref+Amount).
 
 ### Sprint 2.2: TasaService & Valuation
 - [ ] **Domain Service:** Enhance `TasaService`.
