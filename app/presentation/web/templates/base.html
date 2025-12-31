@@ -67,7 +67,8 @@
             <nav class="hidden md:flex flex-1 justify-center items-center gap-6">
                 <a href="/" class="text-sm font-bold transition-colors {% if request.url.path == '/' %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Dashboard</a>
                 <a href="/cxc/clientes" class="text-sm font-bold transition-colors {% if '/cxc/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Cuentas por Cobrar</a>
-                <a href="/bancos/subir" class="text-sm font-bold transition-colors {% if '/bancos/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Conciliación</a>
+                <a href="/bancos/subir" class="text-sm font-bold transition-colors {% if '/bancos/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Carga Bancaria</a>
+                <a href="/reconciliation/inbox" class="text-sm font-bold transition-colors {% if '/reconciliation/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Bandeja Conciliación</a>
                 <a href="#" class="text-sm font-bold text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary transition-colors">Reportes</a>
             </nav>
 

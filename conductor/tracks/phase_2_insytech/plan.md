@@ -70,9 +70,9 @@
         - *Goal:* Reduce invoice balance.
 
 ### Sprint 2.7: UI & Dashboard
-- [ ] **View:** "Bandeja de Entrada de Pagos" (Staging View).
+- [x] **View:** "Bandeja de Entrada de Pagos" (Staging View).
     - List `GePagos` with Status=1.
     - Visual indicators for "Matched", "Diff Tasa", "No Match".
-- [ ] **View:** "Conciliación Detallada".
+- [x] **View:** "Conciliación Detallada".
     - Show side-by-side: Reported Instrument vs. Found Staging Transaction.
-- [ ] **Security:** Implement Basic RBAC (Admin vs Viewer) for these views.
+- [x] **Security:** Implement Basic RBAC (Admin vs Viewer) for these views.
