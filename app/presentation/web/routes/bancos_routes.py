@@ -2,8 +2,14 @@ from fastapi import APIRouter, Request, UploadFile, File, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Optional
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.infrastructure.database.session import get_db
 
-from app.infrastructure.parsers.insytech_parser import InsytechExcelParser
+from app.domain.services.parser_service import BankFileParserService
+from app.infrastructure.parsers.banesco_excel_parser import BanescoExcelParser
+from app.application.use_cases.bancos.upload_bank_statement import UploadBankStatementUseCase
+from app.domain.repositories.staging_banco_repository import StagingBancoRepository
+from app.infrastructure.repositories.staging_banco_repository_impl import StagingBancoRepositoryImpl
 
 router = APIRouter(prefix="/bancos", tags=["bancos"])
 templates = Jinja2Templates(directory="app/presentation/web/templates")
@@ -21,43 +27,52 @@ async def ver_subir_estado_cuenta(request: Request):
 @router.post("/upload", response_class=HTMLResponse)
 async def procesar_archivo_banco(
     request: Request,
+    bank_id: str = Form(...), # e.g., 'banesco'
     file: UploadFile = File(...),
-    format: str = Form(...),
-    simulate: Optional[bool] = Form(False)
+    db: AsyncSession = Depends(get_db)
 ):
     """
-    Procesa el archivo subido usando el parser correspondiente y retorna
-    los resultados del análisis simulado.
+    Procesa el archivo subido usando el parser correspondiente, lo guarda en
+    la tabla de staging y retorna los resultados.
     """
     content = await file.read()
     filename = file.filename
+    file_type = os.path.splitext(filename)[1].lower().replace('.', '')
     
-    # Selección simple de parser (por ahora solo Insytech/Excel simulado)
-    # En el futuro usaríamos una Factory
-    parser = InsytechExcelParser()
+    # 1. Setup Services and Repositories
+    parser_service = BankFileParserService()
+    # Register available parsers
+    parser_service.register_parser("banesco_xlsx", BanescoExcelParser)
+    # Add other parsers here, e.g., parser_service.register_parser("mercantil_csv", MercantilCSVParser)
     
-    transactions = parser.parse(content, filename)
+    staging_repo: StagingBancoRepository = StagingBancoRepositoryImpl(db)
     
-    # Calcular estadísticas simples para la vista
-    total_txns = len(transactions)
-    # Simulamos que el 60% hace match automático
-    conciliados = int(total_txns * 0.6) 
-    pendientes = int(total_txns * 0.3)
-    sin_match = total_txns - conciliados - pendientes
+    # 2. Execute Use Case
+    use_case = UploadBankStatementUseCase(parser_service, staging_repo)
     
-    stats = {
-        "total": total_txns,
-        "conciliados": conciliados,
-        "porcentaje_conciliado": int((conciliados / total_txns * 100)) if total_txns > 0 else 0,
-        "pendientes": pendientes,
-        "sin_match": sin_match
-    }
-
-    return templates.TemplateResponse(
-        "bancos/_analisis_resultados.html",
-        {
-            "request": request, 
-            "transacciones": transactions,
-            "stats": stats
+    try:
+        transactions = await use_case.execute(bank_id, file_type, content, filename)
+        
+        # 3. Prepare response for the UI
+        total_txns = len(transactions)
+        stats = {
+            "total": total_txns,
+            "filename": filename
         }
-    )
+
+        return templates.TemplateResponse(
+            "bancos/_analisis_resultados.html",
+            {
+                "request": request, 
+                "transacciones": transactions,
+                "stats": stats
+            }
+        )
+    except Exception as e:
+        # Handle errors gracefully in the UI
+        return templates.TemplateResponse(
+            "shared/error_toast.html",
+            {"request": request, "message": f"Error procesando archivo: {e}"}
+        )
+
+import os

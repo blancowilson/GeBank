@@ -37,15 +37,15 @@
 - [x] **API Route:** `POST /api/v1/integration/payments` (Endpoint for Insytech Portal).
 
 ### Sprint 2.4: Bank Statement Parsers (The "Bank Input")
-- [ ] **Service:** `BankFileParserService`.
+- [x] **Service:** `BankFileParserService`.
     - Factory pattern to select parser based on Bank ID.
-- [ ] **Parsers:** Implement specific parsers (e.g., `BanescoExcelParser`, `MercantilCSVParser`).
+- [x] **Parsers:** Implement specific parsers (e.g., `BanescoExcelParser`, `MercantilCSVParser`).
     - Must normalize data into `StagingTransaction` format.
-- [ ] **Use Case:** `UploadBankStatementUseCase`.
+- [x] **Use Case:** `UploadBankStatementUseCase`.
     - Accepts file.
     - Parses content.
     - Bulk inserts into `Staging_Bancos`.
-- [ ] **UI:** `bancos/subir_estado_cuenta.html` (Update mock to use real backend).
+- [x] **UI:** `bancos/subir_estado_cuenta.html` (Update mock to use real backend).
 
 ### Sprint 2.5: The Reconciliation Engine (The "Brain")
 - [ ] **Domain Service:** `ReconciliationEngine`.

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from decimal import Decimal
 
 @dataclass
 class TransactionRow:
@@ -9,7 +10,7 @@ class TransactionRow:
     raw_date: str
     description: str
     reference: str
-    amount: float
+    amount: Decimal # Use Decimal for financial precision
     currency: str  # 'USD', 'VES'
     transaction_type: str  # 'DEBIT', 'CREDIT'
     bank_name: str
@@ -19,6 +20,7 @@ class BaseStatementParser(ABC):
     """
     Clase base abstracta para todos los parsers de archivos (Bancos, Insytech, etc).
     """
+    supported_file_types: List[str] = []
 
     @abstractmethod
     def parse(self, file_content: bytes, filename: str) -> List[TransactionRow]:
@@ -27,9 +29,15 @@ class BaseStatementParser(ABC):
         """
         pass
 
-    @abstractmethod
     def validate_format(self, file_content: bytes, filename: str) -> bool:
         """
-        Verifica si el archivo tiene el formato correcto para este parser.
+        Verifica si el archivo tiene una extensión de archivo soportada.
+        Los parsers específicos pueden sobreescribir esto para validaciones más complejas (ej. revisar cabeceras).
         """
-        pass
+        if not self.supported_file_types:
+            # If not defined, parser must implement its own validation logic
+            raise NotImplementedError("El parser debe definir 'supported_file_types' o implementar 'validate_format'.")
+        
+        file_extension = os.path.splitext(filename)[1].lower()
+        return file_extension in self.supported_file_types
+import os
