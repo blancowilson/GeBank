@@ -226,6 +226,7 @@ class GePagos(Base):
     status = Column(SmallInteger, nullable=False)
     UrlImagen = Column(Text)
     fechaCaptura = Column(DateTime, nullable=False)
+    create = Column(String(100))
 
     documentos = relationship("GeDocumentos", back_populates="pago")
     instrumentos = relationship("GeInstrumentos", back_populates="pago")
@@ -247,6 +248,7 @@ class GeDocumentos(Base):
     montoRetencion = Column(DECIMAL(28, 4), nullable=False)
     NroRetencion = Column(String(50))
     UrlRetencion = Column(Text)
+    create = Column(String(100))
 
     pago = relationship("GePagos", back_populates="documentos")
 
@@ -264,6 +266,7 @@ class GeInstrumentos(Base):
     cheque = Column(String(20))
     bancoCliente = Column(String(50))
     monto = Column(DECIMAL(28, 4), nullable=False)
+    create = Column(String(100))
 
     pago = relationship("GePagos", back_populates="instrumentos")
 
