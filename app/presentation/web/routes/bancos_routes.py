@@ -10,18 +10,27 @@ from app.infrastructure.parsers.banesco_excel_parser import BanescoExcelParser
 from app.application.use_cases.bancos.upload_bank_statement import UploadBankStatementUseCase
 from app.domain.repositories.staging_banco_repository import StagingBancoRepository
 from app.infrastructure.repositories.staging_banco_repository_impl import StagingBancoRepositoryImpl
+from app.infrastructure.saint.saint_banco_repository import SaintBancoRepository
+from app.domain.repositories.banco_repository import BancoRepository
 
 router = APIRouter(prefix="/bancos", tags=["bancos"])
 templates = Jinja2Templates(directory="app/presentation/web/templates")
 
 @router.get("/subir", response_class=HTMLResponse)
-async def ver_subir_estado_cuenta(request: Request):
+async def ver_subir_estado_cuenta(request: Request, db: AsyncSession = Depends(get_db)):
     """
-    Renderiza la vista de carga de estados de cuenta.
+    Renderiza la vista de carga de estados de cuenta, incluyendo la lista de bancos.
     """
+    banco_repo: BancoRepository = SaintBancoRepository(db)
+    bancos = await banco_repo.get_all()
+    
     return templates.TemplateResponse(
         "bancos/subir_estado_cuenta.html", 
-        {"request": request, "title": "Cargar Estado de Cuenta"}
+        {
+            "request": request,
+            "title": "Cargar Estado de Cuenta",
+            "bancos": bancos
+        }
     )
 
 @router.post("/upload", response_class=HTMLResponse)

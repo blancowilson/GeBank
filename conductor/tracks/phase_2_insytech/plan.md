@@ -48,13 +48,13 @@
 - [x] **UI:** `bancos/subir_estado_cuenta.html` (Update mock to use real backend).
 
 ### Sprint 2.5: The Reconciliation Engine (The "Brain")
-- [ ] **Domain Service:** `ReconciliationEngine`.
+- [x] **Domain Service:** `ReconciliationEngine`.
     - **Input:** A `GePago` (with its instruments).
     - **Logic:** Iterate over `GeInstrumentos`.
         - **If Cash:** Route to "Virtual Cash" logic (Auto-approve or Manual Review queue).
         - **If Transfer (USD):** Query `Staging_Bancos` for exact match (Ref + Amount).
         - **If Transfer (VES):** Query `Staging_Bancos` for Ref + (Amount in Bs). Use `TasaService` to validate equivalence.
-- [ ] **Use Case:** `ConciliarPagoUseCase`.
+- [x] **Use Case:** `ConciliarPagoUseCase`.
     - Triggered manually (button) or automatically (cron/event).
     - Updates `GePagos.status` (3=Approved, 9=Rejected).
 

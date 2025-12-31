@@ -12,11 +12,11 @@
     {
         "key": "TASA_ALT_VES_USD",
         "label": "USDT / Paralelo VES a USD",
-        "valor": "48.00",
+        "valor": "60.0",
         "icon": "currency_bitcoin",
         "es_referencia_divisa": true,
         "moneda_origen": "VES",
         "moneda_destino": "USD",
-        "fecha_vigencia": "2025-12-31T13:37:33.430235"
+        "fecha_vigencia": "2025-12-31T14:26:07.733644"
     }
 ]

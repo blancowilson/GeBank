@@ -131,7 +131,7 @@ class SaBanc(Base):
     __tablename__ = "SBBANC"
     
     CodBanc = Column(String(30), primary_key=True, nullable=False)
-    Descrip = Column(String(60), nullable=False)  # Mapped from descripcion
+    descripcion = Column(String(60), nullable=False)  # Mapped from descripcion
     Ciudad = Column(Integer)
     Estado = Column(Integer)
     Pais = Column(Integer)
@@ -141,7 +141,6 @@ class SaBanc(Base):
     FechaC1 = Column(DateTime)
     FechaC2 = Column(DateTime)
     CtaContab = Column(String(25))
-    Activo = Column(Integer, name="estado") # YAML uses 'estado'
     
     transacciones = relationship("SbTran", back_populates="banco")
 

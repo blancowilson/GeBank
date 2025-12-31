@@ -66,12 +66,13 @@
             </h3>
             
             <label class="flex flex-col gap-2">
-                <span class="text-sm font-bold text-[#130d1b] dark:text-white">Formato esperado</span>
+                <span class="text-sm font-bold text-[#130d1b] dark:text-white">Banco</span>
                 <div class="relative">
-                    <select name="format" form="upload-form" class="w-full appearance-none bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] text-[#130d1b] dark:text-white rounded-lg px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary cursor-pointer font-medium">
-                        <option value="insytech_excel" selected>Insytech (Excel)</option>
-                        <option value="saint_txt">Saint Standard (TXT)</option>
-                        <option value="banco_generic">Banco Genérico (CSV)</option>
+                    <select name="bank_id" form="upload-form" class="w-full appearance-none bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] text-[#130d1b] dark:text-white rounded-lg px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary cursor-pointer font-medium">
+                        <option value="" disabled selected>Seleccione un banco...</option>
+                        {% for banco in bancos %}
+                        <option value="{{ banco.id.lower() }}">{{ banco.descripcion }}</option>
+                        {% endfor %}
                     </select>
                     <div class="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b4c9a] pointer-events-none">
                         <span class="material-symbols-outlined">expand_more</span>
