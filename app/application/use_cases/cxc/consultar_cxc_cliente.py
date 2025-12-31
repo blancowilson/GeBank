@@ -33,9 +33,21 @@ class ConsultarCXCClienteUseCase:
             ) for f in facturas
         ]
         
-        # Sorting logic
+        # Sorting logic with validation
+        valid_sort_fields = {'antiguedad_dias', 'saldo_pendiente', 'monto_total', 'fecha_emision'}
+        
+        if sort_by not in valid_sort_fields:
+            # Default to antiguedad_dias if invalid sort_by
+            sort_by = 'antiguedad_dias'
+        
         reverse = (order == 'desc')
-        facturas_dto.sort(key=lambda x: getattr(x, sort_by, 0), reverse=reverse)
+        
+        # Sort with proper error handling
+        try:
+            facturas_dto.sort(key=lambda x: getattr(x, sort_by), reverse=reverse)
+        except AttributeError:
+            # Fallback to default sorting if attribute doesn't exist
+            facturas_dto.sort(key=lambda x: x.antiguedad_dias, reverse=True)
         
         return CXCClienteDTO(
             id=cliente.id,
