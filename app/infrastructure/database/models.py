@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, DECIMAL, SmallInteger, Integer, DateTime, ForeignKey, Text, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 from app.infrastructure.database.session import Base
+from decimal import Decimal
 
 # ==========================================
 # Legacy Saint Tables (dbo schema)
@@ -12,24 +13,24 @@ class SaClie(Base):
     CodClie = Column(String(15), primary_key=True, nullable=False)
     Descrip = Column(String(100))
     ID3 = Column(String(20))
-    tipoid3 = Column(String(5))
-    Pais = Column(String(30))
-    Estado = Column(String(30))
-    Ciudad = Column(String(30))
-    Municipio = Column(String(50))
+    tipoid3 = Column(SmallInteger, nullable=False) # Corrected type and added constraint
+    Pais = Column(Integer, nullable=False)
+    Estado = Column(Integer, nullable=False)
+    Ciudad = Column(Integer, nullable=False)
+    Municipio = Column(Integer, nullable=False)
     Telef = Column(String(20))
     Email = Column(String(100))
     CodZona = Column(String(10))
     CodVend = Column(String(10))
     CodConv = Column(String(10))
-    TipoCli = Column(String(10))
+    TipoCli = Column(SmallInteger, nullable=False) # Corrected type and added constraint
     EsCredito = Column(SmallInteger, default=0)
-    LimiteCred = Column(DECIMAL(28, 4))
-    DiasCred = Column(Integer)
-    Descto = Column(DECIMAL(5, 2))
-    Saldo = Column(DECIMAL(28, 4))
-    SaldoPtos = Column(DECIMAL(28, 4))
-    Activo = Column(SmallInteger, default=1)
+    LimiteCred = Column(DECIMAL(28, 4), nullable=False, default=Decimal("0.00"))
+    DiasCred = Column(Integer, nullable=False, default=0)
+    Descto = Column(DECIMAL(5, 2), nullable=False, default=Decimal("0.00"))
+    Saldo = Column(DECIMAL(28, 4), nullable=False, default=Decimal("0.00"))
+    SaldoPtos = Column(DECIMAL(28, 4), nullable=False, default=Decimal("0.00"))
+    Activo = Column(SmallInteger, nullable=False, default=1)
 
     facturas = relationship("SaFact", back_populates="cliente")
     cxc_documents = relationship("SaAcxc", back_populates="cliente")
@@ -260,10 +261,11 @@ class GeInstrumentos(Base):
     formaPago = Column(String(50), nullable=False)
     nroPlanilla = Column(String(30))
     fecha = Column(DateTime, nullable=False)
-    tasa = Column(DECIMAL(28, 4), nullable=False)
+    tasa = Column(DECIMAL(28, 4), nullable=True) # Changed to nullable=True
     cheque = Column(String(20))
     bancoCliente = Column(String(50))
     monto = Column(DECIMAL(28, 4), nullable=False)
+    moneda = Column(String(5), nullable=False)
 
     pago = relationship("GePagos", back_populates="instrumentos")
 

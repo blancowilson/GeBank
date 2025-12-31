@@ -1,16 +1,22 @@
 [
     {
-        "key": "TASA_OFICIAL",
-        "label": "Tasa BCV",
-        "valor": 35.5,
+        "key": "TASA_OFICIAL_VES_USD",
+        "label": "Tasa BCV VES a USD",
+        "valor": "35.50",
         "icon": "account_balance",
-        "es_referencia_divisa": false
+        "es_referencia_divisa": false,
+        "moneda_origen": "VES",
+        "moneda_destino": "USD",
+        "fecha_vigencia": "2025-12-31T13:37:33.430235"
     },
     {
-        "key": "TASA_ALT",
-        "label": "USDT / Paralelo",
-        "valor": 48.0,
+        "key": "TASA_ALT_VES_USD",
+        "label": "USDT / Paralelo VES a USD",
+        "valor": "48.00",
         "icon": "currency_bitcoin",
-        "es_referencia_divisa": true
+        "es_referencia_divisa": true,
+        "moneda_origen": "VES",
+        "moneda_destino": "USD",
+        "fecha_vigencia": "2025-12-31T13:37:33.430235"
     }
 ]

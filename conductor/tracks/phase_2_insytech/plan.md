@@ -28,13 +28,13 @@
     - Logic: Validate if `Monto Bs (Banco) / Tasa ≈ Monto USD (Deuda)`.
 
 ### Sprint 2.3: Ingestion API (The "Packet" Receiver)
-- [ ] **DTOs:** Define strict Pydantic models for the payment packet:
+- [x] **DTOs:** Define strict Pydantic models for the payment packet:
     - `PaymentPacketDTO` (contains `PagoHeader`, `List[DocumentDetail]`, `List[InstrumentDetail]`).
-- [ ] **Use Case:** `ReceivePaymentPacketUseCase`.
+- [x] **Use Case:** `ReceivePaymentPacketUseCase`.
     - Receives the DTO.
     - Validates integrity (Sum(Docs) ≈ Sum(Instruments) - NC/Ret?). *To be defined.*
     - Persists to `GePagos`, `GeDocumentos`, `GeInstrumentos` with `status=1` (Pendiente).
-- [ ] **API Route:** `POST /api/v1/integration/payments` (Endpoint for Insytech Portal).
+- [x] **API Route:** `POST /api/v1/integration/payments` (Endpoint for Insytech Portal).
 
 ### Sprint 2.4: Bank Statement Parsers (The "Bank Input")
 - [ ] **Service:** `BankFileParserService`.
