@@ -126,3 +126,24 @@ class InsytechRepositoryImpl(InsytechRepository):
                 moneda=instr.moneda
             ) for instr in db_instrs
         ]
+
+    async def obtener_pagos_por_status(self, status: int, limit: int = 100) -> List[GePagos]:
+        stmt = select(DBGePagos).where(DBGePagos.status == status).limit(limit)
+        result = await self.session.execute(stmt)
+        db_pagos = result.scalars().all()
+
+        return [
+            GePagos(
+                id=pago.id,
+                idPago=pago.idPago,
+                codCliente=pago.codCliente,
+                DescripClie=pago.DescripClie,
+                Usuario=pago.Usuario,
+                fecha=pago.fecha,
+                MontoPago=pago.MontoPago,
+                MontoCancelado=pago.MontoCancelado,
+                status=pago.status,
+                UrlImagen=pago.UrlImagen,
+                fechaCaptura=pago.fechaCaptura
+            ) for pago in db_pagos
+        ]

@@ -3,7 +3,7 @@ from decimal import Decimal
 from app.domain.entities.reconciliation import ReconciliationResult, MatchResult
 from app.domain.repositories.insytech_repository import InsytechRepository
 from app.domain.repositories.staging_banco_repository import StagingBancoRepository
-from app.domain.services.tasa_service import TasaService
+from app.infrastructure.configuration.tasa_service import TasaService
 
 class ReconciliationEngine:
     def __init__(

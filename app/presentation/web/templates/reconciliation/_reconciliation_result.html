@@ -1,0 +1,66 @@
+<!-- This partial replaces the entire table row (<tr>) for a pending payment -->
+<tr class="animate-in fade-in">
+    <td colspan="7" class="p-0">
+        <div class="grid grid-cols-12 gap-4 bg-primary/5 dark:bg-primary/10 p-4">
+            <!-- Col 1: Payment Header Info -->
+            <div class="col-span-12 md:col-span-3 p-4 bg-white dark:bg-surface-dark rounded-lg shadow-sm">
+                <h4 class="font-bold text-sm mb-2">Pago Reportado</h4>
+                <div class="text-xs space-y-1">
+                    <p><strong class="text-gray-500">ID:</strong> {{ result.pago.idPago }}</p>
+                    <p><strong class="text-gray-500">Cliente:</strong> {{ result.pago.DescripClie }}</p>
+                    <p><strong class="text-gray-500">Monto Total:</strong> {{ "%.2f"|format(result.pago.MontoPago) }}</p>
+                    <p><strong class="text-gray-500">Usuario:</strong> {{ result.pago.Usuario }}</p>
+                </div>
+                <div class="mt-4">
+                    {% if result.is_fully_reconciled %}
+                        <span class="inline-flex items-center gap-2 text-sm font-bold text-green-600 bg-green-100 dark:bg-green-900/50 px-3 py-1 rounded-full">
+                            <span class="material-symbols-outlined text-base">task_alt</span>
+                            Conciliado
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center gap-2 text-sm font-bold text-yellow-600 bg-yellow-100 dark:bg-yellow-900/50 px-3 py-1 rounded-full">
+                            <span class="material-symbols-outlined text-base">pending</span>
+                            Requiere Atención
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Col 2: Instrument & Match Details -->
+            <div class="col-span-12 md:col-span-9 p-4 bg-white dark:bg-surface-dark rounded-lg shadow-sm">
+                <h4 class="font-bold text-sm mb-3">Detalle de Instrumentos Financieros</h4>
+                <div class="space-y-3">
+                    {% for match in result.instrument_matches %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 border border-[#d9cfe7] dark:border-[#382e48] rounded-lg">
+                        <!-- Left: Instrument Details -->
+                        <div class="text-xs">
+                            <strong class="block mb-1 font-mono text-primary/80">{{ match.instrumento.formaPago }}</strong>
+                            <p><strong class="text-gray-500">Monto Reportado:</strong> <span class="font-bold">{{ "%.2f"|format(match.instrumento.monto) }} {{ match.instrumento.moneda }}</span></p>
+                            {% if match.instrumento.moneda == 'VES' and match.converted_amount_usd %}
+                            <p><strong class="text-gray-500">Equivalente:</strong> <span class="font-bold text-blue-500">~${{ "%.2f"|format(match.converted_amount_usd) }}</span></p>
+                            {% endif %}
+                            <p><strong class="text-gray-500">Ref:</strong> {{ match.instrumento.nroPlanilla or '-' }}</p>
+                        </div>
+                        <!-- Right: Match Status -->
+                        <div class="text-xs flex items-center justify-center p-2 rounded-md {% if match.match_found %}bg-green-100/50 dark:bg-green-900/30{% else %}bg-red-100/50 dark:bg-red-900/30{% endif %}">
+                            {% if match.match_found %}
+                                <span class="material-symbols-outlined text-green-600 mr-2">verified</span>
+                                <div>
+                                    <strong class="block text-green-600">Match Encontrado</strong>
+                                    <span class="text-gray-600 dark:text-gray-300">{{ match.details }}</span>
+                                </div>
+                            {% else %}
+                                <span class="material-symbols-outlined text-red-600 mr-2">gpp_maybe</span>
+                                <div>
+                                    <strong class="block text-red-600">Sin Coincidencia</strong>
+                                    <span class="text-gray-600 dark:text-gray-300">{{ match.details }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Bandeja de Conciliación{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs & Heading -->
+<div class="flex flex-col gap-2 mb-8">
+    <div class="flex items-center gap-2 text-sm text-[#6b4c9a] dark:text-[#a589cc]">
+        <a class="hover:text-primary transition-colors" href="/">Home</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="font-medium text-primary">Bandeja de Conciliación</span>
+    </div>
+    <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Pagos Pendientes de Conciliar</h1>
+    <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Estos son los pagos reportados desde Insytech que esperan ser conciliados con los movimientos bancarios.</p>
+</div>
+
+<!-- Payments Table -->
+<div class="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48]">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm whitespace-nowrap">
+            <thead class="bg-background-light dark:bg-[#1f162e] text-[#6b4c9a] dark:text-[#a589cc] font-semibold uppercase tracking-wider text-xs">
+                <tr>
+                    <th class="px-6 py-3">Fecha Reporte</th>
+                    <th class="px-6 py-3">ID Pago</th>
+                    <th class="px-6 py-3">Cliente</th>
+                    <th class="px-6 py-3">Monto Total</th>
+                    <th class="px-6 py-3">Usuario</th>
+                    <th class="px-6 py-3 text-center">Comprobantes</th>
+                    <th class="px-6 py-3 text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-[#ece7f3] dark:divide-[#382e48]">
+                {% for pago in pagos %}
+                <tr class="hover:bg-background-light dark:hover:bg-[#1f162e]">
+                    <td class="px-6 py-4 font-medium">{{ pago.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td class="px-6 py-4 font-mono text-xs">{{ pago.idPago }}</td>
+                    <td class="px-6 py-4">
+                        <div class="font-bold">{{ pago.DescripClie }}</div>
+                        <div class="text-xs text-gray-500">{{ pago.codCliente }}</div>
+                    </td>
+                    <td class="px-6 py-4 font-bold">{{ "%.2f"|format(pago.MontoPago) }}</td>
+                    <td class="px-6 py-4">{{ pago.Usuario }}</td>
+                    <td class="px-6 py-4 text-center">
+                        {% if pago.UrlImagen %}
+                            {% set urls = pago.UrlImagen.split(';') %}
+                            <div class="flex items-center justify-center gap-2">
+                            {% for url in urls %}
+                                {% if url.strip() %}
+                                    <button
+                                        hx-get="/reconciliation/image-viewer?url={{ url.strip() }}"
+                                        hx-target="#modal-content"
+                                        hx-trigger="click"
+                                        onclick="document.getElementById('modal-container').classList.remove('hidden');"
+                                        class="p-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors"
+                                        title="Ver comprobante {{ loop.index }}">
+                                        <span class="material-symbols-outlined text-base">receipt_long</span>
+                                    </button>
+                                {% endif %}
+                            {% endfor %}
+                            </div>
+                        {% else %}
+                            <span class="text-xs text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <button 
+                            hx-post="/reconciliation/attempt/{{ pago.idPago }}"
+                            hx-target="closest tr"
+                            hx-swap="outerHTML"
+                            class="font-bold text-primary hover:underline flex items-center justify-center gap-1 mx-auto">
+                            <span class="material-symbols-outlined text-base htmx-indicator animate-spin">progress_activity</span>
+                            <span>Conciliar</span>
+                        </button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                        No hay pagos pendientes de conciliación.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Container (Generic, could be in base.html) -->
+<div id="modal-container" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50 p-4" onclick="this.classList.add('hidden')">
+    <div id="modal-content" class="bg-white dark:bg-surface-dark rounded-xl shadow-2xl w-full max-w-3xl" onclick="event.stopPropagation()">
+        <!-- Content will be loaded here by HTMX -->
+    </div>
+</div>

@@ -3,7 +3,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.config import settings
 from app.presentation.web.routes import cxc_routes, bancos_routes, config_routes
-from app.presentation.api import insytech_routes # Import new API routes
+from app.presentation.api import insytech_routes
+from app.presentation.web.routes import reconciliation_routes
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -15,6 +16,7 @@ app = FastAPI(
 app.include_router(cxc_routes.router, prefix="/cxc", tags=["CXC"])
 app.include_router(bancos_routes.router)
 app.include_router(config_routes.router)
+app.include_router(reconciliation_routes.router)
 app.include_router(insytech_routes.router, prefix="/api/v1", tags=["Insytech API"])
 
 # Static files

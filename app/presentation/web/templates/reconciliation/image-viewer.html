@@ -1,0 +1,11 @@
+<div class="p-4">
+    <div class="flex items-center justify-between pb-3 border-b border-[#ece7f3] dark:border-[#382e48]">
+        <h3 class="text-lg font-bold text-[#130d1b] dark:text-white">Visor de Comprobante</h3>
+        <button onclick="document.getElementById('modal-container').classList.add('hidden')" class="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+    <div class="mt-4 max-h-[80vh] overflow-auto">
+        <img src="{{ url }}" alt="Comprobante de Pago" class="w-full h-auto object-contain rounded-md"/>
+    </div>
+</div>
