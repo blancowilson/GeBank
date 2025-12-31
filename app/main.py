@@ -2,20 +2,6 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.config import settings
-from app.presentation.web.routes import cxc_routes, bancos_routes
-
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-    version=settings.VERSION,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
-)
-
-# Routes
-app.include_router(cxc_routes.router, prefix="/cxc", tags=["CXC"])
-from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from app.config import settings
 from app.presentation.web.routes import cxc_routes, bancos_routes, config_routes
 
 app = FastAPI(
@@ -46,20 +32,3 @@ async def root(request: Request):
 async def health_check():
     return {"status": "ok"}
 
-
-# Static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Templates
-templates = Jinja2Templates(directory="app/presentation/web/templates")
-
-@app.get("/")
-async def root(request: Request):
-    return templates.TemplateResponse(
-        "index.html", 
-        {"request": request, "title": "Dashboard - GeBankSaint"}
-    )
-
-@app.get("/health")
-async def health_check():
-    return {"status": "ok"}
