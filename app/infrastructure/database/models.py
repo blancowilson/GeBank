@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DECIMAL, SmallInteger, Integer, DateTime, ForeignKey, Text
+from sqlalchemy import Column, String, DECIMAL, SmallInteger, Integer, DateTime, ForeignKey, Text, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 from app.infrastructure.database.session import Base
 
@@ -129,23 +129,71 @@ class SaPagcxc(Base):
 class SaBanc(Base):
     __tablename__ = "SBBANC"
     
-    CodBanc = Column(String(5), primary_key=True, nullable=False)
-    Nombre = Column(String(100), nullable=False)
-    CodBIF = Column(String(10))
+    CodBanc = Column(String(30), primary_key=True, nullable=False)
+    Descrip = Column(String(60), nullable=False)  # Mapped from descripcion
+    Ciudad = Column(Integer)
+    Estado = Column(Integer)
+    Pais = Column(Integer)
+    SaldoAct = Column(DECIMAL(28, 4))
+    SaldoC1 = Column(DECIMAL(28, 4))
+    SaldoC2 = Column(DECIMAL(28, 4))
+    FechaC1 = Column(DateTime)
+    FechaC2 = Column(DateTime)
+    CtaContab = Column(String(25))
+    Activo = Column(Integer, name="estado") # YAML uses 'estado'
     
     transacciones = relationship("SbTran", back_populates="banco")
+
+class SbCtas(Base):
+    __tablename__ = "SBCTAS"
+
+    CodCta = Column(String(30), primary_key=True, nullable=False)
+    Descrip = Column(String(60), nullable=False, name="descripcion")
+    SaldoAct = Column(DECIMAL(28, 4))
+    EsBanco = Column(Integer)
+    CtaBase = Column(Integer)
 
 class SbTran(Base):
     __tablename__ = "SBTRAN"
     
-    CodBanc = Column(String(5), ForeignKey("SBBANC.CodBanc"), primary_key=True, nullable=False)
-    NumTran = Column(Integer, primary_key=True, nullable=False)
+    CodBanc = Column(String(30), ForeignKey("SBBANC.CodBanc"), primary_key=True, nullable=False)
+    Fecha = Column(DateTime, primary_key=True, nullable=False)
+    NOpe = Column(Integer, primary_key=True, nullable=False, name="nope")
     
-    Fecha = Column(DateTime, nullable=False)
-    Monto = Column(DECIMAL(15, 2), nullable=False)
-    Tipo = Column(String(20))
+    TipoOpe = Column(Integer, nullable=False) # YAML tipoope
+    CodOper = Column(String(10)) # YAML codoper
+    Monto = Column(DECIMAL(28, 4), nullable=False)
+    MtoCr = Column(DECIMAL(28, 4))
+    MtoDb = Column(DECIMAL(28, 4))
+    
+    Descrip = Column(String(60), name="descripcion")
+    Beneficiario = Column(String(50), name="beneori")
+    Estado = Column(Integer, nullable=False) # 0:tránsito; 1:pre conciliado; 2:conciliado
+    Consolidado = Column(Integer, nullable=False)
     
     banco = relationship("SaBanc", back_populates="transacciones")
+    detalles = relationship("SbDtrn", back_populates="transaccion")
+
+class SbDtrn(Base):
+    __tablename__ = "SBDTRN"
+    
+    CodBanc = Column(String(30), primary_key=True, nullable=False)
+    NOpe = Column(Integer, primary_key=True, nullable=False, name="nope")
+    NLinea = Column(Integer, primary_key=True, nullable=False, name="nlinea")
+    
+    CodCta = Column(String(30))
+    Monto = Column(DECIMAL(28, 4), nullable=False)
+    MtoCr = Column(DECIMAL(28, 4))
+    MtoDb = Column(DECIMAL(28, 4))
+    Descrip = Column(String(60), name="descripcion")
+    CdCd = Column(Integer, nullable=False) # Cheque, Depósito, Crédito, Débito
+
+    # ForeignKeyComposite for relationship
+    __table_args__ = (
+        ForeignKeyConstraint(['CodBanc', 'nope'], ['SBTRAN.CodBanc', 'SBTRAN.nope']),
+    )
+
+    transaccion = relationship("SbTran", back_populates="detalles")
 
 class SsUsrs(Base):
     __tablename__ = "SSUSRS"
