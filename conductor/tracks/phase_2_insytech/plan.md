@@ -59,9 +59,9 @@
     - Updates `GePagos.status` (3=Approved, 9=Rejected).
 
 ### Sprint 2.6: Persistence & Saint Sync (The "Result")
-- [ ] **Adapter:** `SaintTransactionRepository` (Write to `SBTRAN`).
-- [ ] **Adapter:** `SaintCxCRepository` (Update `SAACXC`).
-- [ ] **Use Case Extension:** Upon `GePagos` approval (Status 3):
+- [x] **Adapter:** `SaintTransactionRepository` (Write to `SBTRAN`).
+- [x] **Adapter:** `SaintCxCRepository` (Update `SAACXC`).
+- [x] **Use Case Extension:** Upon `GePagos` approval (Status 3):
     1. **Insert into SBTRAN:** Create the official bank record from the `Staging_Bancos` data (or `GeInstrumentos` data verified).
     2. **Update SAACXC:**
         - Apply Payment (Net Money).
