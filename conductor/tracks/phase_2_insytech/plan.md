@@ -22,9 +22,9 @@
 - [x] **Repository:** Implement `StagingBancoRepository` (Insert raw, Find by Ref+Amount).
 
 ### Sprint 2.2: TasaService & Valuation
-- [ ] **Domain Service:** Enhance `TasaService`.
+- [x] **Domain Service:** Enhance `TasaService`.
     - Implement `get_tasa(fecha, moneda_origen, moneda_destino)`.
-    - Implement `validar_conversion(monto_origen, monto_destino, tasa_reportada, tolerancia=0.05)`.
+    - Implement `validar_conversion(monto_origen, monto_destino, tasa_a_validar, tolerancia=0.01)`.
     - Logic: Validate if `Monto Bs (Banco) / Tasa ≈ Monto USD (Deuda)`.
 
 ### Sprint 2.3: Ingestion API (The "Packet" Receiver)
