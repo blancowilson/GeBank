@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
+from datetime import datetime
 from app.domain.entities.pago_insytech import GePagos, GeDocumentos, GeInstrumentos
 
 class InsytechRepository(ABC):
@@ -24,8 +25,8 @@ class InsytechRepository(ABC):
         pass
     
     @abstractmethod
-    async def obtener_pagos_por_status(self, status: int, limit: int = 100) -> List[GePagos]:
-        """Obtiene una lista de pagos según su estado."""
+    async def obtener_pagos_por_status(self, status: Optional[int] = None, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, limit: int = 100) -> List[GePagos]:
+        """Obtiene una lista de pagos según su estado y rango de fechas."""
         pass
         
     @abstractmethod

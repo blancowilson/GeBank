@@ -10,8 +10,36 @@
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>
         <span class="font-medium text-primary">Bandeja de Conciliación</span>
     </div>
-    <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Pagos Pendientes de Conciliar</h1>
-    <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Estos son los pagos reportados desde Insytech que esperan ser conciliados con los movimientos bancarios.</p>
+    <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Bandeja de Pagos Reportados</h1>
+    <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Visualiza todos los pagos registrados por los vendedores y gestiona su conciliación.</p>
+</div>
+
+<!-- Filters Bar -->
+<div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] mb-6">
+    <form hx-get="/reconciliation/inbox" hx-target="#pagos-tbody" hx-swap="outerHTML" hx-trigger="change from:input, change from:select" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+            <label class="block text-xs font-bold text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Estado</label>
+            <select name="status" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm focus:ring-primary">
+                <option value="all" {% if filters.status == 'all' %}selected{% endif %}>Todos los estados</option>
+                <option value="1" {% if filters.status == '1' %}selected{% endif %}>Pendientes</option>
+                <option value="3" {% if filters.status == '3' %}selected{% endif %}>Aprobados</option>
+                <option value="9" {% if filters.status == '9' %}selected{% endif %}>Rechazados</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Desde</label>
+            <input type="date" name="start_date" value="{{ filters.start_date or '' }}" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Hasta</label>
+            <input type="date" name="end_date" value="{{ filters.end_date or '' }}" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div class="flex justify-end">
+            <button type="button" onclick="window.location.href='/reconciliation/inbox'" class="px-4 py-2 text-sm font-bold text-[#6b4c9a] hover:text-primary transition-colors">
+                Limpiar Filtros
+            </button>
+        </div>
+    </form>
 </div>
 
 <!-- Payments Table -->
@@ -25,62 +53,12 @@
                     <th class="px-6 py-3">Cliente</th>
                     <th class="px-6 py-3">Monto Total</th>
                     <th class="px-6 py-3">Usuario</th>
+                    <th class="px-6 py-3 text-center">Estado</th>
                     <th class="px-6 py-3 text-center">Comprobantes</th>
                     <th class="px-6 py-3 text-center">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-[#ece7f3] dark:divide-[#382e48]">
-                {% for pago in pagos %}
-                <tr class="hover:bg-background-light dark:hover:bg-[#1f162e]">
-                    <td class="px-6 py-4 font-medium">{{ pago.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td class="px-6 py-4 font-mono text-xs">{{ pago.idPago }}</td>
-                    <td class="px-6 py-4">
-                        <div class="font-bold">{{ pago.DescripClie }}</div>
-                        <div class="text-xs text-gray-500">{{ pago.codCliente }}</div>
-                    </td>
-                    <td class="px-6 py-4 font-bold">{{ "%.2f"|format(pago.MontoPago) }}</td>
-                    <td class="px-6 py-4">{{ pago.Usuario }}</td>
-                    <td class="px-6 py-4 text-center">
-                        {% if pago.UrlImagen %}
-                            {% set urls = pago.UrlImagen.split(';') %}
-                            <div class="flex items-center justify-center gap-2">
-                            {% for url in urls %}
-                                {% if url.strip() %}
-                                    <button
-                                        hx-get="/reconciliation/image-viewer?url={{ url.strip() }}"
-                                        hx-target="#modal-content"
-                                        hx-trigger="click"
-                                        onclick="document.getElementById('modal-container').classList.remove('hidden');"
-                                        class="p-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors"
-                                        title="Ver comprobante {{ loop.index }}">
-                                        <span class="material-symbols-outlined text-base">receipt_long</span>
-                                    </button>
-                                {% endif %}
-                            {% endfor %}
-                            </div>
-                        {% else %}
-                            <span class="text-xs text-gray-400">-</span>
-                        {% endif %}
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button 
-                            hx-post="/reconciliation/attempt/{{ pago.idPago }}"
-                            hx-target="closest tr"
-                            hx-swap="outerHTML"
-                            class="font-bold text-primary hover:underline flex items-center justify-center gap-1 mx-auto">
-                            <span class="material-symbols-outlined text-base htmx-indicator animate-spin">progress_activity</span>
-                            <span>Conciliar</span>
-                        </button>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="7" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                        No hay pagos pendientes de conciliación.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            {% include "reconciliation/_pagos_table_partial.html" %}
         </table>
     </div>
 </div>

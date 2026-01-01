@@ -17,26 +17,61 @@ from app.infrastructure.saint.saint_banco_repository import SaintBancoRepository
 from app.domain.repositories.insytech_repository import InsytechRepository
 from app.infrastructure.repositories.insytech_repository_impl import InsytechRepositoryImpl
 
+from typing import Optional
+from datetime import datetime
+
 router = APIRouter(prefix="/reconciliation", tags=["Reconciliation"])
 templates = Jinja2Templates(directory="app/presentation/web/templates")
 
+import calendar
+
 @router.get("/inbox", response_class=HTMLResponse)
-async def get_reconciliation_inbox(request: Request, db: AsyncSession = Depends(get_db)):
+async def get_reconciliation_inbox(
+    request: Request, 
+    status: Optional[str] = "1", # Default to PENDIENTE
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    db: AsyncSession = Depends(get_db)
+):
     """
-    Muestra la bandeja de entrada de pagos pendientes de conciliar.
+    Muestra la bandeja de entrada de pagos con filtros de estado y fecha.
+    Por defecto muestra el mes actual.
     """
     insytech_repo: InsytechRepository = InsytechRepositoryImpl(db)
     
-    pagos_pendientes = await insytech_repo.obtener_pagos_por_status(1) # Status 1 = PENDIENTE
+    now = datetime.now()
+    if not start_date:
+        start_date = now.replace(day=1).strftime('%Y-%m-%d')
+    if not end_date:
+        _, last_day = calendar.monthrange(now.year, now.month)
+        end_date = now.replace(day=last_day).strftime('%Y-%m-%d')
+
+    # Parse filters for query
+    status_int = int(status) if status and status != "all" else None
+    dt_start = datetime.fromisoformat(start_date).replace(hour=0, minute=0, second=0)
+    dt_end = datetime.fromisoformat(end_date).replace(hour=23, minute=59, second=59)
     
-    return templates.TemplateResponse(
-        "reconciliation/bandeja_entrada.html",
-        {
-            "request": request,
-            "title": "Bandeja de Conciliación",
-            "pagos": pagos_pendientes
-        }
+    pagos = await insytech_repo.obtener_pagos_por_status(
+        status=status_int,
+        start_date=dt_start,
+        end_date=dt_end
     )
+    
+    context = {
+        "request": request,
+        "title": "Bandeja de Conciliación",
+        "pagos": pagos,
+        "filters": {
+            "status": status,
+            "start_date": start_date,
+            "end_date": end_date
+        }
+    }
+
+    if "HX-Request" in request.headers:
+        return templates.TemplateResponse("reconciliation/_pagos_table_partial.html", context)
+    
+    return templates.TemplateResponse("reconciliation/bandeja_entrada.html", context)
 
 @router.post("/attempt/{pago_id}", response_class=HTMLResponse)
 async def attempt_reconciliation(request: Request, pago_id: str, db: AsyncSession = Depends(get_db)):

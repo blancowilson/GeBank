@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 from app.domain.entities.pago_insytech import GePagos, GeDocumentos, GeInstrumentos
@@ -127,8 +128,20 @@ class InsytechRepositoryImpl(InsytechRepository):
             ) for instr in db_instrs
         ]
 
-    async def obtener_pagos_por_status(self, status: int, limit: int = 100) -> List[GePagos]:
-        stmt = select(DBGePagos).where(DBGePagos.status == status).limit(limit)
+    async def obtener_pagos_por_status(self, status: Optional[int] = None, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, limit: int = 100) -> List[GePagos]:
+        stmt = select(DBGePagos)
+        
+        if status is not None:
+            stmt = stmt.where(DBGePagos.status == status)
+        
+        if start_date:
+            stmt = stmt.where(DBGePagos.fecha >= start_date)
+        
+        if end_date:
+            stmt = stmt.where(DBGePagos.fecha <= end_date)
+            
+        stmt = stmt.order_by(DBGePagos.fecha.desc()).limit(limit)
+        
         result = await self.session.execute(stmt)
         db_pagos = result.scalars().all()
 
