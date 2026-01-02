@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     # Celery & Redis
     CELERY_BROKER_URL: str
     CELERY_RESULT_BACKEND: str
+    USE_CELERY: bool = True
 
     # Currency Settings
     BASE_CURRENCY: str = "USD" # USD, VES, EUR
