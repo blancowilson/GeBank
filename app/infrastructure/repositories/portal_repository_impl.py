@@ -3,12 +3,12 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 from app.domain.entities.pago_insytech import GePagos, GeDocumentos, GeInstrumentos
-from app.domain.repositories.insytech_repository import InsytechRepository
+from app.domain.repositories.portal_repository import PortalRepository
 from app.infrastructure.database.models import GePagos as DBGePagos, \
                                                 GeDocumentos as DBGeDocumentos, \
                                                 GeInstrumentos as DBGeInstrumentos
 
-class InsytechRepositoryImpl(InsytechRepository):
+class PortalRepositoryImpl(PortalRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
@@ -128,7 +128,7 @@ class InsytechRepositoryImpl(InsytechRepository):
             ) for instr in db_instrs
         ]
 
-    async def obtener_pagos_por_status(self, status: Optional[int] = None, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, limit: int = 100) -> List[GePagos]:
+    async def obtener_pagos_por_status(self, status: Optional[int] = None, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, vendedor: Optional[str] = None, limit: int = 100) -> List[GePagos]:
         stmt = select(DBGePagos)
         
         if status is not None:
@@ -139,12 +139,15 @@ class InsytechRepositoryImpl(InsytechRepository):
         
         if end_date:
             stmt = stmt.where(DBGePagos.fecha <= end_date)
+
+        if vendedor and vendedor != "all":
+            stmt = stmt.where(DBGePagos.Usuario == vendedor)
             
         stmt = stmt.order_by(DBGePagos.fecha.desc()).limit(limit)
         
         result = await self.session.execute(stmt)
         db_pagos = result.scalars().all()
-
+        
         return [
             GePagos(
                 id=pago.id,
@@ -162,6 +165,11 @@ class InsytechRepositoryImpl(InsytechRepository):
                 fecha_conciliacion=pago.fecha_conciliacion
             ) for pago in db_pagos
         ]
+
+    async def obtener_vendedores_activos(self) -> List[str]:
+        stmt = select(DBGePagos.Usuario).distinct().order_by(DBGePagos.Usuario)
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
         
     async def actualizar_pago(self, pago: GePagos) -> GePagos:
         stmt = update(DBGePagos).where(DBGePagos.idPago == pago.idPago).values(
@@ -172,3 +180,32 @@ class InsytechRepositoryImpl(InsytechRepository):
         await self.session.execute(stmt)
         await self.session.commit()
         return pago
+
+    async def obtener_instrumento_por_id(self, instrument_id: int) -> Optional[GeInstrumentos]:
+        stmt = select(DBGeInstrumentos).where(DBGeInstrumentos.id == instrument_id)
+        result = await self.session.execute(stmt)
+        db_instr = result.scalar_one_or_none()
+        
+        if db_instr:
+            return GeInstrumentos(
+                id=db_instr.id,
+                idPago=db_instr.idPago,
+                banco=db_instr.banco,
+                formaPago=db_instr.formaPago,
+                nroPlanilla=db_instr.nroPlanilla,
+                fecha=db_instr.fecha,
+                tasa=db_instr.tasa,
+                cheque=db_instr.cheque,
+                bancoCliente=db_instr.bancoCliente,
+                monto=db_instr.monto,
+                moneda=db_instr.moneda,
+                estatus=db_instr.estatus
+            )
+        return None
+
+    async def actualizar_instrumento(self, instrumento: GeInstrumentos) -> None:
+        stmt = update(DBGeInstrumentos).where(DBGeInstrumentos.id == instrumento.id).values(
+            estatus=instrumento.estatus
+        )
+        await self.session.execute(stmt)
+        await self.session.commit()

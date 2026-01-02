@@ -43,6 +43,7 @@
         }
     </script>
     <script src="https://unpkg.com/htmx.org@1.9.9" defer></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .material-symbols-outlined {
@@ -67,8 +68,8 @@
             <nav class="hidden md:flex flex-1 justify-center items-center gap-6">
                 <a href="/" class="text-sm font-bold transition-colors {% if request.url.path == '/' %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Dashboard</a>
                 <a href="/cxc/clientes" class="text-sm font-bold transition-colors {% if '/cxc/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Cuentas por Cobrar</a>
+                <a href="/reconciliation/inbox" class="text-sm font-bold transition-colors {% if '/reconciliation/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Pagos Portal</a>
                 <a href="/bancos/subir" class="text-sm font-bold transition-colors {% if '/bancos/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Carga Bancaria</a>
-                <a href="/reconciliation/inbox" class="text-sm font-bold transition-colors {% if '/reconciliation/' in request.url.path %}text-primary{% else %}text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary{% endif %}">Bandeja Conciliación</a>
                 <a href="#" class="text-sm font-bold text-[#6b4c9a] dark:text-[#a589cc] hover:text-primary transition-colors">Reportes</a>
             </nav>
 
@@ -78,10 +79,33 @@
                     <span id="theme-toggle-light-icon" class="hidden material-symbols-outlined text-[20px]">dark_mode</span>
                 </button>
 
-                <div class="flex gap-2 items-center border-l border-[#ece7f3] dark:border-[#382e48] pl-2">
-                    <a href="/configuracion/tasas" class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-white dark:bg-surface-dark border border-[#ece7f3] dark:border-[#382e48] text-[#130d1b] dark:text-white hover:bg-[#f3f1f6] dark:hover:bg-[#382e48] transition-colors">
+                <div class="flex gap-2 items-center border-l border-[#ece7f3] dark:border-[#382e48] pl-2 relative" x-data="{ open: false }">
+                    <button @click="open = !open" @click.away="open = false" class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-white dark:bg-surface-dark border border-[#ece7f3] dark:border-[#382e48] text-[#130d1b] dark:text-white hover:bg-[#f3f1f6] dark:hover:bg-[#382e48] transition-colors">
                         <span class="material-symbols-outlined text-[20px]">settings</span>
-                    </a>
+                    </button>
+                    
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         class="absolute right-0 top-12 w-48 bg-white dark:bg-surface-dark border border-[#ece7f3] dark:border-[#382e48] rounded-xl shadow-xl z-[60] overflow-hidden"
+                         style="display: none;">
+                        <div class="p-2 border-b border-[#ece7f3] dark:border-[#382e48] bg-gray-50 dark:bg-[#1f162e]">
+                            <span class="text-[10px] font-bold uppercase text-[#6b4c9a] dark:text-[#a589cc]">Configuración</span>
+                        </div>
+                        <a href="/configuracion/ajustes" class="flex items-center gap-2 p-3 text-sm hover:bg-primary/10 hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-base">tune</span> Ajustes Generales
+                        </a>
+                        <a href="/configuracion/bancos/mapeo" class="flex items-center gap-2 p-3 text-sm hover:bg-primary/10 hover:text-primary transition-colors border-t border-[#ece7f3] dark:border-[#382e48]">
+                            <span class="material-symbols-outlined text-base">account_balance_wallet</span> Mapeo de Bancos
+                        </a>
+                        <a href="/configuracion/tasas" class="flex items-center gap-2 p-3 text-sm hover:bg-primary/10 hover:text-primary transition-colors border-t border-[#ece7f3] dark:border-[#382e48]">
+                            <span class="material-symbols-outlined text-base">currency_exchange</span> Tasas de Cambio
+                        </a>
+                        <a href="/configuracion/tasas/historial" class="flex items-center gap-2 p-3 text-sm hover:bg-primary/10 hover:text-primary transition-colors border-t border-[#ece7f3] dark:border-[#382e48]">
+                            <span class="material-symbols-outlined text-base">history</span> Historial de Tasas
+                        </a>
+                    </div>
                 </div>
                 <div class="flex items-center gap-3 pl-2 border-l border-[#ece7f3] dark:border-[#382e48]">
                     <div class="hidden sm:flex flex-col items-end">

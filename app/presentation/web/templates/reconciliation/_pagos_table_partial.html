@@ -1,27 +1,30 @@
 <tbody id="pagos-tbody" class="divide-y divide-[#ece7f3] dark:divide-[#382e48]">
     {% for pago in pagos %}
-    <tr class="hover:bg-background-light dark:hover:bg-[#1f162e]">
-        <td class="px-6 py-4 font-medium">{{ pago.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
-        <td class="px-6 py-4 font-mono text-xs">{{ pago.idPago }}</td>
-        <td class="px-6 py-4">
-            <div class="font-bold">{{ pago.DescripClie }}</div>
-            <div class="text-xs text-gray-500">{{ pago.codCliente }}</div>
+    <tr class="hover:bg-background-light dark:hover:bg-[#1f162e] transition-colors group">
+        <td class="px-4 py-3 font-medium text-[11px]">{{ pago.fecha.strftime('%d/%m/%y') if pago.fecha else '-' }}</td>
+        <td class="px-4 py-3 font-mono text-[10px] text-gray-500">{{ pago.idPago }}</td>
+        <td class="px-4 py-3">
+            <div class="font-bold text-xs truncate max-w-[180px]" title="{{ pago.DescripClie }}">{{ pago.DescripClie }}</div>
+            <div class="text-[9px] text-gray-400">{{ pago.codCliente }}</div>
         </td>
-        <td class="px-6 py-4 font-bold text-primary">{{ "%.2f"|format(pago.MontoPago) }}</td>
-        <td class="px-6 py-4">{{ pago.Usuario }}</td>
-        <td class="px-6 py-4 text-center">
-            {% if pago.status == 1 %}
-                <span class="px-2 py-1 text-xs font-bold bg-yellow-100 text-yellow-700 rounded-full">Pendiente</span>
-            {% elif pago.status == 3 %}
-                <span class="px-2 py-1 text-xs font-bold bg-green-100 text-green-700 rounded-full">Aprobado</span>
-            {% elif pago.status == 9 %}
-                <span class="px-2 py-1 text-xs font-bold bg-red-100 text-red-700 rounded-full">Rechazado</span>
+        <td class="px-4 py-3 font-bold text-xs text-primary">${{ "%.2f"|format(pago.MontoPago) }}</td>
+        <td class="px-4 py-3 text-[11px]">{{ pago.Usuario }}</td>
+        <td class="px-4 py-3 text-center">
+            {% set s = pago.status|int %}
+            {% if s == 1 %}
+                <span class="inline-block px-2 py-0.5 text-[9px] font-black bg-amber-100 text-yellow-700 rounded-full uppercase">Pendiente</span>
+            {% elif s == 3 %}
+                <span class="inline-block px-2 py-0.5 text-[9px] font-black bg-green-100 text-green-700 rounded-full uppercase">Aprobado</span>
+            {% elif s == 9 %}
+                <span class="inline-block px-2 py-0.5 text-[9px] font-black bg-red-100 text-red-700 rounded-full uppercase">Rechazado</span>
+            {% else %}
+                <span class="text-[9px] text-gray-400 italic">Estatus: {{ s }}</span>
             {% endif %}
         </td>
-        <td class="px-6 py-4 text-center">
+        <td class="px-4 py-3 text-center">
             {% if pago.UrlImagen %}
                 {% set urls = pago.UrlImagen.split(';') %}
-                <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center justify-center gap-1">
                 {% for url in urls %}
                     {% if url.strip() %}
                         <button
@@ -29,36 +32,48 @@
                             hx-target="#modal-content"
                             hx-trigger="click"
                             onclick="document.getElementById('modal-container').classList.remove('hidden');"
-                            class="p-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors"
-                            title="Ver comprobante {{ loop.index }}">
-                            <span class="material-symbols-outlined text-base">receipt_long</span>
+                            class="p-1 bg-primary/10 hover:bg-primary/20 text-primary rounded transition-colors"
+                            title="Ver imagen">
+                            <span class="material-symbols-outlined text-xs">image</span>
                         </button>
                     {% endif %}
                 {% endfor %}
                 </div>
             {% else %}
-                <span class="text-xs text-gray-400">-</span>
+                <span class="text-[10px] text-gray-300">-</span>
             {% endif %}
         </td>
-        <td class="px-6 py-4 text-center">
-            {% if pago.status == 1 %}
-            <button 
-                hx-post="/reconciliation/attempt/{{ pago.idPago }}"
-                hx-target="closest tr"
-                hx-swap="outerHTML"
-                class="font-bold text-primary hover:underline flex items-center justify-center gap-1 mx-auto">
-                <span class="material-symbols-outlined text-base htmx-indicator animate-spin">progress_activity</span>
-                <span>Conciliar</span>
-            </button>
-            {% else %}
-            <span class="text-xs text-gray-400">Procesado</span>
-            {% endif %}
+        <td class="px-4 py-3 text-center">
+            <div class="flex items-center justify-center gap-2">
+                {% if s == 1 or s == 9 or s == 0 %}
+                <button 
+                    hx-post="/reconciliation/attempt/{{ pago.idPago }}"
+                    hx-target="closest tr"
+                    hx-swap="outerHTML"
+                    class="bg-primary text-white p-1.5 rounded hover:bg-primary/90 transition-all flex items-center justify-center"
+                    title="Conciliar ahora">
+                    <span class="material-symbols-outlined text-sm htmx-indicator animate-spin">sync</span>
+                    <span class="text-[10px] font-black px-1 uppercase">Match</span>
+                </button>
+                <a href="/reconciliation/resolve/{{ pago.idPago }}"
+                   class="border border-primary text-primary p-1.5 rounded hover:bg-primary/5 transition-all flex items-center justify-center"
+                   title="Ajustar datos">
+                    <span class="material-symbols-outlined text-sm">edit_note</span>
+                    <span class="text-[10px] font-black px-1 uppercase">Ajustar</span>
+                </a>
+                {% else %}
+                <span class="text-[9px] text-gray-400 font-bold uppercase bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Procesado</span>
+                {% endif %}
+            </div>
         </td>
     </tr>
     {% else %}
     <tr>
-        <td colspan="8" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-            No se encontraron pagos con los filtros seleccionados.
+        <td colspan="8" class="px-6 py-12 text-center">
+            <div class="flex flex-col items-center gap-2 text-gray-400">
+                <span class="material-symbols-outlined text-4xl">search_off</span>
+                <p class="text-sm font-medium">No se encontraron registros.</p>
+            </div>
         </td>
     </tr>
     {% endfor %}

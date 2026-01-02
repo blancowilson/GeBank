@@ -2,9 +2,9 @@ from fastapi import APIRouter, Request, Depends, Form, Query
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.database.session import get_db
-from app.infrastructure.saint.saint_cliente_repository import SaintClienteRepository
-from app.infrastructure.saint.saint_factura_repository import SaintFacturaRepository
-from app.infrastructure.saint.saint_pago_repository import SaintPagoRepository
+from app.infrastructure.saint.erp_cliente_repository_impl import ERPClienteRepositoryImpl
+from app.infrastructure.saint.erp_factura_repository_impl import ERPFacturaRepositoryImpl
+from app.infrastructure.saint.erp_pago_repository_impl import ERPPagoRepositoryImpl
 from app.domain.services.cxc_service import CXCService
 from app.application.use_cases.cxc.consultar_cxc_cliente import ConsultarCXCClienteUseCase
 from app.application.use_cases.cxc.registrar_pago_manual import RegistrarPagoManualUseCase
@@ -24,7 +24,7 @@ async def listar_clientes(
     sort_by: Optional[str] = Query("deuda"),
     order: Optional[str] = Query("desc")
 ):
-    repo = SaintClienteRepository(db)
+    repo = ERPClienteRepositoryImpl(db)
     page_size = 20
     skip = (page - 1) * page_size
     
@@ -62,8 +62,8 @@ async def detalle_facturas(
     sort_by: str = Query('antiguedad_dias'),
     order: str = Query('desc')
 ):
-    cliente_repo = SaintClienteRepository(db)
-    factura_repo = SaintFacturaRepository(db)
+    cliente_repo = ERPClienteRepositoryImpl(db)
+    factura_repo = ERPFacturaRepositoryImpl(db)
     cxc_service = CXCService()
     use_case = ConsultarCXCClienteUseCase(cliente_repo, factura_repo, cxc_service)
     
@@ -95,8 +95,8 @@ async def registrar_pago(
     referencia: str = Form(...),
     db: AsyncSession = Depends(get_db)
 ):
-    pago_repo = SaintPagoRepository(db)
-    factura_repo = SaintFacturaRepository(db)
+    pago_repo = ERPPagoRepositoryImpl(db)
+    factura_repo = ERPFacturaRepositoryImpl(db)
     use_case = RegistrarPagoManualUseCase(pago_repo, factura_repo)
     
     try:

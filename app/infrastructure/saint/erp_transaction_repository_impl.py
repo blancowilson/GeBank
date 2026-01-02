@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.domain.repositories.saint_transaction_repository import SaintTransactionRepository
 from app.domain.entities.staging_transaction import StagingTransaction
+from app.domain.repositories.erp_transaction_repository import ERPTransactionRepository
 from app.infrastructure.database.models import SbTran
 
-class SaintTransactionRepositoryImpl(SaintTransactionRepository):
+class ERPTransactionRepositoryImpl(ERPTransactionRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 

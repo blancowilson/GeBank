@@ -1,61 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}Bandeja de Conciliación{% endblock %}
+{% block title %}Gestión de Pagos Reportados{% endblock %}
 
 {% block content %}
-<!-- Breadcrumbs & Heading -->
 <div class="flex flex-col gap-2 mb-8">
     <div class="flex items-center gap-2 text-sm text-[#6b4c9a] dark:text-[#a589cc]">
         <a class="hover:text-primary transition-colors" href="/">Home</a>
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-        <span class="font-medium text-primary">Bandeja de Conciliación</span>
+        <span class="font-medium text-primary uppercase text-[10px] font-black tracking-widest">Finanzas</span>
     </div>
-    <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Bandeja de Pagos Reportados</h1>
-    <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Visualiza todos los pagos registrados por los vendedores y gestiona su conciliación.</p>
+    <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Gestión de Pagos Reportados</h1>
+    <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Administra y procesa los cobros recibidos desde el portal.</p>
 </div>
 
-<!-- Filters Bar -->
+<!-- Filters -->
 <div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] mb-6">
-    <form hx-get="/reconciliation/inbox" hx-target="#pagos-tbody" hx-swap="outerHTML" hx-trigger="change from:input, change from:select" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+    <form hx-get="/reconciliation/inbox" hx-target="#pagos-tbody" hx-swap="outerHTML" hx-trigger="change from:input, change from:select" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
         <div>
-            <label class="block text-xs font-bold text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Estado</label>
-            <select name="status" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm focus:ring-primary">
-                <option value="all" {% if filters.status == 'all' %}selected{% endif %}>Todos los estados</option>
+            <label class="block text-[10px] font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1 tracking-tighter">Estado</label>
+            <select name="status" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm font-bold text-primary focus:ring-primary">
+                <option value="all" {% if filters.status == 'all' %}selected{% endif %}>Todos</option>
                 <option value="1" {% if filters.status == '1' %}selected{% endif %}>Pendientes</option>
                 <option value="3" {% if filters.status == '3' %}selected{% endif %}>Aprobados</option>
                 <option value="9" {% if filters.status == '9' %}selected{% endif %}>Rechazados</option>
             </select>
         </div>
         <div>
-            <label class="block text-xs font-bold text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Desde</label>
-            <input type="date" name="start_date" value="{{ filters.start_date or '' }}" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm">
+            <label class="block text-[10px] font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1 tracking-tighter">Vendedor</label>
+            <select name="vendedor" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm font-bold text-primary focus:ring-primary">
+                <option value="all" {% if filters.vendedor == 'all' %}selected{% endif %}>Todos</option>
+                {% for vend in vendedores %}
+                    <option value="{{ vend }}" {% if filters.vendedor == vend %}selected{% endif %}>{{ vend }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div>
-            <label class="block text-xs font-bold text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Hasta</label>
-            <input type="date" name="end_date" value="{{ filters.end_date or '' }}" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm">
+            <label class="block text-[10px] font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1 tracking-tighter">Fecha Inicial</label>
+            <input type="date" name="start_date" value="{{ filters.start_date or '' }}" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm font-medium">
         </div>
-        <div class="flex justify-end">
-            <button type="button" onclick="window.location.href='/reconciliation/inbox'" class="px-4 py-2 text-sm font-bold text-[#6b4c9a] hover:text-primary transition-colors">
-                Limpiar Filtros
+        <div>
+            <label class="block text-[10px] font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1 tracking-tighter">Fecha Final</label>
+            <input type="date" name="end_date" value="{{ filters.end_date or '' }}" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm font-medium">
+        </div>
+        <div class="flex justify-end gap-2">
+            <button type="button" onclick="window.location.href='/reconciliation/inbox'" class="px-4 py-2 text-xs font-black text-[#6b4c9a] hover:text-primary uppercase transition-colors tracking-tighter">
+                Resetear
             </button>
         </div>
     </form>
 </div>
 
-<!-- Payments Table -->
-<div class="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48]">
+<!-- Table -->
+<div class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left text-sm whitespace-nowrap">
-            <thead class="bg-background-light dark:bg-[#1f162e] text-[#6b4c9a] dark:text-[#a589cc] font-semibold uppercase tracking-wider text-xs">
+            <thead class="bg-background-light dark:bg-[#1f162e] text-[#6b4c9a] dark:text-[#a589cc] font-black uppercase tracking-tighter text-[10px] border-b border-[#d9cfe7] dark:border-[#382e48]">
                 <tr>
-                    <th class="px-6 py-3">Fecha Reporte</th>
-                    <th class="px-6 py-3">ID Pago</th>
-                    <th class="px-6 py-3">Cliente</th>
-                    <th class="px-6 py-3">Monto Total</th>
-                    <th class="px-6 py-3">Usuario</th>
-                    <th class="px-6 py-3 text-center">Estado</th>
-                    <th class="px-6 py-3 text-center">Comprobantes</th>
-                    <th class="px-6 py-3 text-center">Acciones</th>
+                    <th class="px-6 py-4">Fecha</th>
+                    <th class="px-6 py-4">ID Pago</th>
+                    <th class="px-6 py-4">Cliente</th>
+                    <th class="px-6 py-4">Monto (USD)</th>
+                    <th class="px-6 py-4">Vendedor</th>
+                    <th class="px-6 py-4 text-center">Estado</th>
+                    <th class="px-6 py-4 text-center">Docs</th>
+                    <th class="px-6 py-4 text-center">Acción</th>
                 </tr>
             </thead>
             {% include "reconciliation/_pagos_table_partial.html" %}
@@ -63,10 +71,10 @@
     </div>
 </div>
 
-<!-- Modal Container (Generic, could be in base.html) -->
-<div id="modal-container" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50 p-4" onclick="this.classList.add('hidden')">
-    <div id="modal-content" class="bg-white dark:bg-surface-dark rounded-xl shadow-2xl w-full max-w-3xl" onclick="event.stopPropagation()">
-        <!-- Content will be loaded here by HTMX -->
+<!-- Modal -->
+<div id="modal-container" class="fixed inset-0 bg-black/60 flex items-center justify-center hidden z-50 p-4 backdrop-blur-sm" onclick="this.classList.add('hidden')">
+    <div id="modal-content" class="bg-white dark:bg-surface-dark rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden" onclick="event.stopPropagation()">
+        <!-- HTMX Content -->
     </div>
 </div>
 {% endblock %}

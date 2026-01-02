@@ -1,11 +1,11 @@
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from app.domain.entities.banco import Banco
 from app.domain.repositories.banco_repository import BancoRepository
+from app.domain.entities.banco import Banco
 from app.infrastructure.database.models import SaBanc
 
-class SaintBancoRepository(BancoRepository):
+class ERPBancoRepositoryImpl(BancoRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 

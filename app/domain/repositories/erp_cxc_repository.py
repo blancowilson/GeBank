@@ -1,16 +1,11 @@
 from abc import ABC, abstractmethod
+from typing import List
+from app.domain.entities.factura import Factura
 from decimal import Decimal
 
-class SaintCxCRepository(ABC):
+class ERPCxCRepository(ABC):
     @abstractmethod
-    async def aplicar_pago_documento(
-        self,
-        numero_documento: str,
-        cod_cliente: str,
-        monto_pago: Decimal,
-        monto_descuento: Decimal,
-        monto_retencion: Decimal
-    ) -> None:
+    async def obtener_facturas_pendientes(self, cod_cliente: str) -> List[Factura]:
         """
         Aplica los montos de pago, descuento y retención a una factura específica
         en la tabla SAACXC, reduciendo su saldo.

@@ -1,24 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.database.session import get_db
-from app.application.dto.insytech_dto import PaymentPacketDTO
 from app.application.use_cases.insytech.receive_payment_packet import ReceivePaymentPacketUseCase
-from app.domain.repositories.insytech_repository import InsytechRepository
-from app.infrastructure.repositories.insytech_repository_impl import InsytechRepositoryImpl
-from app.domain.repositories.cliente_repository import ClienteRepository
-from app.infrastructure.saint.saint_cliente_repository import SaintClienteRepository
+from app.application.dto.insytech_dto import PaymentPacketDTO
+from app.domain.repositories.portal_repository import PortalRepository
+from app.infrastructure.repositories.portal_repository_impl import PortalRepositoryImpl
+from app.infrastructure.saint.erp_cliente_repository_impl import ERPClienteRepositoryImpl
 
 router = APIRouter()
 
 @router.post("/integration/payments", status_code=status.HTTP_201_CREATED)
-async def receive_insytech_payment(
-    packet: PaymentPacketDTO,
-    db: AsyncSession = Depends(get_db)
-):
-    insytech_repo: InsytechRepository = InsytechRepositoryImpl(db)
-    cliente_repo: ClienteRepository = SaintClienteRepository(db) # Reusing SaintClienteRepository
-    
-    use_case = ReceivePaymentPacketUseCase(insytech_repo, cliente_repo)
+async def receive_insytech_payment(packet: PaymentPacketDTO, db: AsyncSession = Depends(get_db)):
+    """
+    Endpoint para recibir paquetes de pago desde el portal de Insytech.
+    """
+    portal_repo: PortalRepository = PortalRepositoryImpl(db)
+    cliente_repo = ERPClienteRepositoryImpl(db)
+    use_case = ReceivePaymentPacketUseCase(portal_repo, cliente_repo)
     
     try:
         # Pydantic validation handles basic schema, use case handles business rules

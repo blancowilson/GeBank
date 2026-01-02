@@ -213,7 +213,7 @@ class SsUsrs(Base):
 
 class GePagos(Base):
     __tablename__ = "GePagos"
-    __table_args__ = {"schema": "AppConciliacion"}
+    __table_args__ = {"schema": "dbo"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     idPago = Column(String(20), nullable=False, unique=True)
@@ -221,10 +221,10 @@ class GePagos(Base):
     DescripClie = Column(String(100), nullable=False)
     Usuario = Column(String(50), nullable=False)
     fecha = Column(DateTime, nullable=False)
-    MontoPago = Column(DECIMAL(28, 4), nullable=False)
-    MontoCancelado = Column(DECIMAL(28, 4), nullable=False)
+    MontoPago = Column(DECIMAL(28, 4), nullable=False, name="montoPago")
+    MontoCancelado = Column(DECIMAL(28, 4), nullable=False, name="montoCancelado")
     status = Column(SmallInteger, nullable=False)
-    UrlImagen = Column(Text)
+    UrlImagen = Column(Text, name="urlImagen")
     fechaCaptura = Column(DateTime, nullable=False)
     
     # Audit fields
@@ -236,45 +236,45 @@ class GePagos(Base):
 
 class GeDocumentos(Base):
     __tablename__ = "GeDocumentos"
-    __table_args__ = {"schema": "AppConciliacion"}
+    __table_args__ = {"schema": "dbo"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    idPago = Column(String(20), ForeignKey("AppConciliacion.GePagos.idPago"), nullable=False)
+    idPago = Column(String(20), ForeignKey("dbo.GePagos.idPago"), nullable=False)
     tipoDoc = Column(String(4), nullable=False)
     numeroDoc = Column(String(30), nullable=False)
     emision = Column(DateTime, nullable=False)
     vencimiento = Column(DateTime, nullable=False)
-    montoDoc = Column(DECIMAL(28, 4), nullable=False)
-    porcentajeDescuento = Column(DECIMAL(5, 2), nullable=False)
-    montoDescuento = Column(DECIMAL(28, 4), nullable=False)
-    porcentajeRetencion = Column(DECIMAL(5, 2), nullable=False)
-    montoRetencion = Column(DECIMAL(28, 4), nullable=False)
-    NroRetencion = Column(String(50))
-    UrlRetencion = Column(Text)
+    montoDoc = Column(DECIMAL(28, 4), nullable=False, name="montoDoc")
+    porcentajeDescuento = Column(DECIMAL(5, 2), nullable=False, name="porcentajeDescuento")
+    montoDescuento = Column(DECIMAL(28, 4), nullable=False, name="montoDescuento")
+    porcentajeRetencion = Column(DECIMAL(5, 2), nullable=False, name="porcentajeRetencion")
+    montoRetencion = Column(DECIMAL(28, 4), nullable=False, name="montoRetencion")
+    NroRetencion = Column(String(50), name="NroRetencion")
+    UrlRetencion = Column(Text, name="UrlRetencion")
 
     pago = relationship("GePagos", back_populates="documentos")
 
 class GeInstrumentos(Base):
     __tablename__ = "GeInstrumentos"
-    __table_args__ = {"schema": "AppConciliacion"}
+    __table_args__ = {"schema": "dbo"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    idPago = Column(String(20), ForeignKey("AppConciliacion.GePagos.idPago"), nullable=False)
-    banco = Column(String(50))
-    formaPago = Column(String(50), nullable=False)
-    nroPlanilla = Column(String(30))
+    idPago = Column(String(20), ForeignKey("dbo.GePagos.idPago"), nullable=False)
+    banco = Column(String(50), name="banco")
+    formaPago = Column(String(50), nullable=False, name="formaPago")
+    nroPlanilla = Column(String(30), name="nroPlanilla")
     fecha = Column(DateTime, nullable=False)
-    tasa = Column(DECIMAL(28, 4), nullable=True) # Changed to nullable=True
-    cheque = Column(String(20))
-    bancoCliente = Column(String(50))
-    monto = Column(DECIMAL(28, 4), nullable=False)
-    moneda = Column(String(5), nullable=False)
+    tasa = Column(DECIMAL(28, 4), nullable=True, name="tasa")
+    cheque = Column(String(20), name="cheque")
+    bancoCliente = Column(String(50), name="bancoCliente")
+    monto = Column(DECIMAL(28, 4), nullable=False, name="monto")
+    moneda = Column(String(5), nullable=False, name="moneda")
+    estatus = Column(SmallInteger, default=0) # 0=Pending, 1=Reconciled
 
     pago = relationship("GePagos", back_populates="instrumentos")
 
 class StagingBancos(Base):
     __tablename__ = "Staging_Bancos"
-    __table_args__ = {"schema": "AppConciliacion"}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     
@@ -316,3 +316,40 @@ class VwAdmFactConBs(Base):
     @property
     def TOTAL_BS(self):
         return (self.SUBTOTAL_BS or 0) + (self.IMPUESTO_BS or 0)
+
+# ==========================================
+# System Configuration
+# ==========================================
+
+class SystemConfig(Base):
+    __tablename__ = "SystemConfig"
+    __table_args__ = {"schema": "dbo"}
+
+    key = Column(String(50), primary_key=True, nullable=False)
+    value = Column(String(255), nullable=True)
+    description = Column(String(255), nullable=True)
+    updated_at = Column(DateTime, nullable=True)
+
+class BankMapping(Base):
+    __tablename__ = "BankMapping"
+    __table_args__ = {"schema": "dbo"}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    portal_code = Column(String(50), nullable=False, unique=True) # e.g. "04"
+    erp_code = Column(String(30), nullable=False) # e.g. "110103" (FK to SBBANC theoretically)
+    description = Column(String(100), nullable=True)
+    is_cash = Column(SmallInteger, default=0, nullable=False) # 0=Bank, 1=Cash
+    currency = Column(String(5), default='USD', nullable=False)
+    updated_at = Column(DateTime, nullable=True)
+
+class ExchangeRate(Base):
+    __tablename__ = "ExchangeRates"
+    __table_args__ = {"schema": "dbo"}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    fecha = Column(DateTime, nullable=False)
+    moneda_origen = Column(String(5), nullable=False)
+    moneda_destino = Column(String(5), nullable=False)
+    tasa = Column(DECIMAL(28, 8), nullable=False)
+    tipo_tasa = Column(String(20), default='OFICIAL', nullable=False) # OFICIAL, PARALELO, ETC
+    created_at = Column(DateTime, nullable=False)

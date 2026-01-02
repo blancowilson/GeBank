@@ -51,6 +51,15 @@
                                class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg text-xl font-bold text-[#130d1b] dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition-all">
                     </div>
                 </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="check_{{ tasa.key }}" name="es_referencia_divisa" value="true"
+                           {% if tasa.es_referencia_divisa %}checked{% endif %}
+                           class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary dark:focus:ring-primary dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="check_{{ tasa.key }}" class="text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Usar como Referencia de Divisa (Aplica Descuento)
+                    </label>
+                </div>
                 
                 <button type="submit" class="w-full py-2 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-md transition-colors flex justify-center items-center gap-2">
                     <span class="material-symbols-outlined text-sm">save</span>

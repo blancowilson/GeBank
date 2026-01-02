@@ -1,0 +1,61 @@
+<tr class="hover:bg-background-light dark:hover:bg-[#1f162e] animate-in fade-in slide-in-from-top-2">
+    <td class="px-6 py-4 font-medium text-xs">{{ pago.fecha.strftime('%Y-%m-%d') if pago.fecha else '-' }}</td>
+    <td class="px-6 py-4 font-mono text-xs">{{ pago.idPago }}</td>
+    <td class="px-6 py-4">
+        <div class="font-bold text-sm">{{ pago.DescripClie }}</div>
+        <div class="text-[10px] text-gray-500">{{ pago.codCliente }}</div>
+    </td>
+    <td class="px-6 py-4 font-bold text-primary">{{ "%.2f"|format(pago.MontoPago) }}</td>
+    <td class="px-6 py-4 text-xs">{{ pago.Usuario }}</td>
+    <td class="px-6 py-4 text-center">
+        {% if pago.status == 1 %}
+            <span class="px-2 py-0.5 text-[10px] font-black bg-amber-100 text-yellow-700 rounded-full uppercase">Pendiente</span>
+        {% elif pago.status == 3 %}
+            <span class="px-2 py-0.5 text-[10px] font-black bg-green-100 text-green-700 rounded-full uppercase">Aprobado</span>
+        {% elif pago.status == 9 %}
+            <span class="px-2 py-0.5 text-[10px] font-black bg-red-100 text-red-700 rounded-full uppercase">Rechazado</span>
+        {% endif %}
+    </td>
+    <td class="px-6 py-4 text-center">
+        {% if pago.UrlImagen %}
+            {% set urls = pago.UrlImagen.split(';') %}
+            <div class="flex items-center justify-center gap-1">
+            {% for url in urls %}
+                {% if url.strip() %}
+                    <button
+                        hx-get="/reconciliation/image-viewer?url={{ url.strip() }}"
+                        hx-target="#modal-content"
+                        hx-trigger="click"
+                        onclick="document.getElementById('modal-container').classList.remove('hidden');"
+                        class="p-1 bg-primary/10 hover:bg-primary/20 text-primary rounded transition-colors">
+                        <span class="material-symbols-outlined text-sm">image</span>
+                    </button>
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% else %}
+            <span class="text-xs text-gray-400">-</span>
+        {% endif %}
+    </td>
+    <td class="px-6 py-4 text-center">
+        <div class="flex flex-col gap-2 items-center justify-center">
+            {% if pago.status == 1 or pago.status == 9 %}
+            <button 
+                hx-post="/reconciliation/attempt/{{ pago.idPago }}"
+                hx-target="closest tr"
+                hx-swap="outerHTML"
+                class="text-[10px] font-black bg-primary text-white px-3 py-1 rounded hover:bg-primary/90 flex items-center justify-center gap-1 uppercase tracking-tighter w-24">
+                <span class="material-symbols-outlined text-sm htmx-indicator animate-spin">sync</span>
+                <span>Conciliar</span>
+            </button>
+            <a href="/reconciliation/match/{{ pago.idPago }}"
+               class="text-[10px] font-black border border-primary text-primary px-3 py-1 rounded hover:bg-primary/5 flex items-center justify-center gap-1 uppercase tracking-tighter w-24">
+                <span class="material-symbols-outlined text-sm">edit_note</span>
+                <span>Ajustar</span>
+            </a>
+            {% else %}
+            <span class="text-[10px] text-gray-400 font-bold uppercase">Procesado</span>
+            {% endif %}
+        </div>
+    </td>
+</tr>

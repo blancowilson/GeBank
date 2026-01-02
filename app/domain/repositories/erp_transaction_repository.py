@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 from app.domain.entities.staging_transaction import StagingTransaction
 
-class SaintTransactionRepository(ABC):
+class ERPTransactionRepository(ABC):
     @abstractmethod
     async def registrar_transaccion(self, transaccion: StagingTransaction) -> None:
         """

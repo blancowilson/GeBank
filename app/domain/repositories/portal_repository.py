@@ -3,9 +3,10 @@ from typing import List, Optional
 from datetime import datetime
 from app.domain.entities.pago_insytech import GePagos, GeDocumentos, GeInstrumentos
 
-class InsytechRepository(ABC):
-    
+class PortalRepository(ABC):
+
     @abstractmethod
+
     async def guardar_pago_completo(self, pago: GePagos, documentos: List[GeDocumentos], instrumentos: List[GeInstrumentos]) -> GePagos:
         """Guarda un pago completo de Insytech (cabecera, documentos e instrumentos)."""
         pass
@@ -25,8 +26,13 @@ class InsytechRepository(ABC):
         pass
     
     @abstractmethod
-    async def obtener_pagos_por_status(self, status: Optional[int] = None, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, limit: int = 100) -> List[GePagos]:
-        """Obtiene una lista de pagos según su estado y rango de fechas."""
+    async def obtener_pagos_por_status(self, status: Optional[int] = None, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, vendedor: Optional[str] = None, limit: int = 100) -> List[GePagos]:
+        """Obtiene una lista de pagos según su estado, rango de fechas y vendedor."""
+        pass
+
+    @abstractmethod
+    async def obtener_vendedores_activos(self) -> List[str]:
+        """Obtiene la lista de usuarios únicos que han registrado pagos."""
         pass
         
     @abstractmethod

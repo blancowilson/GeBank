@@ -7,7 +7,7 @@ from app.domain.value_objects.monto import Monto, Moneda
 from app.infrastructure.database.models import SaClie, SaAcxc
 from decimal import Decimal
 
-class SaintClienteRepository(ClienteRepository):
+class ERPClienteRepositoryImpl(ClienteRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 

@@ -1,13 +1,11 @@
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, func
-from decimal import Decimal
-
+from sqlalchemy import select, func, and_
 from app.domain.repositories.factura_repository import FacturaRepository
 from app.domain.entities.factura import Factura
 from app.infrastructure.database.models import SaFact, SaAcxc, VwAdmFactConBs
 
-class SaintFacturaRepository(FacturaRepository):
+class ERPFacturaRepositoryImpl(FacturaRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 

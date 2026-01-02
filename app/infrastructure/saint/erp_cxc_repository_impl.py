@@ -1,12 +1,39 @@
+from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import update
+from sqlalchemy import select, update
+from app.domain.repositories.erp_cxc_repository import ERPCxCRepository
+from app.domain.entities.factura import Factura
+from app.infrastructure.database.models import SaAcxc, SaPagcxc
 from decimal import Decimal
-from app.domain.repositories.saint_cxc_repository import SaintCxCRepository
-from app.infrastructure.database.models import SaAcxc
 
-class SaintCxCRepositoryImpl(SaintCxCRepository):
+class ERPCxCRepositoryImpl(ERPCxCRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
+
+    async def obtener_facturas_pendientes(self, cod_cliente: str) -> List[Factura]:
+        """
+        Consulta las facturas y notas de débito pendientes de un cliente en SAACXC.
+        """
+        stmt = select(SaAcxc).where(
+            SaAcxc.CodClie == cod_cliente,
+            SaAcxc.Saldo > 0,
+            SaAcxc.TipoCXC.in_(['10', '20']) # 10=Factura, 20=Nota de Débito
+        ).order_by(SaAcxc.FechaE.asc())
+        
+        result = await self.session.execute(stmt)
+        rows = result.scalars().all()
+        
+        return [
+            Factura(
+                numero=r.NumeroD,
+                tipo=r.TipoCXC,
+                fecha_emision=r.FechaE,
+                fecha_vencimiento=r.FechaV,
+                monto_original=r.Monto,
+                saldo=r.Saldo,
+                cod_cliente=r.CodClie
+            ) for r in rows
+        ]
 
     async def aplicar_pago_documento(
         self,

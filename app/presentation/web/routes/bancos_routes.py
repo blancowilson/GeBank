@@ -10,7 +10,7 @@ from app.infrastructure.parsers.banesco_excel_parser import BanescoExcelParser
 from app.application.use_cases.bancos.upload_bank_statement import UploadBankStatementUseCase
 from app.domain.repositories.staging_banco_repository import StagingBancoRepository
 from app.infrastructure.repositories.staging_banco_repository_impl import StagingBancoRepositoryImpl
-from app.infrastructure.saint.saint_banco_repository import SaintBancoRepository
+from app.infrastructure.saint.erp_banco_repository_impl import ERPBancoRepositoryImpl
 from app.domain.repositories.banco_repository import BancoRepository
 
 router = APIRouter(prefix="/bancos", tags=["bancos"])
@@ -21,7 +21,7 @@ async def ver_subir_estado_cuenta(request: Request, db: AsyncSession = Depends(g
     """
     Renderiza la vista de carga de estados de cuenta, incluyendo la lista de bancos.
     """
-    banco_repo: BancoRepository = SaintBancoRepository(db)
+    banco_repo: BancoRepository = ERPBancoRepositoryImpl(db)
     bancos = await banco_repo.get_all()
     
     return templates.TemplateResponse(

@@ -1,0 +1,9 @@
+<td colspan="8" class="p-0"
+    hx-get="/reconciliation/status/{{ task_id }}"
+    hx-trigger="load delay:2s"
+    hx-swap="outerHTML">
+    <div class="bg-blue-50 dark:bg-blue-900/20 p-4 flex items-center justify-center gap-3 animate-pulse">
+        <span class="material-symbols-outlined text-primary animate-spin">settings</span>
+        <span class="text-sm font-bold text-primary">Procesando conciliación...</span>
+    </div>
+</td>

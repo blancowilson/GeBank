@@ -1,14 +1,13 @@
-from typing import List
-from datetime import datetime
-from decimal import Decimal
-from app.application.dto.insytech_dto import PaymentPacketDTO, DocumentDetail, InstrumentDetail
-from app.domain.entities.pago_insytech import GePagos, GeDocumentos, GeInstrumentos
-from app.domain.repositories.insytech_repository import InsytechRepository
+from app.domain.repositories.portal_repository import PortalRepository
 from app.domain.repositories.cliente_repository import ClienteRepository
+from app.application.dto.insytech_dto import PaymentPacketDTO
+from app.domain.entities.pago_insytech import GePagos, GeDocumentos, GeInstrumentos
+from decimal import Decimal
+from datetime import datetime
 
 class ReceivePaymentPacketUseCase:
-    def __init__(self, insytech_repo: InsytechRepository, cliente_repo: ClienteRepository):
-        self.insytech_repo = insytech_repo
+    def __init__(self, portal_repo: PortalRepository, cliente_repo: ClienteRepository):
+        self.portal_repo = portal_repo
         self.cliente_repo = cliente_repo
 
     async def execute(self, packet: PaymentPacketDTO) -> GePagos:
@@ -78,6 +77,6 @@ class ReceivePaymentPacketUseCase:
         ]
 
         # 6. Persist to database
-        await self.insytech_repo.guardar_pago_completo(ge_pagos_entity, ge_documentos_entities, ge_instrumentos_entities)
+        await self.portal_repo.guardar_pago_completo(ge_pagos_entity, ge_documentos_entities, ge_instrumentos_entities)
         
         return ge_pagos_entity

@@ -1,0 +1,43 @@
+{% if matches %}
+    {% for match in matches %}
+    <div 
+        @click="selectedStaging = '{{ match.id }}'"
+        :class="{'ring-2 ring-blue-500 bg-gray-700': selectedStaging === '{{ match.id }}', 'bg-gray-800 hover:bg-gray-700': selectedStaging !== '{{ match.id }}'}"
+        class="p-4 rounded-lg border border-gray-600 cursor-pointer transition-all duration-200"
+    >
+        <div class="flex justify-between items-center mb-2">
+            <span class="px-2 py-1 bg-green-900 text-green-200 text-xs rounded-full">{{ match.tipo_movimiento }}</span>
+            <span class="text-sm text-gray-400">{{ match.fecha.strftime('%d/%m/%Y') }}</span>
+        </div>
+        
+        <div class="flex justify-between items-baseline">
+            <div class="overflow-hidden">
+                <p class="text-sm text-gray-300 font-medium truncate w-48" title="{{ match.descripcion }}">{{ match.descripcion }}</p>
+                <p class="text-xs text-gray-500">Ref: <span class="text-blue-300 font-mono">{{ match.referencia }}</span></p>
+            </div>
+            <div class="text-right">
+                <p class="text-lg font-bold text-white">{{ "{:,.2f}".format(match.monto) }} <span class="text-xs">{{ match.moneda }}</span></p>
+                
+                <!-- Score Badge -->
+                {% if match.score %}
+                <div class="mt-1">
+                    {% if match.score >= 90 %}
+                        <span class="text-xs text-green-400 font-bold border border-green-600 px-1 rounded">Match {{ match.score }}%</span>
+                    {% elif match.score >= 70 %}
+                        <span class="text-xs text-yellow-400 font-bold border border-yellow-600 px-1 rounded">Probable {{ match.score }}%</span>
+                    {% else %}
+                        <span class="text-xs text-gray-500 border border-gray-600 px-1 rounded">Posible {{ match.score }}%</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="flex flex-col items-center justify-center h-64 text-gray-500 text-center p-4">
+        <span class="material-symbols-outlined text-4xl mb-2 text-gray-600">search_off</span>
+        <p class="font-medium">No se encontraron coincidencias automáticas.</p>
+        <p class="text-xs mt-2">Intenta buscar por referencia manualmente o verifica el rango de fechas.</p>
+    </div>
+{% endif %}

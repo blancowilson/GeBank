@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Configuración del Sistema{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-2 mb-8">
+    <div class="flex items-center gap-2 text-sm text-[#6b4c9a] dark:text-[#a589cc]">
+        <a class="hover:text-primary transition-colors" href="/">Home</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="font-medium text-primary uppercase text-[10px] font-black tracking-widest">Configuración</span>
+    </div>
+    <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Ajustes Globales</h1>
+    <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Define los parámetros base para el cálculo de tasas y conciliación.</p>
+</div>
+
+<div class="max-w-2xl">
+    <form hx-post="/configuracion/ajustes" hx-target="#toast-container" hx-swap="innerHTML" class="space-y-6">
+        
+        <!-- Monedas -->
+        <div class="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48]">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">payments</span>
+                Sistema Multimoneda
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-2">Moneda Base</label>
+                    <input type="text" name="base_currency" value="{{ config.base_currency }}" 
+                           class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-4 py-3 font-bold focus:ring-primary">
+                    <p class="text-[10px] text-gray-500 mt-1">Moneda principal del ERP (ej: USD)</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-2">Moneda Referencial</label>
+                    <input type="text" name="ref_currency" value="{{ config.ref_currency }}" 
+                           class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-4 py-3 font-bold focus:ring-primary">
+                    <p class="text-[10px] text-gray-500 mt-1">Moneda de reporte local (ej: VES)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lógica de Tasa -->
+        <div class="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48]">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">calculate</span>
+                Matemática de Conversión
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-2">Operador de Tasa</label>
+                    <select name="rate_operator" class="w-full bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-4 py-3 font-bold text-primary focus:ring-primary">
+                        <option value="MULTIPLY" {% if config.rate_operator == 'MULTIPLY' %}selected{% endif %}>Multiplicar (Base * Tasa = Ref)</option>
+                        <option value="DIVIDE" {% if config.rate_operator == 'DIVIDE' %}selected{% endif %}>Dividir (Ref / Tasa = Base)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-2">Tolerancia de Conciliación</label>
+                    <div class="flex items-center gap-3">
+                        <input type="number" step="0.01" min="0" name="tolerance" value="{{ config.tolerance }}" 
+                               class="w-32 bg-background-light dark:bg-[#1f162e] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-4 py-3 font-mono font-bold text-lg text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-500">Unidades de Moneda Base</span>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-2">Diferencia máxima permitida en céntimos para considerar un match automático exitoso. (Por defecto: 0.01)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapeo de Bancos -->
+        <div class="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48]">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">account_balance</span>
+                Equivalencia de Entidades
+            </h3>
+            <p class="text-sm text-gray-500 mb-4">Configura cómo se traducen los códigos del portal externo a las cuentas de tu ERP.</p>
+            <a href="/configuracion/bancos/mapeo" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+                <span class="material-symbols-outlined text-base">settings_ethernet</span>
+                Gestionar Mapeo de Bancos
+            </a>
+        </div>
+
+        <!-- Historial de Tasas -->
+        <div class="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48]">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">history</span>
+                Auditoría
+            </h3>
+            <a href="/configuracion/tasas/historial" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+                <span class="material-symbols-outlined text-base">view_list</span>
+                Ver Historial de Tasas
+            </a>
+        </div>
+
+        <div class="flex justify-end pt-4">
+            <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-black px-8 py-4 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center gap-2 uppercase tracking-widest text-sm">
+                <span class="material-symbols-outlined">save</span>
+                Guardar Configuración
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Container para el Toast de éxito -->
+<div id="toast-container" class="fixed bottom-10 right-10 z-50"></div>
+{% endblock %}

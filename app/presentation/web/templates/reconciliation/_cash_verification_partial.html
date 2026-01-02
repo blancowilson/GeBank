@@ -1,0 +1,32 @@
+<div class="flex flex-col items-center justify-center h-full p-6 text-center space-y-4">
+    <div class="bg-yellow-900/30 p-4 rounded-full border-2 border-yellow-500/50">
+        <span class="material-symbols-outlined text-5xl text-yellow-400">payments</span>
+    </div>
+    
+    <h3 class="text-xl font-bold text-white">Pago en Efectivo Detectado</h3>
+    
+    <p class="text-gray-300 max-w-sm">
+        Este instrumento está mapeado a una cuenta de efectivo o caja. 
+        <br>
+        <span class="text-yellow-400 font-mono text-sm block mt-2">{{ mapping.description }} ({{ mapping.erp_code }})</span>
+    </p>
+
+    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600 w-full max-w-xs">
+        <p class="text-xs text-gray-400 uppercase tracking-wide">Monto a Conciliar</p>
+        <p class="text-2xl font-bold text-green-400">{{ "{:,.2f}".format(instrument.monto) }} {{ instrument.moneda }}</p>
+    </div>
+
+    <p class="text-sm text-gray-500">
+        Al confirmar, se generará el asiento contable directamente en Saint sin buscar en banco.
+    </p>
+
+    <button 
+        hx-post="/reconciliation/approve-cash"
+        hx-vals='js:{instrument_id: {{ instrument.id }} }'
+        hx-target="body"
+        class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-6 rounded-full flex items-center shadow-lg transition-all"
+    >
+        <span class="material-symbols-outlined mr-2">verified</span>
+        Confirmar Recepción de Efectivo
+    </button>
+</div>

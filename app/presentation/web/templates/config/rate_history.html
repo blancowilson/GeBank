@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Historial de Tasas{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-2 mb-8">
+    <div class="flex items-center gap-2 text-sm text-[#6b4c9a] dark:text-[#a589cc]">
+        <a class="hover:text-primary transition-colors" href="/">Home</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <a class="hover:text-primary transition-colors" href="/configuracion/ajustes">Configuración</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="font-medium text-primary uppercase text-[10px] font-black tracking-widest">Historial de Tasas</span>
+    </div>
+    <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Historial de Tasas de Cambio</h1>
+    <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Registro cronológico de las tasas aplicadas en el sistema.</p>
+</div>
+
+<div class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm whitespace-nowrap">
+            <thead class="bg-background-light dark:bg-[#1f162e] text-[#6b4c9a] dark:text-[#a589cc] font-black uppercase tracking-tighter text-[10px] border-b border-[#d9cfe7] dark:border-[#382e48]">
+                <tr>
+                    <th class="px-6 py-4">Fecha de Vigencia</th>
+                    <th class="px-6 py-4">Par de Monedas</th>
+                    <th class="px-6 py-4 text-right">Tasa</th>
+                    <th class="px-6 py-4">Fecha de Registro</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-[#ece7f3] dark:divide-[#382e48]">
+                {% for rate in rates %}
+                <tr class="hover:bg-background-light dark:hover:bg-[#1f162e] transition-colors">
+                    <td class="px-6 py-4 font-bold">{{ rate.fecha.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-primary/10 text-primary rounded font-black text-[10px]">{{ rate.moneda_origen }}</span>
+                            <span class="material-symbols-outlined text-xs text-gray-400">arrow_forward</span>
+                            <span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded font-black text-[10px]">{{ rate.moneda_destino }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-right font-mono font-bold text-primary">
+                        {{ "{:,.4f}".format(rate.tasa) }}
+                    </td>
+                    <td class="px-6 py-4 text-xs text-gray-500">
+                        {{ rate.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                        <span class="material-symbols-outlined text-4xl block mb-2">history</span>
+                        No hay tasas registradas en la base de datos aún.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-6 flex justify-end">
+    <a href="/configuracion/ajustes" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">settings</span>
+        Volver a Ajustes
+    </a>
+</div>
+{% endblock %}
