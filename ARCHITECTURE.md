@@ -1,0 +1,60 @@
+# 📘 Guía de Arquitectura y Desarrollo: GeBankSaint
+
+## 1. Visión General
+GeBankSaint es un middleware de conciliación financiera diseñado como un sistema agnóstico que conecta un **Portal de Pagos Externo** (ej. Insytech) con un **ERP Interno** (ej. Saint, Profit). Su propósito es automatizar la validación de cobranzas reportadas contra movimientos bancarios reales antes de afectar la contabilidad oficial.
+
+## 2. Arquitectura: Hexagonal (Ports & Adapters)
+El sistema está desacoplado para permitir cambios en el ERP o el Portal sin afectar la lógica de negocio.
+
+*   **Domain (Core):** Contiene las entidades (`GePagos`, `GeInstrumentos`), lógica pura y **Ports** (Interfaces de Repositorio).
+*   **Application (Use Cases):** Orquesta los flujos de trabajo (ej. `ConciliarPagoUseCase`).
+*   **Infrastructure (Adapters):** Implementaciones técnicas:
+    *   `saint/`: Adaptadores para el ERP Saint.
+    *   `parsers/`: Lógica de lectura de estados de cuenta (Excel/CSV).
+    *   `repositories/`: Implementaciones de persistencia y configuración.
+*   **Presentation:** Rutas de FastAPI (`api/` para sistemas, `web/` para humanos) y plantillas **HTMX** para interactividad moderna.
+
+## 3. Procesamiento y Background Tasks
+El sistema está diseñado para manejar grandes volúmenes de datos sin bloquear la interfaz de usuario.
+
+### Modos de Ejecución (Celery Fallback):
+El sistema soporta dos modos de ejecución configurables mediante `USE_CELERY` en el entorno:
+1.  **Modo Asíncrono (Celery + Redis):** Recomendado para producción. La conciliación se delega a un worker, permitiendo al usuario seguir navegando. La interfaz usa **HTMX Polling** para actualizar el estado automáticamente cuando la tarea termina.
+2.  **Modo Síncrono (Fallback):** Ejecuta la lógica directamente en la petición HTTP. Útil para entornos de desarrollo, pruebas unitarias o instalaciones donde no se desea mantener una infraestructura de Redis/Celery.
+
+## 4. Lógica del Motor de Conciliación (The Brain)
+El motor no concilia "pagos" completos, sino **instrumentos individuales** para permitir pagos compuestos (ej. un pago reportado que incluye una parte en Zelle y otra en Efectivo).
+
+### Flujo de Procesamiento:
+1.  **Traducción de Entidades:** Consulta el `BankMappingRepository` para convertir el código del portal (ej. "04") al código contable del ERP (ej. "110103").
+2.  **Enrutamiento por Naturaleza:**
+    *   **Caja/Efectivo (`is_cash=True`):** Omite la búsqueda en bancos y lo marca para verificación manual o aprobación por reglas de caja física.
+    *   **Bancario:** Procede a la búsqueda en la tabla de `Staging_Bancos`.
+3.  **Normalización de Moneda:**
+    *   Identifica la moneda del instrumento y la moneda de la cuenta bancaria (definida en el mapeo).
+    *   Si difieren, utiliza el `TasaService` para convertir los montos basándose en el `RATE_OPERATOR` (MULTIPLY/DIVIDE) configurado globalmente.
+4.  **Búsqueda de Coincidencias (Matching):**
+    *   Busca en el Staging registros que coincidan en: **Banco (ERP Code)**, **Referencia** y **Monto**.
+5.  **Validación de Tolerancia:**
+    *   Aplica la `RECONCILIATION_TOLERANCE` (ej. 0.01) para permitir matches automáticos a pesar de diferencias mínimas de céntimos.
+6.  **Resultado de Conciliación:**
+    *   Genera un `MatchResult` por cada instrumento. El pago solo se considera "Conciliado" si el 100% de sus instrumentos financieros tienen un match exitoso.
+
+## 4. Agnosticismo y Escalabilidad
+
+### Configuración Global (`SystemConfig`)
+El sistema se adapta a diferentes entornos financieros mediante parámetros en base de datos:
+*   `BASE_CURRENCY` / `REF_CURRENCY`: Define qué moneda manda (ej. USD vs VES).
+*   `RATE_OPERATOR`: Define la matemática de conversión (`Base * Tasa = Ref` o `Ref / Tasa = Base`).
+*   `TASA_SOURCE`: Permite alternar entre leer tasas de un archivo `JSON` o de la tabla `ExchangeRates` en DB.
+
+### Cómo añadir un nuevo ERP (ej. Profit)
+1.  Crear `app/infrastructure/profit/`.
+2.  Implementar las interfaces definidas en `app/domain/repositories/` (ej. `IERPTransactionRepository`).
+3.  Actualizar la inyección de dependencias en las rutas correspondientes.
+
+## 5. Estándares Técnicos
+*   **Interactividad:** Se prefiere HTMX sobre JavaScript pesado para mantener la lógica en el servidor.
+*   **Logging:** Uso estricto de `loguru`. Revisar `logs/errors.log` para trazas detalladas.
+*   **Persistencia:** SQLAlchemy 2.0 asíncrono.
+*   **Seguridad de Datos:** Nunca usar `scripts/DANGEROUS_reset_db.py` en producción. Usar scripts de parche para alterar esquemas existentes.

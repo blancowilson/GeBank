@@ -1,37 +1,45 @@
-from typing import List
+from typing import List, Optional
 from decimal import Decimal
-from app.domain.entities.reconciliation import ReconciliationResult, MatchResult
-from app.domain.repositories.insytech_repository import InsytechRepository
+from app.domain.entities.pago_insytech import GePagos, GeInstrumentos
+from app.domain.repositories.portal_repository import PortalRepository
 from app.domain.repositories.staging_banco_repository import StagingBancoRepository
+from app.domain.repositories.bank_mapping_repository import IBankMappingRepository
 from app.infrastructure.configuration.tasa_service import TasaService
+from app.domain.entities.reconciliation import ReconciliationResult, MatchResult
 
 class ReconciliationEngine:
     def __init__(
         self,
-        insytech_repo: InsytechRepository,
+        portal_repo: PortalRepository,
         staging_repo: StagingBancoRepository,
+        mapping_repo: IBankMappingRepository,
         tasa_service: TasaService
     ):
-        self.insytech_repo = insytech_repo
+        self.portal_repo = portal_repo
         self.staging_repo = staging_repo
+        self.mapping_repo = mapping_repo
         self.tasa_service = tasa_service
 
     async def attempt_reconciliation(self, pago_id: str) -> ReconciliationResult:
         """
-        Attempts to reconcile a given payment from Insytech against the staged bank transactions.
+        Orchestrates the matching of all instruments in a payment packet.
         """
-        # 1. Fetch the payment packet from Insytech tables
-        pago = await self.insytech_repo.obtener_pago_por_id(pago_id)
+        # 1. Fetch the payment packet from Portal tables
+        pago = await self.portal_repo.obtener_pago_por_id(pago_id)
         if not pago:
-            raise ValueError(f"Pago con ID '{pago_id}' no encontrado.")
-            
-        instrumentos = await self.insytech_repo.obtener_instrumentos_por_pago(pago_id)
+            raise ValueError(f"Payment with ID {pago_id} not found.")
+
+        instrumentos = await self.portal_repo.obtener_instrumentos_por_pago(pago_id)
 
         match_results: List[MatchResult] = []
 
         # 2. Iterate through each financial instrument of the payment
         for instr in instrumentos:
             match_result = MatchResult(instrumento=instr)
+            
+            # Map Portal Bank -> ERP Bank (Sprint 3.1)
+            mapping = await self.mapping_repo.get_by_portal_code(instr.banco)
+            erp_bank_code = mapping.erp_code if mapping else instr.banco
 
             # Handle different payment methods
             if instr.formaPago in ['TRANSFERENCIA', 'DEPOSITO', 'CHEQUE']:
@@ -41,7 +49,7 @@ class ReconciliationEngine:
                     staging_txn = await self.staging_repo.buscar_por_referencia_y_monto(
                         referencia=instr.nroPlanilla,
                         monto=instr.monto,
-                        cod_banco=instr.banco # Assuming this matches staging cod_banco
+                        cod_banco=erp_bank_code
                     )
                     if staging_txn:
                         match_result.match_found = True
@@ -69,7 +77,7 @@ class ReconciliationEngine:
                     staging_txn = await self.staging_repo.buscar_por_referencia_y_monto(
                         referencia=instr.nroPlanilla,
                         monto=instr.monto,
-                        cod_banco=instr.banco
+                        cod_banco=erp_bank_code
                     )
 
                     if staging_txn:
