@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Resolución de Conflictos - {{ pago.idPago }}{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs & Title -->
+<div class="flex flex-col gap-2 mb-8">
+    <div class="flex items-center gap-2 text-sm text-[#6b4c9a] dark:text-[#a589cc]">
+        <a class="hover:text-primary transition-colors" href="/">Home</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <a class="hover:text-primary transition-colors" href="/reconciliation/inbox">Gestión de Pagos</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="font-medium text-primary uppercase text-[10px] font-black tracking-widest">Conflicto</span>
+    </div>
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-black text-[#130d1b] dark:text-white tracking-tight">Resolución de Conflictos</h1>
+            <p class="text-[#6b4c9a] dark:text-[#a589cc] mt-1 font-medium">Corrigiendo datos del Pago: <span class="font-mono text-primary">{{ pago.idPago }}</span></p>
+        </div>
+        <div class="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20 text-right">
+            <span class="block text-[10px] font-black text-primary uppercase">Total del Pago</span>
+            <span class="text-xl font-black text-primary">${{ "%.2f"|format(pago.MontoPago) }}</span>
+        </div>
+    </div>
+</div>
+
+<form hx-post="/reconciliation/resolve/{{ pago.idPago }}/apply" hx-target="#toast-container" class="space-y-6">
+    
+    <!-- Affected Documents Section -->
+    <div class="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] overflow-hidden" x-data="{ expanded: false }">
+        <div @click="expanded = !expanded" class="px-6 py-3 border-b border-[#d9cfe7] dark:border-[#382e48] bg-background-light dark:bg-[#1f162e] flex justify-between items-center cursor-pointer hover:bg-opacity-80 transition-colors">
+            <h2 class="text-sm font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase tracking-widest flex items-center">
+                <span class="material-symbols-outlined mr-2">description</span>
+                Documentos Afectados ({{ pago.documentos|length if pago.documentos else 0 }})
+            </h2>
+            <span class="material-symbols-outlined text-gray-400 transform transition-transform" :class="{'rotate-180': expanded}">expand_more</span>
+        </div>
+        
+        <div x-show="expanded" class="overflow-x-auto p-4" style="display: none;">
+            {% if pago.documentos %}
+            <table class="w-full text-sm text-left">
+                <thead class="text-xs text-gray-400 uppercase bg-gray-100 dark:bg-gray-800">
+                    <tr>
+                        <th class="px-4 py-2 rounded-tl-lg">Tipo</th>
+                        <th class="px-4 py-2">Documento</th>
+                        <th class="px-4 py-2 text-right">Monto Original</th>
+                        <th class="px-4 py-2 text-right">Descuento</th>
+                        <th class="px-4 py-2 text-right">Retención</th>
+                        <th class="px-4 py-2 text-right rounded-tr-lg">Neto a Pagar</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for doc in pago.documentos %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <td class="px-4 py-3 font-medium text-gray-600 dark:text-gray-300">{{ doc.tipoDoc }}</td>
+                        <td class="px-4 py-3 font-mono text-gray-800 dark:text-gray-200 font-bold">{{ doc.numeroDoc }}</td>
+                        <td class="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{{ "{:,.2f}".format(doc.montoDoc) }}</td>
+                        <td class="px-4 py-3 text-right text-green-600 dark:text-green-400">
+                            {% if doc.montoDescuento > 0 %}
+                                - {{ "{:,.2f}".format(doc.montoDescuento) }} <span class="text-[10px]">({{ doc.porcentajeDescuento }}%)</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-right text-amber-600 dark:text-amber-400">
+                            {% if doc.montoRetencion > 0 %}
+                                - {{ "{:,.2f}".format(doc.montoRetencion) }} <span class="text-[10px]">({{ doc.porcentajeRetencion }}%)</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-right font-black text-gray-800 dark:text-white">
+                            {{ "{:,.2f}".format(doc.montoDoc - doc.montoDescuento - doc.montoRetencion) }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="text-center py-4 text-gray-400 italic text-sm">
+                No hay documentos asociados a este pago.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% for item in instrumentos %}
+    {% set instr = item.instr %}
+    <div class="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-[#d9cfe7] dark:border-[#382e48] overflow-hidden">
+        <div class="bg-background-light dark:bg-[#1f162e] px-6 py-3 border-b border-[#d9cfe7] dark:border-[#382e48] flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="px-2 py-1 bg-primary/10 text-primary rounded font-black text-xs uppercase">{{ instr.formaPago }}</span>
+                <span class="text-sm font-bold text-[#6b4c9a] dark:text-[#a589cc]">{{ instr.banco }}</span>
+            </div>
+            <div class="text-sm font-black text-primary">
+                {{ "%.2f"|format(instr.monto) }} <span class="text-[10px]">{{ instr.moneda }}</span>
+            </div>
+        </div>
+        
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Left: Editable Metadata -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">Datos de la Transacción</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Referencia / Planilla</label>
+                        <input type="text" name="ref_{{ instr.id }}" value="{{ instr.nroPlanilla }}" 
+                               class="w-full bg-background-light dark:bg-[#171022] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm font-bold focus:ring-primary">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-[#6b4c9a] dark:text-[#a589cc] uppercase mb-1">Fecha Reportada</label>
+                        <input type="date" name="date_{{ instr.id }}" value="{{ instr.fecha.strftime('%Y-%m-%d') }}" 
+                               class="w-full bg-background-light dark:bg-[#171022] border border-[#d9cfe7] dark:border-[#382e48] rounded-lg px-3 py-2 text-sm font-bold focus:ring-primary">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Rate Analysis -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest text-right">Análisis de Tasa de Cambio</h4>
+                
+                <div class="flex flex-col gap-3">
+                    <div class="flex justify-between items-center p-3 rounded-xl border border-[#d9cfe7] dark:border-[#382e48]">
+                        <span class="text-xs font-bold text-gray-500">Tasa Vendedor</span>
+                        <span class="font-mono font-bold">{{ "%.4f"|format(instr.tasa or 0) }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center p-3 rounded-xl border border-primary/20 bg-primary/5">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-primary">Tasa Oficial Sistema</span>
+                            <span class="text-[10px] text-gray-500">Para la fecha {{ instr.fecha.strftime('%d/%m/%Y') }}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-mono font-black text-primary text-lg">{{ "%.4f"|format(item.tasa_sistema or 0) }}</span>
+                            {% if item.sugerencia %}
+                                <span class="text-[10px] font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full uppercase">Discrepancia</span>
+                            {% else %}
+                                <span class="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full uppercase">OK</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if item.sugerencia %}
+                    <div class="flex items-center gap-2 text-[10px] text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200">
+                        <span class="material-symbols-outlined text-sm">info</span>
+                        La tasa usada por el vendedor difiere de la tasa del sistema. Esto puede causar que el monto en Bs no coincida con el banco.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Action Bar -->
+    <div class="flex items-center justify-between p-6 bg-white dark:bg-surface-dark rounded-2xl border border-[#d9cfe7] dark:border-[#382e48]">
+        <div class="flex items-center gap-3 text-sm text-gray-500 italic">
+            <span class="material-symbols-outlined text-primary">history_edu</span>
+            Los ajustes quedarán registrados en el log de auditoría.
+        </div>
+        <div class="flex gap-4">
+            <a href="/reconciliation/inbox" class="px-6 py-3 text-sm font-black text-gray-500 hover:text-gray-700 uppercase tracking-widest transition-colors">
+                Cancelar
+            </a>
+            <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-black px-8 py-3 rounded-xl shadow-lg transition-all flex items-center gap-2 uppercase tracking-widest text-sm">
+                <span class="material-symbols-outlined">verified_user</span>
+                Aplicar Correcciones
+            </button>
+        </div>
+    </div>
+</form>
+
+<!-- Toast Container -->
+<div id="toast-container" class="fixed bottom-10 right-10 z-50"></div>
+{% endblock %}
