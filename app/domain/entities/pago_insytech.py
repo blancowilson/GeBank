@@ -19,6 +19,10 @@ class GePagos:
     conciliado_por: Optional[str] = None
     fecha_conciliacion: Optional[datetime] = None
     
+    # Relations (populated at runtime)
+    documentos: Optional[List['GeDocumentos']] = None
+    instrumentos: Optional[List['GeInstrumentos']] = None
+    
     # Constants for Status
     PENDIENTE = 1
     APROBADO = 3
@@ -52,5 +56,4 @@ class GeInstrumentos:
     cheque: Optional[str]
     bancoCliente: Optional[str]
     monto: Decimal
-    moneda: str
     moneda: str
