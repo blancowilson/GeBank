@@ -37,5 +37,16 @@
 
 ### Sprint 3.4: Virtual Cash & Final Persistence
 - [x] **Logic:** Identify "Cash" instruments via the Mapping (e.g., mapped to a "Caja" type account).
-- [x] **Workflow:** Cash instruments usually don't have `Staging` records. They go to a "Virtual Verification" queue or Auto-approve based on rules.
-- [x] **Action:** "Commit to ERP" button. Triggers the actual `SBTRAN` insert only after manual confirmation.
+- [ ] **Workflow:** Refine the "Virtual Verification" queue.
+    - [ ] Asegurar que los instrumentos marcados como `is_cash` no busquen en staging y se presenten para aprobación directa.
+    - [ ] Implementar log de auditoría específico para aprobaciones manuales de efectivo.
+- [ ] **Action:** "Commit to ERP" Final.
+    - [ ] Validar que la persistencia en `SBTRAN` y `SAPAGCXC` sea atómica (preparación para Fase 4).
+    - [ ] Pruebas de rendimiento con "grandes transacciones" (múltiples instrumentos y documentos en un solo pago).
+
+## Próximos Pasos (Preview)
+
+### Fase 4: Integridad Transaccional y Resiliencia
+- [ ] Implementar patrón **Unit of Work** para asegurar operaciones atómicas entre Portal y ERP.
+- [ ] Sistema de Reintentos para fallos en la persistencia del ERP.
+- [ ] Alertas de inconsistencia de datos.

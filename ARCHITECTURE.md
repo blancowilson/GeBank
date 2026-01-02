@@ -28,19 +28,15 @@ El motor no concilia "pagos" completos, sino **instrumentos individuales** para 
 ### Flujo de Procesamiento:
 1.  **Traducción de Entidades:** Consulta el `BankMappingRepository` para convertir el código del portal (ej. "04") al código contable del ERP (ej. "110103").
 2.  **Enrutamiento por Naturaleza:**
-    *   **Caja/Efectivo (`is_cash=True`):** Omite la búsqueda en bancos y lo marca para verificación manual o aprobación por reglas de caja física.
-    *   **Bancario:** Procede a la búsqueda en la tabla de `Staging_Bancos`.
+    *   **Caja/Efectivo (`is_cash=True`):** Omite la búsqueda en bancos y lo marca para verificación manual o aprobación por reglas de caja física. Este flujo bypassea el Staging y permite la persistencia directa en el libro de caja del ERP una vez validado.
 3.  **Normalización de Moneda:**
-    *   Identifica la moneda del instrumento y la moneda de la cuenta bancaria (definida en el mapeo).
-    *   Si difieren, utiliza el `TasaService` para convertir los montos basándose en el `RATE_OPERATOR` (MULTIPLY/DIVIDE) configurado globalmente.
-4.  **Búsqueda de Coincidencias (Matching):**
-    *   Busca en el Staging registros que coincidan en: **Banco (ERP Code)**, **Referencia** y **Monto**.
-5.  **Validación de Tolerancia:**
-    *   Aplica la `RECONCILIATION_TOLERANCE` (ej. 0.01) para permitir matches automáticos a pesar de diferencias mínimas de céntimos.
-6.  **Resultado de Conciliación:**
-    *   Genera un `MatchResult` por cada instrumento. El pago solo se considera "Conciliado" si el 100% de sus instrumentos financieros tienen un match exitoso.
 
-## 4. Agnosticismo y Escalabilidad
+## 4. Persistencia y Consistencia
+El sistema garantiza que los cambios en el ERP y el Portal ocurran de manera coordinada.
+*   **Aprobación Final:** Solo cuando todos los instrumentos de un pago son validados (vía Match o Caja), se procede a la persistencia final en las tablas de CxC (`SAACXC`) y Bancos (`SBTRAN`) del ERP.
+*   **Atocimidad (En Desarrollo):** Se está trabajando en asegurar que las transacciones complejas (grandes volúmenes de documentos) se procesen bajo una sola transacción de base de datos para evitar estados parciales.
+
+## 5. Agnosticismo y Escalabilidad
 
 ### Configuración Global (`SystemConfig`)
 El sistema se adapta a diferentes entornos financieros mediante parámetros en base de datos:
